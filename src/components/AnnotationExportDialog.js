@@ -9,19 +9,7 @@ import MenuList from '@material-ui/core/MenuList';
 import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
 import PropTypes, { bool } from 'prop-types';
-import { withStyles } from '@material-ui/core';
 
-/** */
-const styles = (theme) => ({
-  listitem: {
-    '&:focus': {
-      backgroundColor: theme.palette.action.focus,
-    },
-    '&:hover': {
-      backgroundColor: theme.palette.action.hover,
-    },
-  },
-});
 
 /** */
 class AnnotationExportDialog extends Component {
@@ -137,4 +125,4 @@ AnnotationExportDialog.defaultProps = {
   classes: {},
 };
 
-export default withStyles(styles)(AnnotationExportDialog);
+export default AnnotationExportDialog;

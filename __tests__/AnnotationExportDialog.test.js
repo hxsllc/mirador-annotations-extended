@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import MenuItem from '@material-ui/core/MenuItem';
-import AnnotationExportDialog from '../src/components/AnnotationExportDialog';
+import AnnotationExportDialog from '../src/containers/AnnotationExportDialog';
 
 window.URL.createObjectURL = jest.fn((data) => ('downloadurl'));
 

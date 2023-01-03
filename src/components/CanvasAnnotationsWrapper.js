@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import CanvasListItem from '../components/CanvasListItem';
+import CanvasListItem from '../containers/CanvasListItem';
 import AnnotationActionsContext from '../AnnotationActionsContext';
-import SingleCanvasDialog from '../components/SingleCanvasDialog';
+import SingleCanvasDialog from '../containers/SingleCanvasDialog';
 
 /** */
 class CanvasAnnotationsWrapper extends Component {
@@ -89,4 +89,4 @@ CanvasAnnotationsWrapper.defaultProps = {
   canvases: [],
 };
 
-export default  CanvasAnnotationsWrapper;
+export default CanvasAnnotationsWrapper;

@@ -5,7 +5,6 @@ import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import BoldIcon from '@material-ui/icons/FormatBold';
 import ItalicIcon from '@material-ui/icons/FormatItalic';
-import { withStyles } from '@material-ui/core/styles';
 import { stateToHTML } from 'draft-js-export-html';
 import { stateFromHTML } from 'draft-js-import-html';
 
@@ -105,21 +104,6 @@ class TextEditor extends Component {
   }
 }
 
-/** */
-const styles = (theme) => ({
-  editorRoot: {
-    borderColor: theme.palette.type === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)',
-    borderRadius: theme.shape.borderRadius,
-    borderStyle: 'solid',
-    borderWidth: 1,
-    fontFamily: theme.typography.fontFamily,
-    marginBottom: theme.spacing(1),
-    marginTop: theme.spacing(1),
-    minHeight: theme.typography.fontSize * 6,
-    padding: theme.spacing(1),
-  },
-});
-
 TextEditor.propTypes = {
   annoHtml: PropTypes.string,
   classes: PropTypes.shape({
@@ -135,4 +119,4 @@ TextEditor.defaultProps = {
   t: key => key,
 };
 
-export default withStyles(styles)(TextEditor);
+export default TextEditor;

@@ -24,10 +24,9 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import MenuList from '@material-ui/core/MenuList';
 import { SketchPicker } from 'react-color';
 import { v4 as uuid } from 'uuid';
-import { withStyles } from '@material-ui/core/styles';
 import CompanionWindow from 'mirador/dist/es/src/containers/CompanionWindow';
 import AnnotationDrawing from './AnnotationDrawing';
-import TextEditor from './TextEditor';
+import TextEditor from '../containers/TextEditor';
 import WebAnnotation from '../WebAnnotation';
 import CursorIcon from '../icons/Cursor';
 

@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import { MiradorMenuButton } from 'mirador/dist/es/src/components/MiradorMenuButton';
-import SingleCanvasDialog from '../components/SingleCanvasDialog';
-import AnnotationExportDialog from '../components/AnnotationExportDialog';
+import SingleCanvasDialog from '../containers/SingleCanvasDialog';
+import AnnotationExportDialog from '../containers/AnnotationExportDialog';
 import LocalStorageAdapter from '../adapters/LocalStorageAdapter';
 
 /** */

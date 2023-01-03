@@ -22,7 +22,10 @@ export default {
         annotationPanelTextEditorBold: 'Bold auswählen',
         annotationPanelTextEditorItalic: 'Italic auswählen', 
         annotationPanelCancel: 'Abbrechen',
-        annotationPanelSubmit: 'Speichern'
+        annotationPanelSubmit: 'Speichern',
+        canvasAnnotationTools: 'Annotationswerkzeuge',
+        canvasAnnotationToolsEdit: 'Bearbeiten',
+        canvasAnnotationToolsDelete: 'Löschen'
     },
     en: {
         test: 'this is a test',
@@ -47,6 +50,9 @@ export default {
         annotationPanelTextEditorBold: 'select bold',
         annotationPanelTextEditorItalic: 'select italic', 
         annotationPanelCancel: 'cancel',
-        annotationPanelSubmit: 'save'
+        annotationPanelSubmit: 'save',
+        canvasAnnotationTools: 'annotation tools',
+        canvasAnnotationToolsEdit: 'Edit',
+        canvasAnnotationToolsDelete: 'Delete'
     },
 }
