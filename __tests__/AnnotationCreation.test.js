@@ -1,9 +1,9 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import AnnotationCreation from '../src/AnnotationCreation';
-import AnnotationDrawing from '../src/AnnotationDrawing';
-import TextEditor from '../src/TextEditor';
+import AnnotationCreation from '../src/containers/AnnotationCreation';
+import AnnotationDrawing from '../src/components/AnnotationDrawing';
+import TextEditor from '../src/components/TextEditor';
 
 /** */
 function createWrapper(props) {

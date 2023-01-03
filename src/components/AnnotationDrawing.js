@@ -14,7 +14,7 @@ import
 import { Point } from 'paper';
 import flatten from 'lodash/flatten';
 import EditTool from './EditTool';
-import { mapChildren } from './utils';
+import { mapChildren } from '../utils';
 
 /** */
 class AnnotationDrawing extends Component {

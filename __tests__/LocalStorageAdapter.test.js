@@ -1,4 +1,4 @@
-import LocalStorageAdapter from '../src/LocalStorageAdapter';
+import LocalStorageAdapter from '../src/adapters/LocalStorageAdapter';
 import fixture from '../__fixtures__/web_annotation.json';
 
 describe('LocalStorageAdapter', () => {

@@ -65,7 +65,7 @@ class TextEditor extends Component {
 
   /** */
   render() {
-    const { classes } = this.props;
+    const { classes, t } = this.props;
     const { editorState } = this.state;
     const currentStyle = editorState.getCurrentInlineStyle();
 
@@ -74,16 +74,19 @@ class TextEditor extends Component {
         <ToggleButtonGroup
           size="small"
           value={currentStyle.toArray()}
+          aria-label={t('annotationPanelTextEditorSelection')}
         >
           <ToggleButton
             onClick={this.handleFormating}
             value="BOLD"
+            aria-label={t('annotationPanelTextEditorBold')}
           >
             <BoldIcon />
           </ToggleButton>
           <ToggleButton
             onClick={this.handleFormating}
             value="ITALIC"
+            aria-label={t('annotationPanelTextEditorItalic')}
           >
             <ItalicIcon />
           </ToggleButton>
@@ -123,11 +126,13 @@ TextEditor.propTypes = {
     editorRoot: PropTypes.string,
   }).isRequired,
   updateAnnotationBody: PropTypes.func,
+  t: PropTypes.func,
 };
 
 TextEditor.defaultProps = {
   annoHtml: '',
   updateAnnotationBody: () => {},
+  t: key => key,
 };
 
 export default withStyles(styles)(TextEditor);

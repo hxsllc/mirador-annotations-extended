@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Tool } from '@psychobolt/react-paperjs';
 import { Rectangle } from 'paper';
 import flatten from 'lodash/flatten';
-import { mapChildren } from './utils';
+import { mapChildren } from '../utils';
 /** */
 class EditTool extends Component {
   /** */

@@ -1,19 +1,42 @@
-import miradorAnnotationPlugin from './plugins/miradorAnnotationPlugin';
-import externalStorageAnnotationPlugin from './plugins/externalStorageAnnotationPlugin';
-import canvasAnnotationsPlugin from './plugins/canvasAnnotationsPlugin';
-import annotationCreationCompanionWindow from './plugins/annotationCreationCompanionWindow';
-import windowSideBarButtonsPlugin from './plugins/windowSideBarButtonsPlugin';
-
-export {
-  miradorAnnotationPlugin, externalStorageAnnotationPlugin,
-  canvasAnnotationsPlugin, annotationCreationCompanionWindow,
-  windowSideBarButtonsPlugin,
-};
+import MiradorAnnotation from "./containers/MiradorAnnotation";
+import ExternalStorageAnnotation from './containers/ExternalStorageAnnotation';
+import CanvasAnnotationsWrapper from "./containers/CanvasAnnotationsWrapper";
+import AnnotationCreation from './containers/AnnotationCreation';
+import WindowSideBarButtonWrapper from './containers/WindowSideBarButtonWrapper';
+import translations from "./locales";
 
 export default [
-  miradorAnnotationPlugin,
-  externalStorageAnnotationPlugin,
-  canvasAnnotationsPlugin,
-  annotationCreationCompanionWindow,
-  windowSideBarButtonsPlugin,
+  {
+    component: MiradorAnnotation,
+    mode: 'wrap',
+    target: 'AnnotationSettings',
+    config: {
+      translations,
+    }
+  },
+  {
+    component: ExternalStorageAnnotation,
+    mode: 'wrap',
+    target: 'Window',
+  },
+  {
+    component: CanvasAnnotationsWrapper,
+    mode: 'wrap',
+    target: 'CanvasAnnotations',
+    config: {
+      translations
+    }
+  },
+  {
+    companionWindowKey: 'annotationCreation',
+    component: AnnotationCreation,
+    config: {
+      translations
+    }
+  },
+  {
+    component: WindowSideBarButtonWrapper,
+    mode: 'wrap',
+    target: 'WindowSideBarButtons',
+  }
 ];

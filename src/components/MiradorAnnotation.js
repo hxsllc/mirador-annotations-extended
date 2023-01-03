@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import * as actions from 'mirador/dist/es/src/state/actions';
-import { getWindowViewType } from 'mirador/dist/es/src/state/selectors';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import { MiradorMenuButton } from 'mirador/dist/es/src/components/MiradorMenuButton';
-import { getVisibleCanvases } from 'mirador/dist/es/src/state/selectors/canvases';
-import SingleCanvasDialog from '../SingleCanvasDialog';
-import AnnotationExportDialog from '../AnnotationExportDialog';
-import LocalStorageAdapter from '../LocalStorageAdapter';
+import SingleCanvasDialog from '../components/SingleCanvasDialog';
+import AnnotationExportDialog from '../components/AnnotationExportDialog';
+import LocalStorageAdapter from '../adapters/LocalStorageAdapter';
 
 /** */
 class MiradorAnnotation extends Component {
@@ -61,6 +58,7 @@ class MiradorAnnotation extends Component {
       TargetComponent,
       targetProps,
       windowViewType,
+      t,
     } = this.props;
     const { annotationExportDialogOpen, singleCanvasDialogOpen } = this.state;
     const storageAdapter = config.annotation && config.annotation.adapter('poke');
@@ -72,7 +70,7 @@ class MiradorAnnotation extends Component {
           {...targetProps} // eslint-disable-line react/jsx-props-no-spreading
         />
         <MiradorMenuButton
-          aria-label="Create new annotation"
+          aria-label={t('createNewAnnotation')}
           onClick={windowViewType === 'single' ? this.openCreateAnnotationCompanionWindow : this.toggleSingleCanvasDialogOpen}
           size="small"
         >
@@ -127,27 +125,4 @@ MiradorAnnotation.propTypes = {
   windowViewType: PropTypes.string.isRequired,
 };
 
-/** */
-const mapDispatchToProps = (dispatch, props) => ({
-  addCompanionWindow: (content, additionalProps) => dispatch(
-    actions.addCompanionWindow(props.targetProps.windowId, { content, ...additionalProps }),
-  ),
-  switchToSingleCanvasView: () => dispatch(
-    actions.setWindowViewType(props.targetProps.windowId, 'single'),
-  ),
-});
-
-/** */
-const mapStateToProps = (state, { targetProps: { windowId } }) => ({
-  canvases: getVisibleCanvases(state, { windowId }),
-  config: state.config,
-  windowViewType: getWindowViewType(state, { windowId }),
-});
-
-export default {
-  component: MiradorAnnotation,
-  mapDispatchToProps,
-  mapStateToProps,
-  mode: 'wrap',
-  target: 'AnnotationSettings',
-};
+export default  MiradorAnnotation;

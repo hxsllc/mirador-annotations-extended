@@ -28,8 +28,8 @@ import { withStyles } from '@material-ui/core/styles';
 import CompanionWindow from 'mirador/dist/es/src/containers/CompanionWindow';
 import AnnotationDrawing from './AnnotationDrawing';
 import TextEditor from './TextEditor';
-import WebAnnotation from './WebAnnotation';
-import CursorIcon from './icons/Cursor';
+import WebAnnotation from '../WebAnnotation';
+import CursorIcon from '../icons/Cursor';
 
 /** */
 class AnnotationCreation extends Component {
@@ -220,7 +220,7 @@ class AnnotationCreation extends Component {
   /** */
   render() {
     const {
-      annotation, classes, closeCompanionWindow, id, windowId,
+      annotation, classes, closeCompanionWindow, id, windowId, t
     } = this.props;
 
     const {
@@ -230,7 +230,7 @@ class AnnotationCreation extends Component {
     } = this.state;
     return (
       <CompanionWindow
-        title={annotation ? 'Edit annotation' : 'New annotation'}
+        title={annotation ? t('editAnnotation') : t('addAnnotation')}
         windowId={windowId}
         id={id}
       >
@@ -248,7 +248,7 @@ class AnnotationCreation extends Component {
           <Grid container>
             <Grid item xs={12}>
               <Typography variant="overline">
-                Target
+                {t('annotationPanelLabelTarget')}
               </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -258,13 +258,13 @@ class AnnotationCreation extends Component {
                   value={activeTool}
                   exclusive
                   onChange={this.changeTool}
-                  aria-label="tool selection"
+                  aria-label={t('annotationPanelToolSelection')}
                   size="small"
                 >
-                  <ToggleButton value="cursor" aria-label="select cursor">
+                  <ToggleButton value="cursor" aria-label={t('annotationPanelCursorSelect')} >
                     <CursorIcon />
                   </ToggleButton>
-                  <ToggleButton value="edit" aria-label="select cursor">
+                  <ToggleButton value="edit" aria-label={t('annotationPanelCursorSelect')} >
                     <FormatShapesIcon />
                   </ToggleButton>
                 </ToggleButtonGroup>
@@ -274,19 +274,19 @@ class AnnotationCreation extends Component {
                   value={activeTool}
                   exclusive
                   onChange={this.changeTool}
-                  aria-label="tool selection"
+                  aria-label={t('annotationPanelToolsSelection')}
                   size="small"
                 >
-                  <ToggleButton value="rectangle" aria-label="add a rectangle">
+                  <ToggleButton value="rectangle" aria-label={t('annotationPanelToolsRectangle')} >
                     <RectangleIcon />
                   </ToggleButton>
-                  <ToggleButton value="ellipse" aria-label="add a circle">
+                  <ToggleButton value="ellipse" aria-label={t('annotationPanelToolsCircle')} >
                     <CircleIcon />
                   </ToggleButton>
-                  <ToggleButton value="polygon" aria-label="add a polygon">
+                  <ToggleButton value="polygon" aria-label={t('annotationPanelToolsPolygon')} >
                     <PolygonIcon />
                   </ToggleButton>
-                  <ToggleButton value="freehand" aria-label="free hand polygon">
+                  <ToggleButton value="freehand" aria-label={t('annotationPanelToolsFreeForm')} >
                     <GestureIcon />
                   </ToggleButton>
                 </ToggleButtonGroup>
@@ -296,17 +296,17 @@ class AnnotationCreation extends Component {
           <Grid container>
             <Grid item xs={12}>
               <Typography variant="overline">
-                Style
+                {t('annotationPanelLabelStyle')}
               </Typography>
             </Grid>
             <Grid item xs={12}>
               <ToggleButtonGroup
-                aria-label="style selection"
+                aria-label={t('annotationPanelStyleSelection')}
                 size="small"
               >
                 <ToggleButton
                   value="strokeColor"
-                  aria-label="select color"
+                  aria-label={t('annotationPanelStyleStrokeColor')}
                   onClick={this.openChooseColor}
                 >
                   <StrokeColorIcon style={{ fill: strokeColor }} />
@@ -314,7 +314,7 @@ class AnnotationCreation extends Component {
                 </ToggleButton>
                 <ToggleButton
                   value="strokeColor"
-                  aria-label="select line weight"
+                  aria-label={t('annotationPanelStyleStrokeWidth')}
                   onClick={this.openChooseLineWeight}
                 >
                   <LineWeightIcon />
@@ -322,7 +322,7 @@ class AnnotationCreation extends Component {
                 </ToggleButton>
                 <ToggleButton
                   value="fillColor"
-                  aria-label="select color"
+                  aria-label={t('annotationPanelStyleFillColor')}
                   onClick={this.openChooseColor}
                 >
                   <FormatColorFillIcon style={{ fill: fillColor }} />
@@ -355,7 +355,7 @@ class AnnotationCreation extends Component {
           <Grid container>
             <Grid item xs={12}>
               <Typography variant="overline">
-                Content
+                {t('annotationPanelLabelContent')}
               </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -367,10 +367,10 @@ class AnnotationCreation extends Component {
             </Grid>
           </Grid>
           <Button onClick={closeCompanionWindow}>
-            Cancel
+            {t('annotationPanelCancel')}
           </Button>
           <Button variant="contained" color="primary" type="submit">
-            Save
+            {t('annotationPanelSubmit')}
           </Button>
         </form>
         <Popover
@@ -412,33 +412,6 @@ class AnnotationCreation extends Component {
   }
 }
 
-/** */
-const styles = (theme) => ({
-  divider: {
-    margin: theme.spacing(1, 0.5),
-  },
-  grouped: {
-    '&:first-child': {
-      borderRadius: theme.shape.borderRadius,
-    },
-    '&:not(:first-child)': {
-      borderRadius: theme.shape.borderRadius,
-    },
-    border: 'none',
-    margin: theme.spacing(0.5),
-  },
-  paper: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  section: {
-    paddingBottom: theme.spacing(1),
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(1),
-    paddingTop: theme.spacing(2),
-  },
-});
-
 AnnotationCreation.propTypes = {
   annotation: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   canvases: PropTypes.arrayOf(
@@ -459,12 +432,14 @@ AnnotationCreation.propTypes = {
   id: PropTypes.string.isRequired,
   receiveAnnotation: PropTypes.func.isRequired,
   windowId: PropTypes.string.isRequired,
+  t: PropTypes.func.isRequired,
 };
 
 AnnotationCreation.defaultProps = {
   annotation: null,
   canvases: [],
   closeCompanionWindow: () => {},
+  t: key => key,
 };
 
-export default withStyles(styles)(AnnotationCreation);
+export default AnnotationCreation;

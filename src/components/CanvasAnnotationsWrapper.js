@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { getVisibleCanvases } from 'mirador/dist/es/src/state/selectors/canvases';
-import * as actions from 'mirador/dist/es/src/state/actions';
-import { getWindowViewType } from 'mirador/dist/es/src/state/selectors';
-import CanvasListItem from '../CanvasListItem';
+import CanvasListItem from '../components/CanvasListItem';
 import AnnotationActionsContext from '../AnnotationActionsContext';
-import SingleCanvasDialog from '../SingleCanvasDialog';
+import SingleCanvasDialog from '../components/SingleCanvasDialog';
 
 /** */
 class CanvasAnnotationsWrapper extends Component {
@@ -92,42 +89,4 @@ CanvasAnnotationsWrapper.defaultProps = {
   canvases: [],
 };
 
-/** */
-function mapStateToProps(state, { targetProps: { windowId } }) {
-  const canvases = getVisibleCanvases(state, { windowId });
-  const annotationsOnCanvases = {};
-
-  canvases.forEach((canvas) => {
-    const anno = state.annotations[canvas.id];
-    if (anno) {
-      annotationsOnCanvases[canvas.id] = anno;
-    }
-  });
-  return {
-    annotationsOnCanvases,
-    canvases,
-    config: state.config,
-    windowViewType: getWindowViewType(state, { windowId }),
-  };
-}
-
-/** */
-const mapDispatchToProps = (dispatch, props) => ({
-  addCompanionWindow: (content, additionalProps) => dispatch(
-    actions.addCompanionWindow(props.targetProps.windowId, { content, ...additionalProps }),
-  ),
-  receiveAnnotation: (targetId, id, annotation) => dispatch(
-    actions.receiveAnnotation(targetId, id, annotation),
-  ),
-  switchToSingleCanvasView: () => dispatch(
-    actions.setWindowViewType(props.targetProps.windowId, 'single'),
-  ),
-});
-
-export default {
-  component: CanvasAnnotationsWrapper,
-  mapDispatchToProps,
-  mapStateToProps,
-  mode: 'wrap',
-  target: 'CanvasAnnotations',
-};
+export default  CanvasAnnotationsWrapper;

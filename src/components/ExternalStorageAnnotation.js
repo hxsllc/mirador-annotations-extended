@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import * as actions from 'mirador/dist/es/src/state/actions';
-import { getVisibleCanvases } from 'mirador/dist/es/src/state/selectors/canvases';
 import isEqual from 'lodash/isEqual';
 
 /** */
@@ -77,23 +75,7 @@ ExternalStorageAnnotation.defaultProps = {
   PluginComponents: [],
 };
 
+export default ExternalStorageAnnotation;
 /** */
-const mapDispatchToProps = {
-  receiveAnnotation: actions.receiveAnnotation,
-};
 
-/** */
-function mapStateToProps(state, { targetProps }) {
-  return {
-    canvases: getVisibleCanvases(state, { windowId: targetProps.windowId }),
-    config: state.config,
-  };
-}
 
-export default {
-  component: ExternalStorageAnnotation,
-  mapDispatchToProps,
-  mapStateToProps,
-  mode: 'wrap',
-  target: 'Window',
-};

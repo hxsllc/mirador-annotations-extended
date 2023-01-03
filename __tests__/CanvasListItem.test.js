@@ -1,6 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import CanvasListItem from '../src/CanvasListItem';
+import CanvasListItem from '../src/components/CanvasListItem';
 import AnnotationActionsContext from '../src/AnnotationActionsContext';
 
 const receiveAnnotation = jest.fn();
