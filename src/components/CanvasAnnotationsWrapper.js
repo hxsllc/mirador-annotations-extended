@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import CanvasListItem from '../containers/CanvasListItem';
+import CanvasListItem from './CanvasListItem';
 import AnnotationActionsContext from '../AnnotationActionsContext';
 import SingleCanvasDialog from '../containers/SingleCanvasDialog';
 

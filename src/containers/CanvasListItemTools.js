@@ -1,9 +1,9 @@
 import { compose } from 'redux';
 import { withTranslation } from 'react-i18next';
-import CanvasListItem from '../components/CanvasListItem';
+import CanvasListItemTools from '../components/CanvasListItemTools';
 
 const enhance = compose(
     withTranslation(),
 );
 
-export default enhance(CanvasListItem);
+export default enhance(CanvasListItemTools);
