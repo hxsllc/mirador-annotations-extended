@@ -8,7 +8,7 @@ import ExternalStorageAnnotation from '../components/ExternalStorageAnnotation';
 const mapDispatchToProps = {
     receiveAnnotation: actions.receiveAnnotation,
 };
-  
+
 function mapStateToProps(state, { targetProps }) {
     return {
         canvases: getVisibleCanvases(state, { windowId: targetProps.windowId }),
@@ -20,5 +20,5 @@ const enhance = compose(
     withTranslation(),
     connect(mapStateToProps, mapDispatchToProps),
 );
-  
+
 export default enhance(ExternalStorageAnnotation);

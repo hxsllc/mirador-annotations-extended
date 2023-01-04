@@ -5,5 +5,5 @@ import WindowSideBarButtonWrapper from '../components/WindowSideBarButtonWrapper
 const enhance = compose(
     withTranslation(),
 );
-  
+
 export default enhance(WindowSideBarButtonWrapper);

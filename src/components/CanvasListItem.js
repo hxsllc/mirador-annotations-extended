@@ -11,9 +11,9 @@ import AnnotationActionsContext from '../AnnotationActionsContext';
 /*const CanvasListItem = ({ annotationid, children, ...props }) => {
   const [isHovering, setIsHovering] = React.useState(false);
   const { windowViewType, toggleSingleCanvasDialogOpen, annotationsOnCanvases, canvases, addCompanionWindow, receiveAnnotation, storageAdapter } = React.useContext(AnnotationActionsContext);
-  
+
   const handleDelete = () => {
-    
+
     canvases.forEach((canvas) => {
       const adapter = storageAdapter(canvas.id);
       adapter.delete(annotationid).then((annoPage) => {
@@ -154,9 +154,9 @@ class CanvasListItem extends React.Component {
         canvases.some((canvas) => {
             if (annotationsOnCanvases[canvas.id]) {
                 Object.entries(annotationsOnCanvases[canvas.id]).forEach(([key, value], i) => {
-                if (value.json && value.json.items) {
-                    annotation = value.json.items.find((anno) => anno.id === annotationid);
-                }
+                    if (value.json && value.json.items) {
+                        annotation = value.json.items.find((anno) => anno.id === annotationid);
+                    }
                 });
             }
             return (annotation);
@@ -169,7 +169,7 @@ class CanvasListItem extends React.Component {
 
     handleMouseHover() {
         this.setState((prevState) => ({
-        isHovering: !prevState.isHovering,
+            isHovering: !prevState.isHovering,
         }));
     }
 
@@ -198,46 +198,46 @@ class CanvasListItem extends React.Component {
             <div
                 onMouseEnter={this.handleMouseHover}
                 onMouseLeave={this.handleMouseHover}
-                >
-                {isHovering && this.editable() && (
-                <div
-                    style={{
-                        position: 'relative',
-                        top: -20,
-                        zIndex: 10000,
-                    }}
-                    >
-                    <ToggleButtonGroup
-                        aria-label={t('canvasAnnotationTools')}
-                        size="small"
-                        style={{
-                            position: 'absolute',
-                            right: 0,
-                        }}
-                        >
-                        <ToggleButton
-                            aria-label={t('canvasAnnotationToolsEdit')}
-                            onClick={windowViewType === 'single' ? this.handleEdit : toggleSingleCanvasDialogOpen}
-                            value="edit"
-                            >
-                            <EditIcon />
-                        </ToggleButton>
-                        <ToggleButton 
-                            aria-label={t('canvasAnnotationToolsDelete')} 
-                            onClick={this.handleDelete} 
-                            value="delete"
-                            >
-                            <DeleteIcon />
-                        </ToggleButton>
-                    </ToggleButtonGroup>
-                </div>
-            )}
-            <li
-            {...this.props} // eslint-disable-line react/jsx-props-no-spreading
             >
-            {children}
-            </li>
-        </div>
+                {isHovering && this.editable() && (
+                    <div
+                        style={{
+                            position: 'relative',
+                            top: -20,
+                            zIndex: 10000,
+                        }}
+                    >
+                        <ToggleButtonGroup
+                            aria-label={t('canvasAnnotationTools')}
+                            size="small"
+                            style={{
+                                position: 'absolute',
+                                right: 0,
+                            }}
+                        >
+                            <ToggleButton
+                                aria-label={t('canvasAnnotationToolsEdit')}
+                                onClick={windowViewType === 'single' ? this.handleEdit : toggleSingleCanvasDialogOpen}
+                                value="edit"
+                            >
+                                <EditIcon />
+                            </ToggleButton>
+                            <ToggleButton
+                                aria-label={t('canvasAnnotationToolsDelete')}
+                                onClick={this.handleDelete}
+                                value="delete"
+                            >
+                                <DeleteIcon />
+                            </ToggleButton>
+                        </ToggleButtonGroup>
+                    </div>
+                )}
+                <li
+                    {...this.props} // eslint-disable-line react/jsx-props-no-spreading
+                >
+                    {children}
+                </li>
+            </div>
         );
     }
 }

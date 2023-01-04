@@ -35,39 +35,39 @@ const styles = (theme) => ({
 
 const mapDispatchToProps = (dispatch, { id, windowId }) => ({
     closeCompanionWindow: () => dispatch(
-      actions.removeCompanionWindow(windowId, id),
+        actions.removeCompanionWindow(windowId, id),
     ),
     receiveAnnotation: (targetId, annoId, annotation) => dispatch(
-      actions.receiveAnnotation(targetId, annoId, annotation),
+        actions.receiveAnnotation(targetId, annoId, annotation),
     ),
-  });
-  
-  /** */
-  function mapStateToProps(state, { id: companionWindowId, windowId }) {
+});
+
+/** */
+function mapStateToProps(state, { id: companionWindowId, windowId }) {
     const { annotationid } = getCompanionWindow(state, { companionWindowId, windowId });
     const canvases = getVisibleCanvases(state, { windowId });
-  
+
     let annotation;
     canvases.forEach((canvas) => {
-      const annotationsOnCanvas = state.annotations[canvas.id];
-      Object.values(annotationsOnCanvas || {}).forEach((value, i) => {
-        if (value.json && value.json.items) {
-          annotation = value.json.items.find((anno) => anno.id === annotationid);
-        }
-      });
+        const annotationsOnCanvas = state.annotations[canvas.id];
+        Object.values(annotationsOnCanvas || {}).forEach((value, i) => {
+            if (value.json && value.json.items) {
+                annotation = value.json.items.find((anno) => anno.id === annotationid);
+            }
+        });
     });
-  
+
     return {
-      annotation,
-      canvases,
-      config: state.config,
+        annotation,
+        canvases,
+        config: state.config,
     };
-  }
+}
 
 const enhance = compose(
     withTranslation(),
     withStyles(styles),
     connect(mapStateToProps, mapDispatchToProps),
 );
-  
+
 export default enhance(AnnotationCreation);

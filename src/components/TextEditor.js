@@ -10,113 +10,113 @@ import { stateFromHTML } from 'draft-js-import-html';
 
 /** */
 class TextEditor extends Component {
-  /** */
-  constructor(props) {
-    super(props);
-    this.state = {
-      editorState: EditorState.createWithContent(stateFromHTML(props.annoHtml)),
-    };
-    this.onChange = this.onChange.bind(this);
-    this.handleKeyCommand = this.handleKeyCommand.bind(this);
-    this.handleFormating = this.handleFormating.bind(this);
-    this.handleFocus = this.handleFocus.bind(this);
-    this.editorRef = React.createRef();
-  }
-
-  /**
-   * This is a kinda silly hack (but apparently recommended approach) to
-   * making sure the whole visible editor area is clickable, not just the first line.
-   */
-  handleFocus() {
-    if (this.editorRef.current) this.editorRef.current.focus();
-  }
-
-  /** */
-  handleFormating(e, newFormat) {
-    const { editorState } = this.state;
-    this.onChange(RichUtils.toggleInlineStyle(editorState, newFormat));
-  }
-
-  /** */
-  handleKeyCommand(command, editorState) {
-    const newState = RichUtils.handleKeyCommand(editorState, command);
-    if (newState) {
-      this.onChange(newState);
-      return 'handled';
+    /** */
+    constructor(props) {
+        super(props);
+        this.state = {
+            editorState: EditorState.createWithContent(stateFromHTML(props.annoHtml)),
+        };
+        this.onChange = this.onChange.bind(this);
+        this.handleKeyCommand = this.handleKeyCommand.bind(this);
+        this.handleFormating = this.handleFormating.bind(this);
+        this.handleFocus = this.handleFocus.bind(this);
+        this.editorRef = React.createRef();
     }
-    return 'not-handled';
-  }
 
-  /** */
-  onChange(editorState) {
-    const { updateAnnotationBody } = this.props;
-    this.setState({ editorState });
-    if (updateAnnotationBody) {
-      const options = {
-        inlineStyles: {
-          BOLD: { element: 'b' },
-          ITALIC: { element: 'i' },
-        },
-      };
-      updateAnnotationBody(stateToHTML(editorState.getCurrentContent(), options).toString());
+    /**
+     * This is a kinda silly hack (but apparently recommended approach) to
+     * making sure the whole visible editor area is clickable, not just the first line.
+     */
+    handleFocus() {
+        if (this.editorRef.current) this.editorRef.current.focus();
     }
-  }
 
-  /** */
-  render() {
-    const { classes, t } = this.props;
-    const { editorState } = this.state;
-    const currentStyle = editorState.getCurrentInlineStyle();
+    /** */
+    handleFormating(e, newFormat) {
+        const { editorState } = this.state;
+        this.onChange(RichUtils.toggleInlineStyle(editorState, newFormat));
+    }
 
-    return (
-      <div>
-        <ToggleButtonGroup
-          size="small"
-          value={currentStyle.toArray()}
-          aria-label={t('annotationPanelTextEditorSelection')}
-        >
-          <ToggleButton
-            onClick={this.handleFormating}
-            value="BOLD"
-            aria-label={t('annotationPanelTextEditorBold')}
-          >
-            <BoldIcon />
-          </ToggleButton>
-          <ToggleButton
-            onClick={this.handleFormating}
-            value="ITALIC"
-            aria-label={t('annotationPanelTextEditorItalic')}
-          >
-            <ItalicIcon />
-          </ToggleButton>
-        </ToggleButtonGroup>
+    /** */
+    handleKeyCommand(command, editorState) {
+        const newState = RichUtils.handleKeyCommand(editorState, command);
+        if (newState) {
+            this.onChange(newState);
+            return 'handled';
+        }
+        return 'not-handled';
+    }
 
-        <div className={classes.editorRoot} onClick={this.handleFocus}>
-          <Editor
-            editorState={editorState}
-            handleKeyCommand={this.handleKeyCommand}
-            onChange={this.onChange}
-            ref={this.editorRef}
-          />
-        </div>
-      </div>
-    );
-  }
+    /** */
+    onChange(editorState) {
+        const { updateAnnotationBody } = this.props;
+        this.setState({ editorState });
+        if (updateAnnotationBody) {
+            const options = {
+                inlineStyles: {
+                    BOLD: { element: 'b' },
+                    ITALIC: { element: 'i' },
+                },
+            };
+            updateAnnotationBody(stateToHTML(editorState.getCurrentContent(), options).toString());
+        }
+    }
+
+    /** */
+    render() {
+        const { classes, t } = this.props;
+        const { editorState } = this.state;
+        const currentStyle = editorState.getCurrentInlineStyle();
+
+        return (
+            <div>
+                <ToggleButtonGroup
+                    size="small"
+                    value={currentStyle.toArray()}
+                    aria-label={t('annotationPanelTextEditorSelection')}
+                >
+                    <ToggleButton
+                        onClick={this.handleFormating}
+                        value="BOLD"
+                        aria-label={t('annotationPanelTextEditorBold')}
+                    >
+                        <BoldIcon />
+                    </ToggleButton>
+                    <ToggleButton
+                        onClick={this.handleFormating}
+                        value="ITALIC"
+                        aria-label={t('annotationPanelTextEditorItalic')}
+                    >
+                        <ItalicIcon />
+                    </ToggleButton>
+                </ToggleButtonGroup>
+
+                <div className={classes.editorRoot} onClick={this.handleFocus}>
+                    <Editor
+                        editorState={editorState}
+                        handleKeyCommand={this.handleKeyCommand}
+                        onChange={this.onChange}
+                        ref={this.editorRef}
+                    />
+                </div>
+            </div>
+        );
+    }
 }
 
 TextEditor.propTypes = {
-  annoHtml: PropTypes.string,
-  classes: PropTypes.shape({
-    editorRoot: PropTypes.string,
-  }).isRequired,
-  updateAnnotationBody: PropTypes.func,
-  t: PropTypes.func,
+    annoHtml: PropTypes.string,
+    classes: PropTypes.shape({
+        editorRoot: PropTypes.string,
+    }).isRequired,
+    updateAnnotationBody: PropTypes.func,
+    t: PropTypes.func,
 };
 
 TextEditor.defaultProps = {
-  annoHtml: '',
-  updateAnnotationBody: () => {},
-  t: key => key,
+    annoHtml: '',
+    updateAnnotationBody: () => { },
+    t: key => key,
 };
 
 export default TextEditor;

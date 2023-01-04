@@ -4,75 +4,75 @@ import isEqual from 'lodash/isEqual';
 
 /** */
 class ExternalStorageAnnotation extends Component {
-  /** */
-  constructor(props) {
-    super(props);
-    this.retrieveAnnotations = this.retrieveAnnotations.bind(this);
-  }
-
-  /** */
-  componentDidMount() {
-    const { canvases } = this.props;
-    this.retrieveAnnotations(canvases);
-  }
-
-  /** */
-  componentDidUpdate(prevProps) {
-    const { canvases } = this.props;
-    const currentCanvasIds = canvases.map((canvas) => canvas.id);
-    const prevCanvasIds = prevProps.canvases.map((canvas) => canvas.id);
-    if (!isEqual(currentCanvasIds, prevCanvasIds)) {
-      this.retrieveAnnotations(canvases);
+    /** */
+    constructor(props) {
+        super(props);
+        this.retrieveAnnotations = this.retrieveAnnotations.bind(this);
     }
-  }
 
-  /** */
-  retrieveAnnotations(canvases) {
-    const { config, receiveAnnotation } = this.props;
+    /** */
+    componentDidMount() {
+        const { canvases } = this.props;
+        this.retrieveAnnotations(canvases);
+    }
 
-    canvases.forEach((canvas) => {
-      const storageAdapter = config.annotation.adapter(canvas.id);
-      storageAdapter.all().then((annoPage) => {
-        if (annoPage) {
-          receiveAnnotation(canvas.id, storageAdapter.annotationPageId, annoPage);
+    /** */
+    componentDidUpdate(prevProps) {
+        const { canvases } = this.props;
+        const currentCanvasIds = canvases.map((canvas) => canvas.id);
+        const prevCanvasIds = prevProps.canvases.map((canvas) => canvas.id);
+        if (!isEqual(currentCanvasIds, prevCanvasIds)) {
+            this.retrieveAnnotations(canvases);
         }
-      });
-    });
-  }
+    }
 
-  /** */
-  render() {
-    const { PluginComponents, TargetComponent, targetProps } = this.props;
-    return (
-      <TargetComponent
-        {...targetProps} // eslint-disable-line react/jsx-props-no-spreading
-        PluginComponents={PluginComponents}
-      />
-    );
-  }
+    /** */
+    retrieveAnnotations(canvases) {
+        const { config, receiveAnnotation } = this.props;
+
+        canvases.forEach((canvas) => {
+            const storageAdapter = config.annotation.adapter(canvas.id);
+            storageAdapter.all().then((annoPage) => {
+                if (annoPage) {
+                    receiveAnnotation(canvas.id, storageAdapter.annotationPageId, annoPage);
+                }
+            });
+        });
+    }
+
+    /** */
+    render() {
+        const { PluginComponents, TargetComponent, targetProps } = this.props;
+        return (
+            <TargetComponent
+                {...targetProps} // eslint-disable-line react/jsx-props-no-spreading
+                PluginComponents={PluginComponents}
+            />
+        );
+    }
 }
 
 ExternalStorageAnnotation.propTypes = {
-  canvases: PropTypes.arrayOf(
-    PropTypes.shape({ id: PropTypes.string, index: PropTypes.number }),
-  ),
-  config: PropTypes.shape({
-    annotation: PropTypes.shape({
-      adapter: PropTypes.func,
-    }),
-  }).isRequired,
-  PluginComponents: PropTypes.array, // eslint-disable-line react/forbid-prop-types
-  receiveAnnotation: PropTypes.func.isRequired,
-  TargetComponent: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.node,
-  ]).isRequired,
-  targetProps: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    canvases: PropTypes.arrayOf(
+        PropTypes.shape({ id: PropTypes.string, index: PropTypes.number }),
+    ),
+    config: PropTypes.shape({
+        annotation: PropTypes.shape({
+            adapter: PropTypes.func,
+        }),
+    }).isRequired,
+    PluginComponents: PropTypes.array, // eslint-disable-line react/forbid-prop-types
+    receiveAnnotation: PropTypes.func.isRequired,
+    TargetComponent: PropTypes.oneOfType([
+        PropTypes.func,
+        PropTypes.node,
+    ]).isRequired,
+    targetProps: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 ExternalStorageAnnotation.defaultProps = {
-  canvases: [],
-  PluginComponents: [],
+    canvases: [],
+    PluginComponents: [],
 };
 
 export default ExternalStorageAnnotation;

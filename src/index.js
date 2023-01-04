@@ -6,37 +6,37 @@ import WindowSideBarButtonWrapper from './containers/WindowSideBarButtonWrapper'
 import translations from "./locales";
 
 export default [
-  {
-    component: MiradorAnnotation,
-    mode: 'wrap',
-    target: 'AnnotationSettings',
-    config: {
-      translations,
+    {
+        component: MiradorAnnotation,
+        mode: 'wrap',
+        target: 'AnnotationSettings',
+        config: {
+            translations,
+        }
+    },
+    {
+        component: ExternalStorageAnnotation,
+        mode: 'wrap',
+        target: 'Window',
+    },
+    {
+        component: CanvasAnnotationsWrapper,
+        mode: 'wrap',
+        target: 'CanvasAnnotations',
+        config: {
+            translations
+        }
+    },
+    {
+        companionWindowKey: 'annotationCreation',
+        component: AnnotationCreation,
+        config: {
+            translations
+        }
+    },
+    {
+        component: WindowSideBarButtonWrapper,
+        mode: 'wrap',
+        target: 'WindowSideBarButtons',
     }
-  },
-  {
-    component: ExternalStorageAnnotation,
-    mode: 'wrap',
-    target: 'Window',
-  },
-  {
-    component: CanvasAnnotationsWrapper,
-    mode: 'wrap',
-    target: 'CanvasAnnotations',
-    config: {
-      translations
-    }
-  },
-  {
-    companionWindowKey: 'annotationCreation',
-    component: AnnotationCreation,
-    config: {
-      translations
-    }
-  },
-  {
-    component: WindowSideBarButtonWrapper,
-    mode: 'wrap',
-    target: 'WindowSideBarButtons',
-  }
 ];

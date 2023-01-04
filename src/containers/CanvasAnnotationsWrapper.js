@@ -10,7 +10,7 @@ import CanvasAnnotationsWrapper from '../components/CanvasAnnotationsWrapper';
 function mapStateToProps(state, { targetProps: { windowId } }) {
     const canvases = getVisibleCanvases(state, { windowId });
     const annotationsOnCanvases = {};
-  
+
     canvases.forEach((canvas) => {
         const anno = state.annotations[canvas.id];
         if (anno) {
@@ -24,9 +24,9 @@ function mapStateToProps(state, { targetProps: { windowId } }) {
         windowViewType: getWindowViewType(state, { windowId }),
     };
 }
-  
-  /** */
-  const mapDispatchToProps = (dispatch, props) => ({
+
+/** */
+const mapDispatchToProps = (dispatch, props) => ({
     addCompanionWindow: (content, additionalProps) => dispatch(
         actions.addCompanionWindow(props.targetProps.windowId, { content, ...additionalProps }),
     ),
@@ -42,5 +42,5 @@ const enhance = compose(
     withTranslation(),
     connect(mapStateToProps, mapDispatchToProps),
 );
-  
+
 export default enhance(CanvasAnnotationsWrapper);

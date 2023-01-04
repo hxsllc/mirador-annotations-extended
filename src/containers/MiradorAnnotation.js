@@ -14,7 +14,7 @@ const mapDispatchToProps = (dispatch, props) => ({
         actions.setWindowViewType(props.targetProps.windowId, 'single'),
     ),
 });
-  
+
 const mapStateToProps = (state, { targetProps: { windowId } }) => ({
     canvases: getVisibleCanvases(state, { windowId }),
     config: state.config,
@@ -25,5 +25,5 @@ const enhance = compose(
     withTranslation(),
     connect(mapStateToProps, mapDispatchToProps),
 );
-  
+
 export default enhance(MiradorAnnotation);

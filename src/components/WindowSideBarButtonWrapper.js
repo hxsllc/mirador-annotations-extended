@@ -6,30 +6,30 @@ import PropTypes from 'prop-types';
  * companion window button is present
  */
 class WindowSideBarButtonWrapper extends Component {
-  /** */
-  render() {
-    const { PluginComponents, TargetComponent, targetProps } = this.props;
-    targetProps.hasAnyAnnotations = true;
-    return (
-      <TargetComponent
-        {...targetProps} // eslint-disable-line react/jsx-props-no-spreading
-        PluginComponents={PluginComponents}
-      />
-    );
-  }
+    /** */
+    render() {
+        const { PluginComponents, TargetComponent, targetProps } = this.props;
+        targetProps.hasAnyAnnotations = true;
+        return (
+            <TargetComponent
+                {...targetProps} // eslint-disable-line react/jsx-props-no-spreading
+                PluginComponents={PluginComponents}
+            />
+        );
+    }
 }
 
 WindowSideBarButtonWrapper.propTypes = {
-  PluginComponents: PropTypes.array, // eslint-disable-line react/forbid-prop-types
-  TargetComponent: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.node,
-  ]).isRequired,
-  targetProps: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    PluginComponents: PropTypes.array, // eslint-disable-line react/forbid-prop-types
+    TargetComponent: PropTypes.oneOfType([
+        PropTypes.func,
+        PropTypes.node,
+    ]).isRequired,
+    targetProps: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 WindowSideBarButtonWrapper.defaultProps = {
-  PluginComponents: [],
+    PluginComponents: [],
 };
 
 export default WindowSideBarButtonWrapper;

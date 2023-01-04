@@ -5,5 +5,5 @@ import CanvasListItem from '../components/CanvasListItem';
 const enhance = compose(
     withTranslation(),
 );
-  
+
 export default enhance(CanvasListItem);

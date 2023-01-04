@@ -6,19 +6,19 @@ import AnnototAdapter from '../../src/adapters/AnnototAdapter';
 
 const endpointUrl = 'http://127.0.0.1:3000/annotations';
 const config = {
-  annotation: {
-    adapter: (canvasId) => new LocalStorageAdapter(`localStorage://?canvasId=${canvasId}`),
-    // adapter: (canvasId) => new AnnototAdapter(canvasId, endpointUrl),
-    exportLocalStorageAnnotations: true, // display annotation JSON export button
-  },
-  id: 'demo',
-  window: {
-    defaultSideBarPanel: 'annotations',
-    sideBarOpenByDefault: true,
-  },
-  windows: [{
-    loadedManifest: 'https://iiif.harvardartmuseums.org/manifests/object/299843',
-  }],
+    annotation: {
+        adapter: (canvasId) => new LocalStorageAdapter(`localStorage://?canvasId=${canvasId}`),
+        // adapter: (canvasId) => new AnnototAdapter(canvasId, endpointUrl),
+        exportLocalStorageAnnotations: true, // display annotation JSON export button
+    },
+    id: 'demo',
+    window: {
+        defaultSideBarPanel: 'annotations',
+        sideBarOpenByDefault: true,
+    },
+    windows: [{
+        loadedManifest: 'https://iiif.harvardartmuseums.org/manifests/object/299843',
+    }],
 };
 
 mirador.viewer(config, [...annotationPlugins]);
