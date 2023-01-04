@@ -1,6 +1,5 @@
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withTranslation } from 'react-i18next';
 import * as actions from 'mirador/dist/es/src/state/actions';
 import { getVisibleCanvases } from 'mirador/dist/es/src/state/selectors/canvases';
 import ExternalStorageAnnotation from '../components/ExternalStorageAnnotation';
@@ -17,7 +16,6 @@ function mapStateToProps(state, { targetProps }) {
 }
 
 const enhance = compose(
-    withTranslation(),
     connect(mapStateToProps, mapDispatchToProps),
 );
 
