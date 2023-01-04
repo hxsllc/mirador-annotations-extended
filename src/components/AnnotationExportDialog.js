@@ -63,7 +63,7 @@ class AnnotationExportDialog extends Component {
 
   /** */
   render() {
-    const { classes, handleClose, open } = this.props;
+    const { classes, handleClose, open, t } = this.props;
     const { exportLinks } = this.state;
     return (
       <Dialog
@@ -74,11 +74,11 @@ class AnnotationExportDialog extends Component {
         open={open}
       >
         <DialogTitle id="annotation-export-dialog-title" disableTypography>
-          <Typography variant="h2">Export Annotations</Typography>
+          <Typography variant="h2">{t('dialogExportAnnotationTitle')}</Typography>
         </DialogTitle>
         <DialogContent>
           { exportLinks === undefined || exportLinks.length === 0 ? (
-            <Typography variant="body1">No annotations stored yet.</Typography>
+            <Typography variant="body1">{t('dialogExportAnnotationNoAnnotations')}</Typography>
           ) : (
             <MenuList>
               { exportLinks.map((dl) => (
@@ -87,7 +87,7 @@ class AnnotationExportDialog extends Component {
                   className={classes.listitem}
                   component="a"
                   key={dl.canvasId}
-                  aria-label={`Export annotations for ${dl.label}`}
+                  aria-label={t('dialogExportAnnotationAnnotion', { annotation: dl.label })}
                   href={dl.url}
                   download={`${dl.id}.json`}
                 >
@@ -95,7 +95,7 @@ class AnnotationExportDialog extends Component {
                     <GetAppIcon />
                   </ListItemIcon>
                   <ListItemText>
-                    {`Export annotations for "${dl.label}"`}
+                  {t('dialogExportAnnotationAnnotion', { annotation: dl.label })}
                   </ListItemText>
                 </MenuItem>
               ))}
@@ -119,10 +119,12 @@ AnnotationExportDialog.propTypes = {
   }).isRequired,
   handleClose: PropTypes.func.isRequired,
   open: bool.isRequired,
+  t: PropTypes.func.isRequired,
 };
 
 AnnotationExportDialog.defaultProps = {
   classes: {},
+  t: key => key,
 };
 
 export default AnnotationExportDialog;

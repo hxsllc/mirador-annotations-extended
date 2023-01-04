@@ -85,7 +85,7 @@ class MiradorAnnotation extends Component {
         )}
         { offerExportDialog && (
           <MiradorMenuButton
-            aria-label="Export local annotations for visible items"
+            aria-label={t('exportAnnotation')}
             onClick={this.toggleCanvasExportDialog}
             size="small"
           >

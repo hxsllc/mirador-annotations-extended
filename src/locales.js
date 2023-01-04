@@ -4,6 +4,7 @@ export default {
         createNewAnnotation: 'Neue Annotation erstellen',
         editAnnotation: 'Annotation bearbeiten',
         addAnnotation: 'Neue Annotation',
+        exportAnnotation: 'Exportiere sichtbare lokale Annotationen',
         exportLocalAnnotation: 'Sichtbare lokale Annotationen exportieren',
         annotationPanelLabelTarget: 'Target',
         annotationPanelLabelStyle: 'Style',
@@ -25,13 +26,21 @@ export default {
         annotationPanelSubmit: 'Speichern',
         canvasAnnotationTools: 'Annotationswerkzeuge',
         canvasAnnotationToolsEdit: 'Bearbeiten',
-        canvasAnnotationToolsDelete: 'Löschen'
+        canvasAnnotationToolsDelete: 'Löschen',
+        dialogExportAnnotationTitle: 'Annotationen exportieren',
+        dialogExportAnnotationNoAnnotations: 'Keine exportierbaren Annotationen vorhanden.',
+        dialogExportAnnotationAnnotion: 'Exportiere Annotationen für "{{ annotation }}"',
+        dialogSingleCanvasTitle: 'Zur Einzelansicht wechseln?',
+        dialogSingleCanvasContent: 'Annotationen können nur in der Einzelansicht bearbeitet werden. \n Jetzt zur Einzelansicht wechseln?',
+        dialogSingleCanvasButtonCancel: 'Abbrechen',
+        dialogSingleCanvasButtonSubmit: 'Zur Einzelansicht wechseln'
     },
     en: {
         test: 'this is a test',
         createNewAnnotation: 'Create new annotation',
         editAnnotation: 'Edit annotation',
         addAnnotation: 'New annotation',
+        exportAnnotation: 'Export local annotations for visible items',
         exportLocalAnnotation: 'Export local annotations for visible items',
         annotationPanelLabelTarget: 'target',
         annotationPanelLabelStyle: 'style',
@@ -53,6 +62,13 @@ export default {
         annotationPanelSubmit: 'save',
         canvasAnnotationTools: 'annotation tools',
         canvasAnnotationToolsEdit: 'Edit',
-        canvasAnnotationToolsDelete: 'Delete'
+        canvasAnnotationToolsDelete: 'Delete',
+        dialogExportAnnotationTitle: 'Export Annotations',
+        dialogExportAnnotationNoAnnotations: 'No annotations stored yet.',
+        dialogExportAnnotationAnnotion: 'Export annotations for "{{ annotation }}"',
+        dialogSingleCanvasTitle: 'Switch view type to single view?',
+        dialogSingleCanvasContent: 'Annotations can only be edited in single canvas view type. Switch view type to single view now?',
+        dialogSingleCanvasButtonCancel: 'Cancel',
+        dialogSingleCanvasButtonSubmit: 'Switch to single view'
     },
 }
