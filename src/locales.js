@@ -1,6 +1,5 @@
 export default {
     de: {
-        test: 'das ist ein Test',
         createNewAnnotation: 'Neue Annotation erstellen',
         editAnnotation: 'Annotation bearbeiten',
         addAnnotation: 'Neue Annotation',
@@ -36,7 +35,6 @@ export default {
         dialogSingleCanvasButtonSubmit: 'Zur Einzelansicht wechseln'
     },
     en: {
-        test: 'this is a test',
         createNewAnnotation: 'Create new annotation',
         editAnnotation: 'Edit annotation',
         addAnnotation: 'New annotation',
