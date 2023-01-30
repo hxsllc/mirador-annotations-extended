@@ -11,6 +11,20 @@ const styles = (theme) => ({
     divider: {
         margin: theme.spacing(1, 0.5),
     },
+    editAnnotation: {
+        backgroundColor: theme.palette.shades.light,
+    },
+    editAnnotationCollapse: {
+        padding: theme.spacing(1),
+    },
+    editAnnotationListItem: {
+        display:"inherit !important",
+        '&:last-child': {
+            borderBottom: 'none',
+        },
+        paddingLeft: theme.spacing(0),
+        paddingRight: theme.spacing(0),
+    },
     grouped: {
         '&:first-child': {
             borderRadius: theme.shape.borderRadius,
@@ -26,9 +40,10 @@ const styles = (theme) => ({
         flexWrap: 'wrap',
     },
     section: {
+        borderBottom: `.5px solid ${theme.palette.section_divider}`,
         paddingBottom: theme.spacing(1),
         paddingLeft: theme.spacing(2),
-        paddingRight: theme.spacing(1),
+        paddingRight: theme.spacing(2),
         paddingTop: theme.spacing(2),
     },
 });

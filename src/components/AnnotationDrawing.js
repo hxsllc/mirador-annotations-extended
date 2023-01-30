@@ -47,6 +47,9 @@ class AnnotationDrawing extends Component {
         )));
         svgExports.unshift("<svg xmlns='http://www.w3.org/2000/svg'>");
         svgExports.push('</svg>');
+        console.log('svg exports');
+        console.log(svgExports);
+        console.log(bounds);
         updateGeometry({
             svg: svgExports.join(''),
             xywh: [
