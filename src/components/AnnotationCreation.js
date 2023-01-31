@@ -50,6 +50,9 @@ class AnnotationCreation extends Component {
         super(props);
         const annoState = {};
         if (props.annotation) {
+            if(props.annotation.id) {
+                annoState.annoId = props.annotation.id;
+            };
             if (Array.isArray(props.annotation.body)) {
                 annoState.tags = [];
                 props.annotation.body.forEach((body) => {
@@ -89,24 +92,32 @@ class AnnotationCreation extends Component {
 
         const testDataState = [
             {
+                id: 'body1',
                 value: '<p>dummi 1</p>',
                 type: 'TextualBody',
                 purpose: 'describing'
             },
             {
+                id: 'body2',
                 value: '<p>two Cherries</p>',
                 type: 'TextualBody',
                 purpose: 'describing'
             },
-            {   value: '<p>Tick, Trick & Paul</p>',
+            {
+                id: 'body3',
+                value: '<p>Tick, Trick & Paul</p>',
                 type: 'TextualBody',
                 purpose: 'describing'
             },
-            {   value: '<p>Ḿay the fourth</p>',
+            {
+                id: 'body4',
+                value: '<p>Ḿay the fourth</p>',
                 type: 'TextualBody',
                 purpose: 'describing'
             },
-            {   value: '<p>Mambo number 5</p>',
+            {
+                id: 'body5',
+                value: '<p>Mambo number 5</p>',
                 type: 'TextualBody',
                 purpose: 'describing'
             }
@@ -134,6 +145,7 @@ class AnnotationCreation extends Component {
         this.state = {
             ...toolState,
             annoBody: '',
+            annoId: null,
             colorPopoverOpen: false,
             lineWeightPopoverOpen: false,
             targetListOpen: false,
@@ -161,24 +173,8 @@ class AnnotationCreation extends Component {
         this.handleCloseLineWeight = this.handleCloseLineWeight.bind(this);
         this.closeChooseColor = this.closeChooseColor.bind(this);
         this.updateStrokeColor = this.updateStrokeColor.bind(this);
-        this.handleTargetListClick = this.handleTargetListClick.bind(this);
-        this.handleBodyListClick = this.handleBodyListClick.bind(this);
-        this.handleCreatorEdit = this.handleCreatorEdit.bind(this);
-    }
-
-    handleTargetListClick() {
-        const { targetListOpen } = this.state;
-        this.setState({ targetListOpen: !targetListOpen, });
-    }
-
-    handleCreatorEdit(edit) {
-        const { creatorEdit } = this.state;
-        this.setState({ creatorEdit: edit });
-    }
-
-    handleBodyListClick() {
-        const { bodyListOpen } = this.state;
-        this.setState({ bodyListOpen: !bodyListOpen, });
+        this.deleteAnnotationItem = this.deleteAnnotationItem.bind(this);
+        this.updateAnnotationItem = this.updateAnnotationItem.bind(this);
     }
 
     /** */
@@ -187,6 +183,59 @@ class AnnotationCreation extends Component {
             lineWeightPopoverOpen: false,
             popoverLineWeightAnchorEl: null,
         });
+    }
+
+    deleteAnnotationItem(type, pos) {
+        const { testDataState, testMetadataState, testSelectorState } = this.state;
+        console.log('i have fun doing shit');
+        console.log(type);
+        console.log(pos);
+        switch(type) {
+            case "target":
+                var newData = testSelectorState;
+                newData.splice(pos, 1);
+                this.setState({ testSelectorState: newData });
+                break;
+            case "metadata":
+                var newData = testMetadataState;
+                newData.splice(pos, 1);
+                this.setState({ testmetaDataState: newData });
+                break;
+            case "body":
+                var newData = testDataState;
+                newData.splice(pos, 1);
+                this.setState({ testDataState: newData });
+                break;
+            default:
+                break;
+        }
+    }
+
+    updateAnnotationItem(type, content, pos) {
+        const { testDataState, testMetadataState, testSelectorState } = this.state;
+        console.log('i really have fun doing shit');
+        console.log(type);
+        console.log(content);
+        console.log(pos);
+        switch(type) {
+            case "target":
+                //var newData = testSelectorState;
+                //newData[pos] = content;
+                //this.setState({ testSelectorState: newData });
+                break;
+            case "metadata":
+                //var newData = testMetadataState;
+                //newData[pos] = content;
+                //this.setState({ testmetaDataState: newData });
+                break;
+            case "body":
+                //var newData = testDataState;
+                //newData[pos] = content;
+                this.setState({ testDataState: update(testDataState, {pos: newData })});
+                break;
+            default:
+                break;
+        }
     }
 
     /** */
@@ -309,8 +358,10 @@ class AnnotationCreation extends Component {
         const {
             activeTool, colorPopoverOpen, currentColorType, fillColor, popoverAnchorEl, strokeColor,
             popoverLineWeightAnchorEl, lineWeightPopoverOpen, strokeWidth, closedMode, annoBody, svg,
-            textEditorStateBustingKey, targetListOpen, bodyListOpen, creatorEdit, testDataState, testMetadataState, testSelectorState
+            textEditorStateBustingKey, targetListOpen, bodyListOpen, creatorEdit, testDataState, testMetadataState, testSelectorState, annoId
         } = this.state;
+        console.log('this is anno - id');
+        console.log(annoId);
         return (
             <CompanionWindow
                 title={annotation ? t('editAnnotation') : t('addAnnotation')}
@@ -323,155 +374,36 @@ class AnnotationCreation extends Component {
                 <div className={classes.section}>
                     <CollapsibleSection id={`${id}-metadata`} label={t('metadata')}>
                         <List disablePadding>
-                            {testMetadataState.map((value) => (
-                                <AnnotationMetadataItem metadata={value} />
+                            {testMetadataState.map((value, index) => (
+                                <AnnotationMetadataItem metadata={value} metadataPos={index} handleDelete={this.deleteAnnotationItem} handleSubmit={this.updateAnnotationItem} />
                             ))}
                         </List>
                     </CollapsibleSection>
                 </div>
-
-                {/* metadata dummi section */}
-                {/*<div className={classes.section}>
-                    <CollapsibleSection id={`${id}-metadata`} label={t('metadata')}>
-                        <List disablePadding>
-                            <ListItem divider className={classes.editAnnotationListItem} key={`${id}-metadata-creator`} >
-                                <div>
-                                    <Grid container spacing={1}>
-                                        <Grid item xs={8}>
-                                            <ListItemText style={{ lineHeight: '1rem'}} primary={t('annotationMetadataCreator')} secondary={t('annotationMetadataCreatorUnset')} />
-                                        </Grid>
-                                        <Grid item xs={4}>
-                                            <IconButton size="small" onClick={() => this.handleCreatorEdit(creatorEdit ? false : true)}>
-                                                {
-                                                    creatorEdit
-                                                    ? <Check />
-                                                    : <EditIcon />
-                                                }
-                                            </IconButton>
-                                            <IconButton size="small">
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </Grid>
-                                    </Grid>
-                                </div>
-                                <div className={classes.editAnnotation}>
-                                <Collapse className={classes.editAnnotationCollapse} in={creatorEdit} unmountOnExit>
-                                    <Grid container spacing={1}>
-                                        <Grid item xs={12}>
-                                            <TextField id={`${id}-creator`} label={t('annotationMetadataCreator')} vartiant="standard" />
-                                        </Grid>
-                                    </Grid>
-                                </Collapse>
-                                </div>
-                            </ListItem>
-                        </List>
-                    </CollapsibleSection>
-                </div>*/}
 
                 {/* target testing section */}
                 <div className={classes.section}>
                     <CollapsibleSection id={`${id}-targets`} label="Targets">
                         <List disablePadding>
-                            {testSelectorState.map((value) => (
-                                <AnnotationTargetItem selector={value} />
+                            {testSelectorState.map((value, index) => (
+                                <AnnotationTargetItem selector={value} targetPos={index} handleDelete={this.deleteAnnotationItem} handleSubmit={this.updateAnnotationItem} />
                             ))}
                         </List>
                     </CollapsibleSection>
                 </div>
-
-                {/* target dummi section */}
-                {/*<div className={classes.section}>
-                    <CollapsibleSection id={`${id}-targets`} label="Targets">
-                        <List disablePadding>
-                        {[1].map((value) => (
-                            <ListItem divider className={classes.editAnnotationListItem} key={`${id}-metadata-creator`} >
-                                <div>
-                                    <Grid container spacing={1}>
-                                        <Grid item xs={8}>
-                                            <ListItemText style={{ lineHeight: '1rem'}} primary={`Target item ${value}`} secondary='type | motivation | purpose' />
-                                        </Grid>
-                                        <Grid item xs={4}>
-                                            <IconButton size="small" onClick={() => this.handleCreatorEdit(creatorEdit ? false : true)}>
-                                                {
-                                                    creatorEdit
-                                                    ? <Check />
-                                                    : <EditIcon />
-                                                }
-                                            </IconButton>
-                                            <IconButton size="small">
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </Grid>
-                                    </Grid>
-                                </div>
-                                <div className={classes.editAnnotation}>
-                                <Collapse className={classes.editAnnotationCollapse} in={creatorEdit} unmountOnExit>
-                                    <Grid container spacing={1}>
-                                        <Grid item xs={12}>
-                                            Schreibe irgendwelchen Text hier rein und nehme Reisaus!
-                                        </Grid>
-                                    </Grid>
-                                </Collapse>
-                                </div>
-                            </ListItem>
-                        ))}
-                        </List>
-                    </CollapsibleSection>
-                </div> */}
 
                 {/* testing body section */}
                 <div className={classes.section}>
                     <CollapsibleSection id={`${id}-bodies`} label="Bodies">
                         <List component="div" disablePadding>
-                            {testDataState.map((value) => (
-                                <AnnotationBodyItem body={value}/>
+                            {testDataState.map((value, index) => (
+                                <AnnotationBodyItem body={value} bodyPos={index} handleDelete={this.deleteAnnotationItem} handleSubmit={this.updateAnnotationItem} />
 
                             ))}
                         </List>
                     </CollapsibleSection>
                 </div>
 
-                {/* body section dummi */}
-                {/*<div className={classes.section}>
-                    <CollapsibleSection id={`${id}-bodies`} label="Bodies">
-                    <List component="div" disablePadding >
-                            {[1, 2, 3].map((value) => (
-                                <ListItem divider className={classes.editAnnotationListItem} key={value} >
-                                    <div>
-                                    <Grid container>
-                                        <Grid item xs={8}>
-                                            <ListItemText style={{ lineHeight: '1rem'}} primary={`Body item ${value}`} secondary='type | motivation | purpose' />
-                                        </Grid>
-                                        <Grid container item xs={4}>
-                                            <Grid item>
-                                                <IconButton size="small" onClick={() => this.handleCreatorEdit(creatorEdit ? false : true)}>
-                                                    {
-                                                        creatorEdit
-                                                        ? <Check />
-                                                        : <EditIcon />
-                                                    }
-                                                </IconButton>
-                                                <IconButton size="small">
-                                                    <DeleteIcon />
-                                                </IconButton>
-                                            </Grid>
-                                        </Grid>
-                                    </Grid>
-                                    </div>
-                                    <div className={classes.editAnnotation}>
-                                <Collapse className={classes.editAnnotationCollapse} in={creatorEdit} unmountOnExit>
-                                    <Grid container spacing={1}>
-                                        <Grid item xs={12}>
-                                            Schreibe irgendwelchen Text hier rein und nehme Reisaus!
-                                        </Grid>
-                                    </Grid>
-                                </Collapse>
-                                </div>
-                                </ListItem>
-                            ))}
-                            </List>
-                    </CollapsibleSection>
-                                                </div>*/}
                 <AnnotationDrawing
                     activeTool={activeTool}
                     fillColor={fillColor}

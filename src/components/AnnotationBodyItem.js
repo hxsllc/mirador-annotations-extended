@@ -56,11 +56,13 @@ class AnnotationBodyItem extends Component {
     }
 
     confirm() {
-        const { edit } = this.state;
+        const { edit, value, type, purpose } = this.state;
+        const { bodyPos, handleSubmit } = this.props;
         if(edit) {
-            this.setState({
+            handleSubmit('metadata', { value, type, purpose }, bodyPos);
+            /*this.setState({
                 edit: false
-            });
+            });*/
         }
     }
 
@@ -87,13 +89,15 @@ class AnnotationBodyItem extends Component {
 
     delete() {
         const { edit } = this.state;
+        const { bodyPos, handleDelete } = this.props;
         if(!edit) {
+            handleDelete('body', bodyPos);
             // you can only delete when you are not editing
         }
     }
 
     render() {
-        const { body, classes, t } = this.props;
+        const { body, classes, t, bodyPos } = this.props;
         const { edit, value, purpose, type } = this.state;
 
         return (
@@ -102,6 +106,7 @@ class AnnotationBodyItem extends Component {
                     <Grid container spacing={1}>
                         <Grid item xs={8}>
                             <ListItemText style={{ lineHeight: '1rem'}} primary={type} secondary={purpose} />
+                            {bodyPos}
                         </Grid>
                         <Grid item xs={4}>
                             <IconButton size="small" onClick={() => edit ? this.confirm() : this.edit()}>

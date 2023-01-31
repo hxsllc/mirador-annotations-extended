@@ -52,11 +52,13 @@ class AnnotationMetadataItem extends Component {
     }
 
     confirm() {
-        const { edit } = this.state;
+        const { edit , value, type } = this.state;
+        const { metadataPos, handleSubmit } = this.props;
         if(edit) {
-            this.setState({
+            handleSubmit('metadata', { value, type }, metadataPos);
+            /*this.setState({
                 edit: false
-            });
+            });*/
         }
     }
 
@@ -80,23 +82,24 @@ class AnnotationMetadataItem extends Component {
 
     delete() {
         const { edit } = this.state;
+        const { handleDelete, metadataPos } = this.props;
         if(!edit) {
+            handleDelete('metadata', metadataPos);
             // you can only delete when you are not editing
         }
     }
 
     render() {
-        const { metadata, classes, t } = this.props;
+        const { metadata, classes, t, metadataPos,  handleDelete} = this.props;
         const { edit, value, type } = this.state;
-        console.log(metadata);
-        console.log(value);
-        console.log(type);
+
         return (
             <ListItem divider className={classes.editAnnotationListItem} key={metadata}>
                 <div>
                     <Grid container spacing={1}>
                         <Grid item xs={8}>
                             <ListItemText style={{ lineHeight: '1rem'}} primary={type} secondary={value} />
+                            {metadataPos}
                         </Grid>
                         <Grid item xs={4}>
                             <IconButton size="small" onClick={() => edit ? this.confirm() : this.edit()}>

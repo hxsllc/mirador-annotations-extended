@@ -80,23 +80,24 @@ class AnnotationTargetItem extends Component {
 
     delete() {
         const { edit } = this.state;
+        const { targetPos, handleDelete } = this.props;
         if(!edit) {
+            handleDelete('target', targetPos);
             // you can only delete when you are not editing
         }
     }
 
     render() {
-        const { selector, classes, t } = this.props;
-        const { edit, value, purpose, type } = this.state;
-        console.log(selector);
-        console.log(value);
-        console.log(type);
+        const { selector, classes, t, targetPos } = this.props;
+        const { edit, value, type } = this.state;
+
         return (
             <ListItem divider className={classes.editAnnotationListItem} key={selector}>
                 <div>
                     <Grid container spacing={1}>
                         <Grid item xs={8}>
                             <ListItemText style={{ lineHeight: '1rem'}} primary={type} secondary={value} />
+                            {targetPos}
                         </Grid>
                         <Grid item xs={4}>
                             <IconButton size="small" onClick={() => edit ? this.confirm() : this.edit()}>
