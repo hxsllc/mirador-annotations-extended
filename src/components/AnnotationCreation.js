@@ -39,6 +39,9 @@ import CursorIcon from '../icons/Cursor';
 import { Check } from '@material-ui/icons';
 import IconButton from '@material-ui/core/IconButton';
 import ns from 'mirador/dist/es/src/config/css-ns';
+import AnnotationBodyItem from '../containers/AnnotationBodyItem';
+import AnnotationMetadataItem from '../containers/AnnotationMetadataItem';
+import AnnotationTargetItem from '../containers/AnnotationTargetItem';
 
 /** */
 class AnnotationCreation extends Component {
@@ -84,6 +87,50 @@ class AnnotationCreation extends Component {
             ...(props.config.annotation.defaults || {}),
         };
 
+        const testDataState = [
+            {
+                value: '<p>dummi 1</p>',
+                type: 'TextualBody',
+                purpose: 'describing'
+            },
+            {
+                value: '<p>two Cherries</p>',
+                type: 'TextualBody',
+                purpose: 'describing'
+            },
+            {   value: '<p>Tick, Trick & Paul</p>',
+                type: 'TextualBody',
+                purpose: 'describing'
+            },
+            {   value: '<p>Ḿay the fourth</p>',
+                type: 'TextualBody',
+                purpose: 'describing'
+            },
+            {   value: '<p>Mambo number 5</p>',
+                type: 'TextualBody',
+                purpose: 'describing'
+            }
+        ];
+
+        const testMetadataState = [
+            {
+                value: 'Thomas Bär',
+                type: 'creator'
+            },
+            {
+                value: 'commenting',
+                type: 'motivation'
+            }
+        ];
+
+        const testSelectorState = [
+            {
+                value: 'xywh=20,20,40,40',
+                type: 'FragmentSelector'
+            }
+        ];
+
+
         this.state = {
             ...toolState,
             annoBody: '',
@@ -97,6 +144,9 @@ class AnnotationCreation extends Component {
             svg: null,
             textEditorStateBustingKey: 0,
             xywh: null,
+            testDataState,
+            testMetadataState,
+            testSelectorState,
             ...annoState,
         };
 
@@ -259,7 +309,7 @@ class AnnotationCreation extends Component {
         const {
             activeTool, colorPopoverOpen, currentColorType, fillColor, popoverAnchorEl, strokeColor,
             popoverLineWeightAnchorEl, lineWeightPopoverOpen, strokeWidth, closedMode, annoBody, svg,
-            textEditorStateBustingKey, targetListOpen, bodyListOpen, creatorEdit,
+            textEditorStateBustingKey, targetListOpen, bodyListOpen, creatorEdit, testDataState, testMetadataState, testSelectorState
         } = this.state;
         return (
             <CompanionWindow
@@ -269,7 +319,19 @@ class AnnotationCreation extends Component {
                 paperClassName={ns('window-sidebar-annotation-panel')}
             >
 
+                {/* metadata testing section */}
                 <div className={classes.section}>
+                    <CollapsibleSection id={`${id}-metadata`} label={t('metadata')}>
+                        <List disablePadding>
+                            {testMetadataState.map((value) => (
+                                <AnnotationMetadataItem metadata={value} />
+                            ))}
+                        </List>
+                    </CollapsibleSection>
+                </div>
+
+                {/* metadata dummi section */}
+                {/*<div className={classes.section}>
                     <CollapsibleSection id={`${id}-metadata`} label={t('metadata')}>
                         <List disablePadding>
                             <ListItem divider className={classes.editAnnotationListItem} key={`${id}-metadata-creator`} >
@@ -304,139 +366,112 @@ class AnnotationCreation extends Component {
                             </ListItem>
                         </List>
                     </CollapsibleSection>
-                </div>
+                </div>*/}
+
+                {/* target testing section */}
                 <div className={classes.section}>
                     <CollapsibleSection id={`${id}-targets`} label="Targets">
+                        <List disablePadding>
+                            {testSelectorState.map((value) => (
+                                <AnnotationTargetItem selector={value} />
+                            ))}
+                        </List>
+                    </CollapsibleSection>
+                </div>
 
-                    <List component="div" disablePadding >
-                            {[1].map((value) => (
-                                <ListItem divider className={classes.editAnnotationListItem} key={value} >
-                                    <Grid container>
+                {/* target dummi section */}
+                {/*<div className={classes.section}>
+                    <CollapsibleSection id={`${id}-targets`} label="Targets">
+                        <List disablePadding>
+                        {[1].map((value) => (
+                            <ListItem divider className={classes.editAnnotationListItem} key={`${id}-metadata-creator`} >
+                                <div>
+                                    <Grid container spacing={1}>
                                         <Grid item xs={8}>
                                             <ListItemText style={{ lineHeight: '1rem'}} primary={`Target item ${value}`} secondary='type | motivation | purpose' />
                                         </Grid>
-                                        <Grid container item xs={4}>
-                                            <Grid item>
-                                                <ToggleButtonGroup>
-                                                    <ToggleButton>
-                                                        <EditIcon />
-                                                    </ToggleButton>
-                                                    <ToggleButton>
-                                                        <DeleteIcon />
-                                                    </ToggleButton>
-                                                </ToggleButtonGroup>
-                                            </Grid>
+                                        <Grid item xs={4}>
+                                            <IconButton size="small" onClick={() => this.handleCreatorEdit(creatorEdit ? false : true)}>
+                                                {
+                                                    creatorEdit
+                                                    ? <Check />
+                                                    : <EditIcon />
+                                                }
+                                            </IconButton>
+                                            <IconButton size="small">
+                                                <DeleteIcon />
+                                            </IconButton>
                                         </Grid>
                                     </Grid>
-                                </ListItem>
+                                </div>
+                                <div className={classes.editAnnotation}>
+                                <Collapse className={classes.editAnnotationCollapse} in={creatorEdit} unmountOnExit>
+                                    <Grid container spacing={1}>
+                                        <Grid item xs={12}>
+                                            Schreibe irgendwelchen Text hier rein und nehme Reisaus!
+                                        </Grid>
+                                    </Grid>
+                                </Collapse>
+                                </div>
+                            </ListItem>
+                        ))}
+                        </List>
+                    </CollapsibleSection>
+                </div> */}
+
+                {/* testing body section */}
+                <div className={classes.section}>
+                    <CollapsibleSection id={`${id}-bodies`} label="Bodies">
+                        <List component="div" disablePadding>
+                            {testDataState.map((value) => (
+                                <AnnotationBodyItem body={value}/>
+
                             ))}
-                            </List>
+                        </List>
                     </CollapsibleSection>
                 </div>
-                <div className={classes.section}>
+
+                {/* body section dummi */}
+                {/*<div className={classes.section}>
                     <CollapsibleSection id={`${id}-bodies`} label="Bodies">
                     <List component="div" disablePadding >
                             {[1, 2, 3].map((value) => (
                                 <ListItem divider className={classes.editAnnotationListItem} key={value} >
+                                    <div>
                                     <Grid container>
                                         <Grid item xs={8}>
                                             <ListItemText style={{ lineHeight: '1rem'}} primary={`Body item ${value}`} secondary='type | motivation | purpose' />
                                         </Grid>
                                         <Grid container item xs={4}>
                                             <Grid item>
-                                                <ToggleButtonGroup>
-                                                    <ToggleButton>
-                                                        <EditIcon />
-                                                    </ToggleButton>
-                                                    <ToggleButton>
-                                                        <DeleteIcon />
-                                                    </ToggleButton>
-                                                </ToggleButtonGroup>
+                                                <IconButton size="small" onClick={() => this.handleCreatorEdit(creatorEdit ? false : true)}>
+                                                    {
+                                                        creatorEdit
+                                                        ? <Check />
+                                                        : <EditIcon />
+                                                    }
+                                                </IconButton>
+                                                <IconButton size="small">
+                                                    <DeleteIcon />
+                                                </IconButton>
                                             </Grid>
                                         </Grid>
                                     </Grid>
+                                    </div>
+                                    <div className={classes.editAnnotation}>
+                                <Collapse className={classes.editAnnotationCollapse} in={creatorEdit} unmountOnExit>
+                                    <Grid container spacing={1}>
+                                        <Grid item xs={12}>
+                                            Schreibe irgendwelchen Text hier rein und nehme Reisaus!
+                                        </Grid>
+                                    </Grid>
+                                </Collapse>
+                                </div>
                                 </ListItem>
                             ))}
                             </List>
                     </CollapsibleSection>
-                </div>
-                {/*
-                <List style={{ width: '90%', margin: '10px auto', backgroundColor: '#CC0000' }} disablePadding >
-                    <ListItem divider key='0' onClick={this.handleTargetListClick} >
-                        <Grid container>
-                            <Grid item xs={11}>
-                                <ListItemText primary="Targets" secondary="Anzahl 3"/>
-                            </Grid>
-                            <Grid item xs={1}>
-                                { targetListOpen ? <ExpandLess /> : <ExpandMore /> }
-                            </Grid>
-                        </Grid>
-                    </ListItem>
-                    <Collapse in={targetListOpen} unmountOnExit>
-                        <List component="div" disablePadding >
-                            {[1, 2, 3].map((value) => (
-                                <ListItem divider key={value} >
-                                    <Grid container>
-                                        <Grid item xs={8}>
-                                            <ListItemText style={{ lineHeight: '1rem'}} primary={`Target item ${value}`} secondary='type | motivation | purpose' />
-                                        </Grid>
-                                        <Grid container item xs={4}>
-                                            <Grid item>
-                                                <ToggleButtonGroup>
-                                                    <ToggleButton>
-                                                        <EditIcon />
-                                                    </ToggleButton>
-                                                    <ToggleButton>
-                                                        <DeleteIcon />
-                                                    </ToggleButton>
-                                                </ToggleButtonGroup>
-                                            </Grid>
-                                        </Grid>
-                                    </Grid>
-                                </ListItem>
-                            ))}
-                        </List>
-                    </Collapse>
-                </List>
-
-                <List style={{ width: '90%', margin: '10px auto', backgroundColor: '#CC0000' }} disablePadding >
-                    <ListItem divider key='0' onClick={this.handleBodyListClick} >
-                        <Grid container>
-                            <Grid item xs={11}>
-                                <ListItemText primary="Bodies" secondary="Anzahl 4"/>
-                            </Grid>
-                            <Grid item xs={1}>
-                                { bodyListOpen ? <ExpandLess /> : <ExpandMore /> }
-                            </Grid>
-                        </Grid>
-                    </ListItem>
-                    <Collapse in={ bodyListOpen } unmountOnExit>
-                        <List component="div" disablePadding >
-                            {[1, 2, 3, 4].map((value) => (
-                                <ListItem divider key={value} >
-                                    <Grid container>
-                                        <Grid item xs={8}>
-                                            <ListItemText style={{ lineHeight: '1rem'}} primary={`Body item ${value}`} secondary='type | motivation | purpose' />
-                                        </Grid>
-                                        <Grid container item xs={4}>
-                                            <Grid item>
-                                                <ToggleButtonGroup>
-                                                    <ToggleButton>
-                                                        <EditIcon />
-                                                    </ToggleButton>
-                                                    <ToggleButton>
-                                                        <DeleteIcon />
-                                                    </ToggleButton>
-                                                </ToggleButtonGroup>
-                                            </Grid>
-                                        </Grid>
-                                    </Grid>
-                                </ListItem>
-                            ))}
-                        </List>
-                    </Collapse>
-                </List>*/}
-
+                                                </div>*/}
                 <AnnotationDrawing
                     activeTool={activeTool}
                     fillColor={fillColor}
