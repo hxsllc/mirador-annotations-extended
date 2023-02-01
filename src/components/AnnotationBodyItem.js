@@ -8,6 +8,7 @@ import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import { Collapse } from '@material-ui/core';
 import { TextField } from '@material-ui/core';
+import { NativeSelect, FormControl, InputLabel } from '@material-ui/core';
 
 
 class AnnotationBodyItem extends Component {
@@ -22,6 +23,7 @@ class AnnotationBodyItem extends Component {
 
         this.state = {
             edit: false,
+            purposeOptionState: 0,
             ...bodyState,
         }
 
@@ -30,19 +32,30 @@ class AnnotationBodyItem extends Component {
         this.cancel = this.cancel.bind(this);
         this.delete = this.delete.bind(this);
         this.handleTextFieldInput = this.handleTextFieldInput.bind(this);
+        this.handleSelcetedPurposeOption = this.handleSelcetedPurposeOption.bind(this);
     }
 
     componentDidMount() {
         const { body } = this.props;
-        const { value, type, purpose } = this.state;
+        const { value, type, purpose, purposeOptionState } = this.state;
         if(body.value) {
-            this.setState({ value: body.value })
+            this.setState({ value: body.value });
         }
         if(body.type) {
-            this.setState({ type: body.type })
+            this.setState({ type: body.type });
         }
         if(body.purpose) {
-            this.setState({ purpose: body.purpose })
+            this.setState({ purpose: body.purpose });
+            switch(body.purpose) {
+                case 'describing':
+                    this.setState({ purposeOptionState: 1 });
+                    break;
+                case 'classifying':
+                    this.setState({ purposeOptionState: 2 });
+                    break;
+                default:
+                    this.setState({ purposeOptionState: 0 });
+            }
         }
     }
 
@@ -57,12 +70,28 @@ class AnnotationBodyItem extends Component {
 
     confirm() {
         const { edit, value, type, purpose } = this.state;
-        const { bodyPos, handleSubmit } = this.props;
+        const { bodyPos, handleSubmit, body } = this.props;
         if(edit) {
-            handleSubmit('body', { value, type, purpose }, bodyPos);
+            handleSubmit('body', { value: value, type: type, purpose: purpose, _temp_id: body._temp_id }, bodyPos);
             this.setState({
                 edit: false
             });
+        }
+    }
+
+    handleSelcetedPurposeOption(e) {
+        const { purpose } = this.state;
+        this.setState({ purpose: e.target.value });
+        switch(e.target.value) {
+            case 'describing':
+                this.setState({ purposeOptionState: 1 });
+                break;
+            case 'classifying':
+                this.setState({ purposeOptionState: 2 });
+                break;
+            default:
+                this.setState({ purposeOptionState: 0 });
+                break;
         }
     }
 
@@ -76,14 +105,24 @@ class AnnotationBodyItem extends Component {
         const { body } = this.props;
         if(edit) {
             if(body.value) {
-                this.setState({ value: body.value })
-            }
+                this.setState({ value: body.value });
+            };
             if(body.type) {
-                this.setState({ type: body.type })
-            }
+                this.setState({ type: body.type });
+            };
             if(body.purpose) {
-                this.setState({ purpose: body.purpose })
-            }
+                this.setState({ purpose: body.purpose });
+                switch(purpose) {
+                    case 'describing':
+                        this.setState({ purposeOptionState: 1 });
+                        break;
+                    case 'classifying':
+                        this.setState({ purposeOptionState: 2 });
+                        break;
+                    default:
+                        this.setState({ purposeOptionState: 0 });
+                }
+            };
         }
     }
 
@@ -97,8 +136,9 @@ class AnnotationBodyItem extends Component {
     }
 
     render() {
-        const { body, classes, t, bodyPos } = this.props;
-        const { edit, value, purpose, type } = this.state;
+        const { body, classes, t } = this.props;
+        const { edit, value, purpose, type, purposeOptionState } = this.state;
+        const purposeOptions = ['tagging', 'describing', 'classifying'];
 
         return (
             <ListItem divider className={classes.editAnnotationListItem}>
@@ -106,7 +146,6 @@ class AnnotationBodyItem extends Component {
                     <Grid container spacing={1}>
                         <Grid item xs={8}>
                             <ListItemText style={{ lineHeight: '1rem'}} primary={type} secondary={purpose} />
-                            {bodyPos}
                         </Grid>
                         <Grid item xs={4}>
                             <IconButton size="small" onClick={() => edit ? this.confirm() : this.edit()}>
@@ -130,6 +169,17 @@ class AnnotationBodyItem extends Component {
                     <Collapse className={classes.editAnnotationCollapse} in={edit} unmountOnExit>
                         <Grid container spacing={1}>
                             <Grid item xs={12}>
+                            <FormControl>
+                                    <InputLabel variant="standard" htmlFor='uncontrolled-native'>
+                                        purpose
+                                    </InputLabel>
+                                    {/* maybe add a key */}
+                                    <NativeSelect value={purposeOptions[purposeOptionState]} inputProps={{ name: 'metadata', id: 'uncontrolled-native' }} onChange={this.handleSelcetedPurposeOption}>
+                                        {purposeOptions.map((value) => (
+                                            <option value={value}>{value}</option>
+                                        ))}
+                                    </NativeSelect>
+                                </FormControl>
                                 <TextField id={`${body}-body`} label={t('annotationMetadataBody')} value={value} onChange={this.handleTextFieldInput} variant="standard" />
                             </Grid>
                         </Grid>

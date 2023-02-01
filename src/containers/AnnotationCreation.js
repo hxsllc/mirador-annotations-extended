@@ -43,6 +43,7 @@ const styles = (theme) => ({
     paper: {
         display: 'flex',
         flexWrap: 'wrap',
+        height: '100%',
     },
     section: {
         borderBottom: `.5px solid ${theme.palette.section_divider}`,

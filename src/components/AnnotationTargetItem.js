@@ -14,14 +14,14 @@ class AnnotationTargetItem extends Component {
     constructor(props) {
         super(props);
 
-        const selectorState = {
+        const targetState = {
             value: null,
             type: null
         }
 
         this.state = {
             edit: false,
-            ...selectorState,
+            ...targetState,
         }
 
         this.edit = this.edit.bind(this);
@@ -32,13 +32,13 @@ class AnnotationTargetItem extends Component {
     }
 
     componentDidMount() {
-        const { selector } = this.props;
+        const { target } = this.props;
         const { value, type } = this.state;
-        if(selector.value) {
-            this.setState({ value: selector.value })
+        if(target.value) {
+            this.setState({ value: target.value })
         }
-        if(selector.type) {
-            this.setState({ type: selector.type })
+        if(target.type) {
+            this.setState({ type: target.type })
         }
     }
 
@@ -52,8 +52,10 @@ class AnnotationTargetItem extends Component {
     }
 
     confirm() {
-        const { edit } = this.state;
+        const { edit , value, type } = this.state;
+        const { targetPos, handleSubmit, target } = this.props;
         if(edit) {
+            handleSubmit('target', { value: value, type: type, _temp_id: target._temp_id }, targetPos);
             this.setState({
                 edit: false
             });
@@ -67,13 +69,13 @@ class AnnotationTargetItem extends Component {
 
     cancel() {
         const { edit, value, type } = this.state;
-        const { selector } = this.props;
+        const { target } = this.props;
         if(edit) {
-            if(selector.value) {
-                this.setState({ value: selector.value })
+            if(target.value) {
+                this.setState({ value: target.value })
             }
-            if(selector.type) {
-                this.setState({ type: selector.type })
+            if(target.type) {
+                this.setState({ type: target.type })
             }
         }
     }
@@ -88,7 +90,7 @@ class AnnotationTargetItem extends Component {
     }
 
     render() {
-        const { selector, classes, t, targetPos } = this.props;
+        const { target, classes, t, targetPos } = this.props;
         const { edit, value, type } = this.state;
 
         return (
@@ -97,7 +99,6 @@ class AnnotationTargetItem extends Component {
                     <Grid container spacing={1}>
                         <Grid item xs={8}>
                             <ListItemText style={{ lineHeight: '1rem'}} primary={type} secondary={value} />
-                            {targetPos}
                         </Grid>
                         <Grid item xs={4}>
                             <IconButton size="small" onClick={() => edit ? this.confirm() : this.edit()}>
@@ -121,7 +122,7 @@ class AnnotationTargetItem extends Component {
                     <Collapse className={classes.editAnnotationCollapse} in={edit} unmountOnExit>
                         <Grid container spacing={1}>
                             <Grid item xs={12}>
-                                <TextField id={`${selector}-target`} label={t('annotationMetadataSelector')} value={value} onChange={this.handleTextFieldInput} variant="standard" />
+                                <TextField id={`${target}-target`} label={t('annotationMetadataTarget')} value={value} onChange={this.handleTextFieldInput} variant="standard" />
                             </Grid>
                         </Grid>
                     </Collapse>
@@ -133,7 +134,7 @@ class AnnotationTargetItem extends Component {
 
 AnnotationTargetItem.propTypes = {
     classes: PropTypes.objectOf(PropTypes.string),
-    selector: PropTypes.arrayOf(
+    target: PropTypes.arrayOf(
         PropTypes.shape({ value: PropTypes.string, type: PropTypes.string, purpose: PropTypes.string }),
     ),
     t: PropTypes.func.isRequired,
@@ -141,7 +142,7 @@ AnnotationTargetItem.propTypes = {
 
 AnnotationTargetItem.defaultProps = {
     classes: {},
-    selector: {},
+    target: {},
     t: key => key,
 }
 

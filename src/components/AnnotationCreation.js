@@ -54,7 +54,9 @@ class AnnotationCreation extends Component {
         if (props.annotation) {
             if(props.annotation.id) {
                 annoState.annoId = props.annotation.id;
-            };
+            } else {
+                annoState.annoId = uuid();
+            }
             if (Array.isArray(props.annotation.body)) {
                 annoState.tags = [];
                 props.annotation.body.forEach((body) => {
@@ -82,62 +84,26 @@ class AnnotationCreation extends Component {
             }
         }
 
-        const baseMetadata = { type: 'creator', value: null };
-        const baseTarget = { type: 'FragmentSelector', value: null };
-        const baseBody = { type: 'TexttualBody', value: null, purpose: null };
-
 
         this.state = {
-            annoBody: '',
             annoId: null,
-            colorPopoverOpen: false,
-            lineWeightPopoverOpen: false,
-            targetListOpen: false,
-            bodyListOpen: false,
-            popoverAnchorEl: null,
-            popoverLineWeightAnchorEl: null,
-            creatorEdit: false,
-            svg: null,
-            textEditorStateBustingKey: 0,
-            xywh: null,
             body: [],
             metadata: [],
             target: [],
-            baseMetadata,
-            baseTarget,
-            baseBody,
+            bodyCount: 0,
+            metadataCount: 0,
+            targetCount: 0,
             ...annoState,
         };
 
         this.submitForm = this.submitForm.bind(this);
-        this.updateBody = this.updateBody.bind(this);
-        this.updateGeometry = this.updateGeometry.bind(this);
-        this.changeTool = this.changeTool.bind(this);
-        this.changeClosedMode = this.changeClosedMode.bind(this);
-        this.openChooseColor = this.openChooseColor.bind(this);
-        this.openChooseLineWeight = this.openChooseLineWeight.bind(this);
-        this.handleLineWeightSelect = this.handleLineWeightSelect.bind(this);
-        this.handleCloseLineWeight = this.handleCloseLineWeight.bind(this);
-        this.closeChooseColor = this.closeChooseColor.bind(this);
-        this.updateStrokeColor = this.updateStrokeColor.bind(this);
         this.deleteAnnotationItem = this.deleteAnnotationItem.bind(this);
         this.updateAnnotationItem = this.updateAnnotationItem.bind(this);
         this.createAnnotationItem = this.createAnnotationItem.bind(this);
     }
 
-    /** */
-    handleCloseLineWeight(e) {
-        this.setState({
-            lineWeightPopoverOpen: false,
-            popoverLineWeightAnchorEl: null,
-        });
-    }
-
     deleteAnnotationItem(type, pos) {
         const { body, metadata, target } = this.state;
-        console.log('i have fun doing shit');
-        console.log(type);
-        console.log(pos);
         switch(type) {
             case "target":
                 var newData = target;
@@ -159,23 +125,25 @@ class AnnotationCreation extends Component {
         }
     }
 
+    /** add dynamic generatet ids whichare only used to get freaking rerendering done */
     createAnnotationItem(type) {
-        const { body, metadata, target, baseMetadata, baseBody, baseTarget } = this.state;
+        const { body, metadata, target, metadataCount, bodyCount, targetCount, annoId } = this.state;
+
         switch(type) {
             case "target":
-                var newData = target.concat(baseTarget);
-                this.setState({ target: newData })
-                console.log('this should be new target');
+                const targetBase = { type: 'FragmentSelector', value: null, _temp_id: annoId + '-target-item-' + targetCount };
+                var newData = target.concat(targetBase);
+                this.setState({ target: newData, targetCount: targetCount + 1 });
                 break;
             case "body":
-                var newData = body.concat(baseBody);
-                this.setState({ body: newData });
-                console.log('this should be new body');
+                const bodyBase = { type: 'TextualBody', value: null, purpose: 'describing', _temp_id: annoId + '-body-item-' + bodyCount };
+                var newData = body.concat(bodyBase);
+                this.setState({ body: newData, bodyCount: bodyCount +1 });
                 break;
             case "metadata":
-                var newData = metadata.concat(baseMetadata);
-                this.setState({ metadata: newData });
-                console.log('this should be new metadata');
+                const metadataBase = { type: 'creator', value: null, _temp_id: annoId + '-metadata-item-' + metadataCount };
+                var newData = metadata.concat(metadataBase);
+                this.setState({ metadata: newData, metadataCount: metadataCount +1 });
                 break;
             default:
                 break;
@@ -210,114 +178,8 @@ class AnnotationCreation extends Component {
     }
 
     /** */
-    handleLineWeightSelect(e) {
-        this.setState({
-            lineWeightPopoverOpen: false,
-            popoverLineWeightAnchorEl: null,
-            strokeWidth: e.currentTarget.value,
-        });
-    }
-
-    /** */
-    openChooseColor(e) {
-        this.setState({
-            colorPopoverOpen: true,
-            currentColorType: e.currentTarget.value,
-            popoverAnchorEl: e.currentTarget,
-        });
-    }
-
-    /** */
-    openChooseLineWeight(e) {
-        this.setState({
-            lineWeightPopoverOpen: true,
-            popoverLineWeightAnchorEl: e.currentTarget,
-        });
-    }
-
-    /** */
-    closeChooseColor(e) {
-        this.setState({
-            colorPopoverOpen: false,
-            currentColorType: null,
-            popoverAnchorEl: null,
-        });
-    }
-
-    /** */
-    updateStrokeColor(color) {
-        const { currentColorType } = this.state;
-        this.setState({
-            [currentColorType]: color.hex,
-        });
-    }
-
-    /** */
     submitForm(e) {
         e.preventDefault();
-        const {
-            annotation, canvases, receiveAnnotation, config,
-        } = this.props;
-        const {
-            annoBody, tags, xywh, svg, textEditorStateBustingKey,
-        } = this.state;
-        canvases.forEach((canvas) => {
-            const storageAdapter = config.annotation.adapter(canvas.id);
-            const anno = new WebAnnotation({
-                body: annoBody,
-                canvasId: canvas.id,
-                id: (annotation && annotation.id) || `${uuid()}`,
-                manifestId: canvas.options.resource.id,
-                svg,
-                tags,
-                xywh,
-            }).toJson();
-            if (annotation) {
-                storageAdapter.update(anno).then((annoPage) => {
-                    receiveAnnotation(canvas.id, storageAdapter.annotationPageId, annoPage);
-                });
-            } else {
-                storageAdapter.create(anno).then((annoPage) => {
-                    receiveAnnotation(canvas.id, storageAdapter.annotationPageId, annoPage);
-                });
-            }
-        });
-
-        this.setState({
-            annoBody: '',
-            svg: null,
-            textEditorStateBustingKey: textEditorStateBustingKey + 1,
-            xywh: null,
-        });
-    }
-
-    /** */
-    changeTool(e, tool) {
-        this.setState({
-            activeTool: tool,
-        });
-    }
-
-    /** */
-    changeClosedMode(e) {
-        this.setState({
-            closedMode: e.currentTarget.value,
-        });
-    }
-
-    /** */
-    updateBody(annoBody) {
-        this.setState({ annoBody });
-    }
-
-    /** */
-    updateGeometry({ svg, xywh }) {
-        console.log('i update geo');
-        console.log(svg);
-        console.log(xywh);
-        this.setState({
-            svg, xywh,
-        });
     }
 
     /** */
@@ -327,9 +189,7 @@ class AnnotationCreation extends Component {
         } = this.props;
 
         const {
-            activeTool, colorPopoverOpen, currentColorType, fillColor, popoverAnchorEl, strokeColor,
-            popoverLineWeightAnchorEl, lineWeightPopoverOpen, strokeWidth, closedMode, annoBody, svg,
-            textEditorStateBustingKey, targetListOpen, bodyListOpen, creatorEdit, body, metadata, target, annoId
+            body, metadata, target, annoId
         } = this.state;
         console.log('this is anno - id');
         console.log(annoId);
@@ -346,7 +206,7 @@ class AnnotationCreation extends Component {
                     <CollapsibleSection id={`${id}-metadata`} label={t('metadata')}>
                         <List disablePadding>
                             {metadata?.map((value, index) => (
-                                <AnnotationMetadataItem metadata={value} metadataPos={index} handleDelete={this.deleteAnnotationItem} handleSubmit={this.updateAnnotationItem} />
+                                <AnnotationMetadataItem key={value._temp_id} metadata={value} metadataPos={index} handleDelete={this.deleteAnnotationItem} handleSubmit={this.updateAnnotationItem} />
                             ))}
                         </List>
                         <div className={classes.addSection}>
@@ -358,11 +218,11 @@ class AnnotationCreation extends Component {
                 </div>
 
                 {/* target testing section */}
-                {/*<div className={classes.section}>
+                <div className={classes.section}>
                     <CollapsibleSection id={`${id}-targets`} label="Targets">
                         <List disablePadding>
                             {target?.map((value, index) => (
-                                <AnnotationTargetItem selector={value} targetPos={index} handleDelete={this.deleteAnnotationItem} handleSubmit={this.updateAnnotationItem} />
+                                <AnnotationTargetItem key={value._temp_id} target={value} targetPos={index} handleDelete={this.deleteAnnotationItem} handleSubmit={this.updateAnnotationItem} />
                             ))}
                         </List>
                         <div className={classes.addSection}>
@@ -371,14 +231,14 @@ class AnnotationCreation extends Component {
                             </MiradorMenuButton>
                         </div>
                     </CollapsibleSection>
-                            </div>*/}
+                </div>
 
                 {/* testing body section */}
-                {/*<div className={classes.section}>
+                <div className={classes.section}>
                     <CollapsibleSection id={`${id}-bodies`} label="Bodies">
                         <List component="div" disablePadding>
                             {body?.map((value, index) => (
-                                <AnnotationBodyItem body={value} bodyPos={index} handleDelete={this.deleteAnnotationItem} handleSubmit={this.updateAnnotationItem} />
+                                <AnnotationBodyItem key={value._temp_id} body={value} bodyPos={index} handleDelete={this.deleteAnnotationItem} handleSubmit={this.updateAnnotationItem} />
 
                             ))}
                         </List>
@@ -388,16 +248,16 @@ class AnnotationCreation extends Component {
                             </MiradorMenuButton>
                         </div>
                     </CollapsibleSection>
-                </div>*/}
+                </div>
 
-                <form onSubmit={this.submitForm} className={classes.section}>
+                <div>
                     <Button onClick={closeCompanionWindow}>
                         {t('annotationPanelCancel')}
                     </Button>
-                    <Button variant="contained" color="primary" onClick={() => {console.log('this my state data'); console.log(metadata); console.log(target); console.log(body);}}>
+                    <Button variant="contained" color="primary" onClick={() => console.log('you submited')}>
                         {t('annotationPanelSubmit')}
                     </Button>
-                </form>
+                </div>
             </CompanionWindow>
         );
     }

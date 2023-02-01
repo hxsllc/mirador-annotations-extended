@@ -8,13 +8,12 @@ import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import { Collapse } from '@material-ui/core';
 import { TextField } from '@material-ui/core';
-import { v4 as uuid } from 'uuid';
+import { NativeSelect, FormControl, InputLabel } from '@material-ui/core';
 
 
 class AnnotationMetadataItem extends Component {
     constructor(props) {
         super(props);
-        const mykey = uuid();
 
         const metadataState = {
             value: null,
@@ -23,9 +22,7 @@ class AnnotationMetadataItem extends Component {
 
         this.state = {
             edit: false,
-            mykey,
             myPos: null,
-            tempValue: "",
             ...metadataState,
         }
 
@@ -41,7 +38,7 @@ class AnnotationMetadataItem extends Component {
         const { value, type, myPos } = this.state;
         this.setState({ myPos: metadataPos });
         if(metadata.value) {
-            this.setState({ value: metadata.value, tempValue: metadata.value })
+            this.setState({ value: metadata.value })
         }
         if(metadata.type) {
             this.setState({ type: metadata.type })
@@ -58,19 +55,19 @@ class AnnotationMetadataItem extends Component {
     }
 
     confirm() {
-        const { edit , tempValue, type } = this.state;
-        const { metadataPos, handleSubmit } = this.props;
+        const { edit , value, type } = this.state;
+        const { metadataPos, handleSubmit, metadata } = this.props;
         if(edit) {
-            handleSubmit('metadata', { value: tempValue, type: type }, metadataPos);
+            handleSubmit('metadata', { value: value, type: type, _temp_id: metadata._temp_id }, metadataPos);
             this.setState({
-                edit: false,
+                edit: false
             });
         }
     }
 
     handleTextFieldInput(e) {
-        const { tempValue } = this.state;
-        this.setState({ tempValue: e.target.value });
+        const { value } = this.state;
+        this.setState({ value: e.target.value });
     }
 
     cancel() {
@@ -97,15 +94,15 @@ class AnnotationMetadataItem extends Component {
 
     render() {
         const { metadata, classes, t, handleDelete} = this.props;
-        const { edit, value, type, mykey, myPos } = this.state;
+        const { edit, value, type, myPos } = this.state;
+        const metadataOptions = ['creator', 'motivation'];
 
         return (
-            <ListItem divider className={classes.editAnnotationListItem} key={mykey}>
+            <ListItem divider className={classes.editAnnotationListItem}>
                 <div>
                     <Grid container spacing={1}>
                         <Grid item xs={8}>
-                            <ListItemText style={{ lineHeight: '1rem'}} primary={mykey} secondary={value}/>
-                            {myPos}
+                            <ListItemText style={{ lineHeight: '1rem'}} primary={type} secondary={value}/>
                             {value}
                         </Grid>
                         <Grid item xs={4}>
@@ -130,7 +127,17 @@ class AnnotationMetadataItem extends Component {
                     <Collapse className={classes.editAnnotationCollapse} in={edit} unmountOnExit>
                         <Grid container spacing={1}>
                             <Grid item xs={12}>
-                                <TextField id={`${metadata}-creator`} label={t('annotationMetadataCreator')} defaultValue={value} onChange={this.handleTextFieldInput} variant="standard" />
+                                <FormControl>
+                                    <InputLabel variant="standard" htmlFor='uncontrolled-native'>
+                                        metadata
+                                    </InputLabel>
+                                    <NativeSelect initialValue={metadataOptions[0]} inputProps={{name: 'metadata', id: 'uncontrolled-native'}}>
+                                        {metadataOptions.map((value) => (
+                                            <option value={value}>{value}</option>
+                                        ))}
+                                    </NativeSelect>
+                                </FormControl>
+                                <TextField id={`${metadata}-creator`} label={t('annotationMetadataCreator')} value={value} onChange={this.handleTextFieldInput} variant="standard" />
                             </Grid>
                         </Grid>
                     </Collapse>
