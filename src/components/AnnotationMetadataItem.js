@@ -8,11 +8,13 @@ import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import { Collapse } from '@material-ui/core';
 import { TextField } from '@material-ui/core';
+import { v4 as uuid } from 'uuid';
 
 
 class AnnotationMetadataItem extends Component {
     constructor(props) {
         super(props);
+        const mykey = uuid();
 
         const metadataState = {
             value: null,
@@ -21,6 +23,9 @@ class AnnotationMetadataItem extends Component {
 
         this.state = {
             edit: false,
+            mykey,
+            myPos: null,
+            tempValue: "",
             ...metadataState,
         }
 
@@ -32,10 +37,11 @@ class AnnotationMetadataItem extends Component {
     }
 
     componentDidMount() {
-        const { metadata } = this.props;
-        const { value, type } = this.state;
+        const { metadata, metadataPos } = this.props;
+        const { value, type, myPos } = this.state;
+        this.setState({ myPos: metadataPos });
         if(metadata.value) {
-            this.setState({ value: metadata.value })
+            this.setState({ value: metadata.value, tempValue: metadata.value })
         }
         if(metadata.type) {
             this.setState({ type: metadata.type })
@@ -52,19 +58,19 @@ class AnnotationMetadataItem extends Component {
     }
 
     confirm() {
-        const { edit , value, type } = this.state;
+        const { edit , tempValue, type } = this.state;
         const { metadataPos, handleSubmit } = this.props;
         if(edit) {
-            handleSubmit('metadata', { value, type }, metadataPos);
-            /*this.setState({
-                edit: false
-            });*/
+            handleSubmit('metadata', { value: tempValue, type: type }, metadataPos);
+            this.setState({
+                edit: false,
+            });
         }
     }
 
     handleTextFieldInput(e) {
-        const { value } = this.state;
-        this.setState({ value: e.target.value });
+        const { tempValue } = this.state;
+        this.setState({ tempValue: e.target.value });
     }
 
     cancel() {
@@ -90,16 +96,17 @@ class AnnotationMetadataItem extends Component {
     }
 
     render() {
-        const { metadata, classes, t, metadataPos,  handleDelete} = this.props;
-        const { edit, value, type } = this.state;
+        const { metadata, classes, t, handleDelete} = this.props;
+        const { edit, value, type, mykey, myPos } = this.state;
 
         return (
-            <ListItem divider className={classes.editAnnotationListItem} key={metadata}>
+            <ListItem divider className={classes.editAnnotationListItem} key={mykey}>
                 <div>
                     <Grid container spacing={1}>
                         <Grid item xs={8}>
-                            <ListItemText style={{ lineHeight: '1rem'}} primary={type} secondary={value} />
-                            {metadataPos}
+                            <ListItemText style={{ lineHeight: '1rem'}} primary={mykey} secondary={value}/>
+                            {myPos}
+                            {value}
                         </Grid>
                         <Grid item xs={4}>
                             <IconButton size="small" onClick={() => edit ? this.confirm() : this.edit()}>
@@ -123,7 +130,7 @@ class AnnotationMetadataItem extends Component {
                     <Collapse className={classes.editAnnotationCollapse} in={edit} unmountOnExit>
                         <Grid container spacing={1}>
                             <Grid item xs={12}>
-                                <TextField id={`${metadata}-creator`} label={t('annotationMetadataCreator')} value={value} onChange={this.handleTextFieldInput} variant="standard" />
+                                <TextField id={`${metadata}-creator`} label={t('annotationMetadataCreator')} defaultValue={value} onChange={this.handleTextFieldInput} variant="standard" />
                             </Grid>
                         </Grid>
                     </Collapse>

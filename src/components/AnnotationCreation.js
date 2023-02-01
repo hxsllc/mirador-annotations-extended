@@ -19,6 +19,7 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import FormatShapesIcon from '@material-ui/icons/FormatShapes';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
 import EditIcon from '@material-ui/icons/Edit';
+import { Add } from '@material-ui/icons';
 import Popover from '@material-ui/core/Popover';
 import Divider from '@material-ui/core/Divider';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -39,6 +40,7 @@ import CursorIcon from '../icons/Cursor';
 import { Check } from '@material-ui/icons';
 import IconButton from '@material-ui/core/IconButton';
 import ns from 'mirador/dist/es/src/config/css-ns';
+import MiradorMenuButton from 'mirador/dist/es/src/containers/MiradorMenuButton';
 import AnnotationBodyItem from '../containers/AnnotationBodyItem';
 import AnnotationMetadataItem from '../containers/AnnotationMetadataItem';
 import AnnotationTargetItem from '../containers/AnnotationTargetItem';
@@ -80,70 +82,12 @@ class AnnotationCreation extends Component {
             }
         }
 
-        const toolState = {
-            activeTool: 'cursor',
-            closedMode: 'closed',
-            currentColorType: false,
-            fillColor: null,
-            strokeColor: '#00BFFF',
-            strokeWidth: 3,
-            ...(props.config.annotation.defaults || {}),
-        };
-
-        const testDataState = [
-            {
-                id: 'body1',
-                value: '<p>dummi 1</p>',
-                type: 'TextualBody',
-                purpose: 'describing'
-            },
-            {
-                id: 'body2',
-                value: '<p>two Cherries</p>',
-                type: 'TextualBody',
-                purpose: 'describing'
-            },
-            {
-                id: 'body3',
-                value: '<p>Tick, Trick & Paul</p>',
-                type: 'TextualBody',
-                purpose: 'describing'
-            },
-            {
-                id: 'body4',
-                value: '<p>Ḿay the fourth</p>',
-                type: 'TextualBody',
-                purpose: 'describing'
-            },
-            {
-                id: 'body5',
-                value: '<p>Mambo number 5</p>',
-                type: 'TextualBody',
-                purpose: 'describing'
-            }
-        ];
-
-        const testMetadataState = [
-            {
-                value: 'Thomas Bär',
-                type: 'creator'
-            },
-            {
-                value: 'commenting',
-                type: 'motivation'
-            }
-        ];
-
-        const testSelectorState = [
-            {
-                value: 'xywh=20,20,40,40',
-                type: 'FragmentSelector'
-            }
-        ];
+        const baseMetadata = { type: 'creator', value: null };
+        const baseTarget = { type: 'FragmentSelector', value: null };
+        const baseBody = { type: 'TexttualBody', value: null, purpose: null };
 
 
         this.state = {
-            ...toolState,
             annoBody: '',
             annoId: null,
             colorPopoverOpen: false,
@@ -156,9 +100,12 @@ class AnnotationCreation extends Component {
             svg: null,
             textEditorStateBustingKey: 0,
             xywh: null,
-            testDataState,
-            testMetadataState,
-            testSelectorState,
+            body: [],
+            metadata: [],
+            target: [],
+            baseMetadata,
+            baseTarget,
+            baseBody,
             ...annoState,
         };
 
@@ -175,6 +122,7 @@ class AnnotationCreation extends Component {
         this.updateStrokeColor = this.updateStrokeColor.bind(this);
         this.deleteAnnotationItem = this.deleteAnnotationItem.bind(this);
         this.updateAnnotationItem = this.updateAnnotationItem.bind(this);
+        this.createAnnotationItem = this.createAnnotationItem.bind(this);
     }
 
     /** */
@@ -186,25 +134,48 @@ class AnnotationCreation extends Component {
     }
 
     deleteAnnotationItem(type, pos) {
-        const { testDataState, testMetadataState, testSelectorState } = this.state;
+        const { body, metadata, target } = this.state;
         console.log('i have fun doing shit');
         console.log(type);
         console.log(pos);
         switch(type) {
             case "target":
-                var newData = testSelectorState;
+                var newData = target;
                 newData.splice(pos, 1);
-                this.setState({ testSelectorState: newData });
+                this.setState({ target: newData });
                 break;
             case "metadata":
-                var newData = testMetadataState;
+                var newData = metadata;
                 newData.splice(pos, 1);
-                this.setState({ testmetaDataState: newData });
+                this.setState({ metadata: newData });
                 break;
             case "body":
-                var newData = testDataState;
+                var newData = body;
                 newData.splice(pos, 1);
-                this.setState({ testDataState: newData });
+                this.setState({ body: newData });
+                break;
+            default:
+                break;
+        }
+    }
+
+    createAnnotationItem(type) {
+        const { body, metadata, target, baseMetadata, baseBody, baseTarget } = this.state;
+        switch(type) {
+            case "target":
+                var newData = target.concat(baseTarget);
+                this.setState({ target: newData })
+                console.log('this should be new target');
+                break;
+            case "body":
+                var newData = body.concat(baseBody);
+                this.setState({ body: newData });
+                console.log('this should be new body');
+                break;
+            case "metadata":
+                var newData = metadata.concat(baseMetadata);
+                this.setState({ metadata: newData });
+                console.log('this should be new metadata');
                 break;
             default:
                 break;
@@ -212,26 +183,26 @@ class AnnotationCreation extends Component {
     }
 
     updateAnnotationItem(type, content, pos) {
-        const { testDataState, testMetadataState, testSelectorState } = this.state;
+        const { body, metadata, target } = this.state;
         console.log('i really have fun doing shit');
         console.log(type);
         console.log(content);
         console.log(pos);
         switch(type) {
             case "target":
-                //var newData = testSelectorState;
-                //newData[pos] = content;
-                //this.setState({ testSelectorState: newData });
+                var newData = target;
+                newData[pos] = content;
+                this.setState({ target: newData });
                 break;
             case "metadata":
-                //var newData = testMetadataState;
-                //newData[pos] = content;
-                //this.setState({ testmetaDataState: newData });
+                var newData = metadata;
+                newData[pos] = content;
+                this.setState({ metadata: newData });
                 break;
             case "body":
-                //var newData = testDataState;
-                //newData[pos] = content;
-                this.setState({ testDataState: update(testDataState, {pos: newData })});
+                var newData = body;
+                newData[pos] = content;
+                this.setState({ body: newData });
                 break;
             default:
                 break;
@@ -358,7 +329,7 @@ class AnnotationCreation extends Component {
         const {
             activeTool, colorPopoverOpen, currentColorType, fillColor, popoverAnchorEl, strokeColor,
             popoverLineWeightAnchorEl, lineWeightPopoverOpen, strokeWidth, closedMode, annoBody, svg,
-            textEditorStateBustingKey, targetListOpen, bodyListOpen, creatorEdit, testDataState, testMetadataState, testSelectorState, annoId
+            textEditorStateBustingKey, targetListOpen, bodyListOpen, creatorEdit, body, metadata, target, annoId
         } = this.state;
         console.log('this is anno - id');
         console.log(annoId);
@@ -374,130 +345,59 @@ class AnnotationCreation extends Component {
                 <div className={classes.section}>
                     <CollapsibleSection id={`${id}-metadata`} label={t('metadata')}>
                         <List disablePadding>
-                            {testMetadataState.map((value, index) => (
+                            {metadata?.map((value, index) => (
                                 <AnnotationMetadataItem metadata={value} metadataPos={index} handleDelete={this.deleteAnnotationItem} handleSubmit={this.updateAnnotationItem} />
                             ))}
                         </List>
+                        <div className={classes.addSection}>
+                            <MiradorMenuButton aria-label="hooray" className={classes.button} onClick={() => this.createAnnotationItem('metadata')}>
+                                <Add />
+                            </MiradorMenuButton>
+                        </div>
                     </CollapsibleSection>
                 </div>
 
                 {/* target testing section */}
-                <div className={classes.section}>
+                {/*<div className={classes.section}>
                     <CollapsibleSection id={`${id}-targets`} label="Targets">
                         <List disablePadding>
-                            {testSelectorState.map((value, index) => (
+                            {target?.map((value, index) => (
                                 <AnnotationTargetItem selector={value} targetPos={index} handleDelete={this.deleteAnnotationItem} handleSubmit={this.updateAnnotationItem} />
                             ))}
                         </List>
+                        <div className={classes.addSection}>
+                            <MiradorMenuButton aria-label="hooray" className={classes.button} onClick={() => this.createAnnotationItem('target')}>
+                                <Add />
+                            </MiradorMenuButton>
+                        </div>
                     </CollapsibleSection>
-                </div>
+                            </div>*/}
 
                 {/* testing body section */}
-                <div className={classes.section}>
+                {/*<div className={classes.section}>
                     <CollapsibleSection id={`${id}-bodies`} label="Bodies">
                         <List component="div" disablePadding>
-                            {testDataState.map((value, index) => (
+                            {body?.map((value, index) => (
                                 <AnnotationBodyItem body={value} bodyPos={index} handleDelete={this.deleteAnnotationItem} handleSubmit={this.updateAnnotationItem} />
 
                             ))}
                         </List>
+                        <div className={classes.addSection}>
+                            <MiradorMenuButton aria-label="hooray" className={classes.button} onClick={() => this.createAnnotationItem('body')}>
+                                <Add />
+                            </MiradorMenuButton>
+                        </div>
                     </CollapsibleSection>
-                </div>
+                </div>*/}
 
-                <AnnotationDrawing
-                    activeTool={activeTool}
-                    fillColor={fillColor}
-                    strokeColor={strokeColor}
-                    strokeWidth={strokeWidth}
-                    closed={closedMode === 'closed'}
-                    svg={svg}
-                    updateGeometry={this.updateGeometry}
-                    windowId={windowId}
-                />
                 <form onSubmit={this.submitForm} className={classes.section}>
-                    {/*
-                    <Grid container>
-                        <Grid item xs={12}>
-                            <Typography variant="overline">
-                                {t('annotationPanelLabelTarget')}
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Paper elevation={0} className={classes.paper}>
-                                <ToggleButtonGroup
-                                    className={classes.grouped}
-                                    value={activeTool}
-                                    exclusive
-                                    onChange={this.changeTool}
-                                    aria-label={t('annotationPanelToolSelection')}
-                                    size="small"
-                                >
-                                    <ToggleButton value="cursor" aria-label={t('annotationPanelCursorSelect')} >
-                                        <CursorIcon />
-                                    </ToggleButton>
-                                    <ToggleButton value="edit" aria-label={t('annotationPanelCursorSelect')} >
-                                        <FormatShapesIcon />
-                                    </ToggleButton>
-                                </ToggleButtonGroup>
-                            </Paper>
-                        </Grid>
-                    </Grid>
-
-                    <Grid container>
-                        <Grid item xs={12}>
-                            <Typography variant="overline">
-                                {t('annotationPanelLabelContent')}
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextEditor
-                                key={textEditorStateBustingKey}
-                                annoHtml={annoBody}
-                                updateAnnotationBody={this.updateBody}
-                            />
-                        </Grid>
-            </Grid>*/}
                     <Button onClick={closeCompanionWindow}>
                         {t('annotationPanelCancel')}
                     </Button>
-                    <Button variant="contained" color="primary" type="submit">
+                    <Button variant="contained" color="primary" onClick={() => {console.log('this my state data'); console.log(metadata); console.log(target); console.log(body);}}>
                         {t('annotationPanelSubmit')}
                     </Button>
                 </form>
-                <Popover
-                    open={lineWeightPopoverOpen}
-                    anchorEl={popoverLineWeightAnchorEl}
-                >
-                    <Paper>
-                        <ClickAwayListener onClickAway={this.handleCloseLineWeight}>
-                            <MenuList autoFocus role="listbox">
-                                {[1, 3, 5, 10, 50].map((option, index) => (
-                                    <MenuItem
-                                        key={option}
-                                        onClick={this.handleLineWeightSelect}
-                                        value={option}
-                                        selected={option == strokeWidth}
-                                        role="option"
-                                        aria-selected={option == strokeWidth}
-                                    >
-                                        {option}
-                                    </MenuItem>
-                                ))}
-                            </MenuList>
-                        </ClickAwayListener>
-                    </Paper>
-                </Popover>
-                <Popover
-                    open={colorPopoverOpen}
-                    anchorEl={popoverAnchorEl}
-                    onClose={this.closeChooseColor}
-                >
-                    <SketchPicker
-                        // eslint-disable-next-line react/destructuring-assignment
-                        color={this.state[currentColorType] || {}}
-                        onChangeComplete={this.updateStrokeColor}
-                    />
-                </Popover>
             </CompanionWindow>
         );
     }

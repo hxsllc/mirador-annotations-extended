@@ -8,6 +8,11 @@ import { getVisibleCanvases } from 'mirador/dist/es/src/state/selectors/canvases
 import AnnotationCreation from '../components/AnnotationCreation';
 
 const styles = (theme) => ({
+    button: {
+        padding: 0,
+        marginRight: 0,
+        marginLeft: 'auto',
+    },
     divider: {
         margin: theme.spacing(1, 0.5),
     },
@@ -45,6 +50,10 @@ const styles = (theme) => ({
         paddingLeft: theme.spacing(2),
         paddingRight: theme.spacing(2),
         paddingTop: theme.spacing(2),
+    },
+    addSection: {
+        width: '100%',
+        display: 'flex',
     },
 });
 

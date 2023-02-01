@@ -92,7 +92,7 @@ class AnnotationTargetItem extends Component {
         const { edit, value, type } = this.state;
 
         return (
-            <ListItem divider className={classes.editAnnotationListItem} key={selector}>
+            <ListItem divider className={classes.editAnnotationListItem}>
                 <div>
                     <Grid container spacing={1}>
                         <Grid item xs={8}>

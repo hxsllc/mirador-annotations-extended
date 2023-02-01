@@ -59,10 +59,10 @@ class AnnotationBodyItem extends Component {
         const { edit, value, type, purpose } = this.state;
         const { bodyPos, handleSubmit } = this.props;
         if(edit) {
-            handleSubmit('metadata', { value, type, purpose }, bodyPos);
-            /*this.setState({
+            handleSubmit('body', { value, type, purpose }, bodyPos);
+            this.setState({
                 edit: false
-            });*/
+            });
         }
     }
 
@@ -101,7 +101,7 @@ class AnnotationBodyItem extends Component {
         const { edit, value, purpose, type } = this.state;
 
         return (
-            <ListItem divider className={classes.editAnnotationListItem} key={body}>
+            <ListItem divider className={classes.editAnnotationListItem}>
                 <div>
                     <Grid container spacing={1}>
                         <Grid item xs={8}>
