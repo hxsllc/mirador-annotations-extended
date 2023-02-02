@@ -55,6 +55,7 @@ class AnnotationBodyItem extends Component {
                     break;
                 default:
                     this.setState({ purposeOptionState: 0 });
+                    break;
             }
         }
     }
@@ -80,7 +81,7 @@ class AnnotationBodyItem extends Component {
     }
 
     handleSelcetedPurposeOption(e) {
-        const { purpose } = this.state;
+        const { purpose, purposeOptionState } = this.state;
         this.setState({ purpose: e.target.value });
         switch(e.target.value) {
             case 'describing':
@@ -112,7 +113,7 @@ class AnnotationBodyItem extends Component {
             };
             if(body.purpose) {
                 this.setState({ purpose: body.purpose });
-                switch(purpose) {
+                switch(body.purpose) {
                     case 'describing':
                         this.setState({ purposeOptionState: 1 });
                         break;
@@ -121,6 +122,7 @@ class AnnotationBodyItem extends Component {
                         break;
                     default:
                         this.setState({ purposeOptionState: 0 });
+                        break;
                 }
             };
         }
@@ -175,7 +177,7 @@ class AnnotationBodyItem extends Component {
                                     </InputLabel>
                                     {/* maybe add a key */}
                                     <NativeSelect value={purposeOptions[purposeOptionState]} inputProps={{ name: 'metadata', id: 'uncontrolled-native' }} onChange={this.handleSelcetedPurposeOption}>
-                                        {purposeOptions.map((value) => (
+                                        {purposeOptions.map((value, index) => (
                                             <option value={value}>{value}</option>
                                         ))}
                                     </NativeSelect>

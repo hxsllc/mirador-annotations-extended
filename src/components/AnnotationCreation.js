@@ -222,7 +222,7 @@ class AnnotationCreation extends Component {
                     <CollapsibleSection id={`${id}-targets`} label="Targets">
                         <List disablePadding>
                             {target?.map((value, index) => (
-                                <AnnotationTargetItem key={value._temp_id} target={value} targetPos={index} handleDelete={this.deleteAnnotationItem} handleSubmit={this.updateAnnotationItem} />
+                                <AnnotationTargetItem key={value._temp_id} target={value} targetPos={index} handleDelete={this.deleteAnnotationItem} handleSubmit={this.updateAnnotationItem} windowId={windowId} />
                             ))}
                         </List>
                         <div className={classes.addSection}>

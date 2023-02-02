@@ -10,6 +10,7 @@ import { Collapse } from '@material-ui/core';
 import { TextField } from '@material-ui/core';
 import { NativeSelect, FormControl, InputLabel } from '@material-ui/core';
 
+// you still have a lot of work to do
 
 class AnnotationMetadataItem extends Component {
     constructor(props) {
@@ -103,7 +104,6 @@ class AnnotationMetadataItem extends Component {
                     <Grid container spacing={1}>
                         <Grid item xs={8}>
                             <ListItemText style={{ lineHeight: '1rem'}} primary={type} secondary={value}/>
-                            {value}
                         </Grid>
                         <Grid item xs={4}>
                             <IconButton size="small" onClick={() => edit ? this.confirm() : this.edit()}>

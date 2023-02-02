@@ -16,8 +16,14 @@ const config = {
         defaultSideBarPanel: 'annotations',
         sideBarOpenByDefault: true,
     },
+    catalog: [{
+        manifestId: 'https://iiif.harvardartmuseums.org/manifests/object/299843',
+    },
+    {
+        manifestId: 'https://iiif.arthistoricum.net/proxy/fotothek/adf_cva_0000292/manifest.json',
+    }],
     windows: [{
-        loadedManifest: 'https://iiif.harvardartmuseums.org/manifests/object/299843',
+        loadedManifest: 'https://iiif.arthistoricum.net/proxy/fotothek/adf_cva_0000292/manifest.json',
     }],
 };
 

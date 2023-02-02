@@ -8,7 +8,9 @@ import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import { Collapse } from '@material-ui/core';
 import { TextField } from '@material-ui/core';
-
+import { NativeSelect, FormControl, InputLabel } from '@material-ui/core';
+import TargetFragmentSelector from '../containers/TargetFragmentSelector';
+import TargetSvgSelector from '../containers/TargetSvgSelector';
 
 class AnnotationTargetItem extends Component {
     constructor(props) {
@@ -21,6 +23,7 @@ class AnnotationTargetItem extends Component {
 
         this.state = {
             edit: false,
+            targetOptionState: 0,
             ...targetState,
         }
 
@@ -29,16 +32,25 @@ class AnnotationTargetItem extends Component {
         this.cancel = this.cancel.bind(this);
         this.delete = this.delete.bind(this);
         this.handleTextFieldInput = this.handleTextFieldInput.bind(this);
+        this.handleSelectedTargetOption = this.handleSelectedTargetOption.bind(this);
     }
 
     componentDidMount() {
         const { target } = this.props;
-        const { value, type } = this.state;
+        const { value, type, targetOptionState } = this.state;
         if(target.value) {
             this.setState({ value: target.value })
         }
         if(target.type) {
             this.setState({ type: target.type })
+            switch(target.type) {
+                case 'SvgSelector':
+                    this.setState({ purposeOptionState: 1 });
+                    break;
+                default:
+                    this.setState({ purposeOptionState: 0 });
+                    break;
+            }
         }
     }
 
@@ -62,20 +74,43 @@ class AnnotationTargetItem extends Component {
         }
     }
 
+    handleSelectedTargetOption(e) {
+        const { type, targetOptionState } = this.state;
+        this.setState({ type: e.target.value });
+        switch(e.target.value) {
+            case 'SvgSelector':
+                this.setState({ targetOptionState: 1 });
+                break;
+            default:
+                this.setState({ targetOptionState: 0 });
+                break;
+        }
+    }
+
     handleTextFieldInput(e) {
         const { value } = this.state;
         this.setState({ value: e.target.value });
     }
 
     cancel() {
-        const { edit, value, type } = this.state;
+        const { edit, value, type, targetOptionState } = this.state;
         const { target } = this.props;
         if(edit) {
             if(target.value) {
-                this.setState({ value: target.value })
+                this.setState({ value: target.value });
+            } else {
+                this.setState({ value: '' });
             }
             if(target.type) {
-                this.setState({ type: target.type })
+                this.setState({ type: target.type });
+                switch(target.type) {
+                    case 'SvgSelector':
+                        this.setState({ targetOptionState: 1 });
+                        break;
+                    default:
+                        this.setState({ targetOptionState: 0 });
+                        break;
+                }
             }
         }
     }
@@ -90,8 +125,9 @@ class AnnotationTargetItem extends Component {
     }
 
     render() {
-        const { target, classes, t, targetPos } = this.props;
-        const { edit, value, type } = this.state;
+        const { target, classes, t, targetPos, windowId } = this.props;
+        const { edit, value, type, targetOptionState } = this.state;
+        const targetOptions = ['FragmentSelector', 'SvgSelector'];
 
         return (
             <ListItem divider className={classes.editAnnotationListItem}>
@@ -122,7 +158,23 @@ class AnnotationTargetItem extends Component {
                     <Collapse className={classes.editAnnotationCollapse} in={edit} unmountOnExit>
                         <Grid container spacing={1}>
                             <Grid item xs={12}>
-                                <TextField id={`${target}-target`} label={t('annotationMetadataTarget')} value={value} onChange={this.handleTextFieldInput} variant="standard" />
+                            <FormControl>
+                                    <InputLabel variant="standard" htmlFor='uncontrolled-native-target'>
+                                        type
+                                    </InputLabel>
+                                    {/* maybe add a key */}
+                                    <NativeSelect value={targetOptions[targetOptionState]} inputProps={{ name: 'target', id: 'uncontrolled-native-target' }} onChange={this.handleSelectedTargetOption}>
+                                        {targetOptions.map((value, index) => (
+                                            <option value={value}>{value}</option>
+                                        ))}
+                                    </NativeSelect>
+                                </FormControl>
+                                {
+                                    targetOptionState==1
+                                    ? <TargetSvgSelector windowId={windowId} />
+                                    : <TargetFragmentSelector windowId={windowId} />
+                                }
+                                {/*<TextField id={`${target}-target`} label={t('annotationMetadataTarget')} value={value} onChange={this.handleTextFieldInput} variant="standard" />*/}
                             </Grid>
                         </Grid>
                     </Collapse>
