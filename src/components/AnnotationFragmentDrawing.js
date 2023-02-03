@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { OSDReferences } from 'mirador/dist/es/src/plugins/OSDReferences';
 import { renderWithPaperScope, PaperContainer } from '@psychobolt/react-paperjs';
+
 import {
 EllipseTool,
 PolygonTool,
@@ -15,19 +16,13 @@ import flatten from 'lodash/flatten';
 import EditTool from './EditTool';
 import { mapChildren } from '../utils';
 
-/** */
+/** needs some fixing on import of xywh on PaperContainer, this part is not working so far */
 class AnnotationFragmentDrawing extends Component {
     /** */
     constructor(props) {
         super(props);
 
         this.addPath = this.addPath.bind(this);
-    }
-
-    /** */
-    componentDidMount() {
-        const { windowId } = this.props;
-        this.OSDReference = OSDReferences.get(windowId);
     }
 
     /** */
@@ -47,16 +42,16 @@ class AnnotationFragmentDrawing extends Component {
                 Math.floor(y),
                 Math.floor(width),
                 Math.floor(height),
-            ],
+            ].join(','),
         });
     }
 
     /** */
     paperThing() {
         const {
-            activeTool, fillColor, strokeColor, strokeWidth,
+            activeTool, fillColor, strokeColor, strokeWidth, xywh
         } = this.props;
-        if (!activeTool || activeTool === 'cursor') return null;
+        //if (!activeTool || activeTool === 'cursor') return null;
         // Setup Paper View to have the same center and zoom as the OSD Viewport
         const viewportZoom = this.OSDReference.viewport.getZoom(true);
         const image1 = this.OSDReference.world.getItemAt(0);
@@ -99,6 +94,12 @@ class AnnotationFragmentDrawing extends Component {
                         const paths = flatten(paper.project.layers.map((layer) => (
                             flatten(mapChildren(layer)).map((aPath) => aPath)
                         )));
+                        console.log(paper);
+                        if(xywh) {
+                            //paper.createBounds(xywh);
+                            // add from Paper Path.Rectangle(point, size, strokeColor)
+                            //paper.project.addChild();
+                        }
                         /*if (svg && paths.length === 0) {
                             paper.project.importSVG(svg);
                         }*/

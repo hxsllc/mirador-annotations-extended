@@ -147,7 +147,7 @@ AnnotationSvgDrawing.propTypes = {
 
 AnnotationSvgDrawing.defaultProps = {
     activeTool: null,
-    closed: true,
+    closed: false,
     strokeColor: '#00BFFF',
     strokeWidth: 1,
     svg: null,

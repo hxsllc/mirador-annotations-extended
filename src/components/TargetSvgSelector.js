@@ -9,9 +9,7 @@ import PolygonIcon from '@material-ui/icons/Timeline';
 import GestureIcon from '@material-ui/icons/Gesture';
 import ClosedPolygonIcon from '@material-ui/icons/ChangeHistory';
 import OpenPolygonIcon from '@material-ui/icons/ShowChart';
-import { ButtonGroup } from '@material-ui/core';
-import MiradorMenuButton from 'mirador/dist/es/src/containers/MiradorMenuButton';
-import { Button } from '@material-ui/core';
+import { Radio } from '@material-ui/core';
 
 class TargetSvgSelector extends Component {
     constructor(props) {
@@ -19,66 +17,104 @@ class TargetSvgSelector extends Component {
 
         const toolState = {
             activeTool: 'rectangle',
-            strokeColor: '#CC0000',
+            strokeColor: "#cc0000",
             strokeWidth: 1,
-            closedMode: false,
+            closedMode: true,
+        };
+
+        const selectorState= {
+            svg: props.value,
         };
 
         this.state = {
             ...toolState,
             svg: null,
+            ...selectorState
         }
 
         this.changeTool = this.changeTool.bind(this);
         this.updateGeometry = this.updateGeometry.bind(this);
+        this.changeColor = this.changeColor.bind(this);
+    }
+
+    componentDidMount() {
+        const { svg } = this.state;
+        if(svg) {
+            this.setState({ activeTool: 'edit' });
+        }
     }
 
     changeTool(e, tool) {
-        console.log(tool);
-        this.setState({
-            activeTool: tool,
-        });
+        const { activeTool } = this.state;
+        if(activeTool !== 'edit') {
+            console.log(tool);
+            this.setState({
+                activeTool: tool,
+            });
+        };
+        switch(tool) {
+            case 'rectangle':
+                this.setState({ closedMode: true });
+                break;
+            case 'ellipse':
+                this.setState({ closedMode: true });
+                break;
+            case 'polygon':
+                this.setState({ closedMode: true });
+                break;
+            case 'freehand':
+                this.setState({ closedMode: false });
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    changeColor(e) {
+        this.setState({ strokeColor: e.target.value });
     }
 
     updateGeometry({ svg }) {
+        const { updateValue } = this.props;
+        const { activeTool } = this.state;
         this.setState({ svg });
+        updateValue({ value: svg });
+        if(svg && activeTool !=='edit') {
+            this.setState({ activeTool: 'edit'});
+        }
     }
 
     render() {
-        const { classes, windowId } = this.props;
+        const { classes, windowId, value } = this.props;
         const { activeTool, strokeColor, svg, strokeWidth, closedMode } = this.state;
+
+        const colors = ["#cc0000", "#fcba03", "#32c784", "#403df2"];
 
         return (
             <div className={classes.selector}>
-                <AnnotationSvgDrawing activeTool={activeTool} strokeColor={strokeColor} strokeWidth={strokeWidth} closed={closedMode} svg={svg} updateGeometry={this.updateGeometry} windowId={windowId} />
+                <AnnotationSvgDrawing activeTool={activeTool} strokeColor={strokeColor} strokeWidth={strokeWidth} closed={closedMode} svg={value} updateGeometry={this.updateGeometry} windowId={windowId} />
+                <div>
                 <ToggleButtonGroup value={activeTool} exclusive onChange={this.changeTool} aria-Label='tools'>
-                    <ToggleButton value="rectangle" aria-label="rectangle">
+                    <ToggleButton value="rectangle" aria-label="rectangle" disabled={activeTool =='edit'}>
                         <RectangleIcon />
                     </ToggleButton>
-                    <ToggleButton value="ellipse" aria-label="circle">
+                    <ToggleButton value="ellipse" aria-label="circle" disabled={activeTool =='edit'}>
                         <CircleIcon />
                     </ToggleButton>
-                    <ToggleButton value="polygon" aria-label="polygon">
+                    <ToggleButton value="polygon" aria-label="polygon" disabled={activeTool =='edit'}>
                         <PolygonIcon />
                     </ToggleButton>
-                    <ToggleButton value="freehand" aria-label="freehand">
+                    <ToggleButton value="freehand" aria-label="freehand" disabled={activeTool =='edit'}>
                         <GestureIcon />
                     </ToggleButton>
                 </ToggleButtonGroup>
-                {/*<ToggleButtonGroup value={activeTool} onChange={this.changeTool} aria-Label='tools'>
-                    <ToggleButton value="rectangle" aria-label="add a rectangle">
-                        <RectangleIcon />
-                    </ToggleButton>
-                    <ToggleButton value="ellipse" aria-label="add a circle">
-                        <CircleIcon />
-                    </ToggleButton>
-                    <ToggleButton value="polygon" aria-label="add a polygon">
-                        <PolygonIcon />
-                    </ToggleButton>
-                    <ToggleButton value="freehand" aria-label="free hand polygon">
-                        <GestureIcon />
-                    </ToggleButton>
-        </ToggleButtonGroup>*/}
+                </div>
+                <div>
+                    {colors.map((value) => (
+                        <Radio disabled={activeTool =='edit'} style={ activeTool !== 'edit' ? { color: `${value}` } : {}} checked={strokeColor==value} onChange={this.changeColor} value={value} aria-label={`select color-${value}`} />
+                    ))}
+                </div>
             </div>
         )
     }

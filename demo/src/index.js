@@ -20,10 +20,13 @@ const config = {
         manifestId: 'https://iiif.harvardartmuseums.org/manifests/object/299843',
     },
     {
+        manifestId: 'https://iiif.arthistoricum.net/proxy/fotothek/os_ub_0006184/manifest.json',
+    },
+    {
         manifestId: 'https://iiif.arthistoricum.net/proxy/fotothek/adf_cva_0000292/manifest.json',
     }],
     windows: [{
-        loadedManifest: 'https://iiif.arthistoricum.net/proxy/fotothek/adf_cva_0000292/manifest.json',
+        loadedManifest: 'https://iiif.arthistoricum.net/proxy/fotothek/os_ub_0006184/manifest.json',
     }],
 };
 

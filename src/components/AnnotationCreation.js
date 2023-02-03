@@ -131,7 +131,7 @@ class AnnotationCreation extends Component {
 
         switch(type) {
             case "target":
-                const targetBase = { type: 'FragmentSelector', value: null, _temp_id: annoId + '-target-item-' + targetCount };
+                const targetBase = { type: 'SvgSelector', value: null, _temp_id: annoId + '-target-item-' + targetCount };
                 var newData = target.concat(targetBase);
                 this.setState({ target: newData, targetCount: targetCount + 1 });
                 break;

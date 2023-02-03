@@ -30,6 +30,14 @@ class TargetFragmentSelector extends Component {
         this.updateGeometry = this.updateGeometry.bind(this);
     }
 
+    componentDidMount() {
+        const { xywh } = this.state;
+        const { value } = this.props;
+        if(value) {
+            this.setState({ xywh: value, activeTool: 'edit' });
+        }
+    }
+
     changeTool(tool) {
         this.setState({
             activeTool: tool,
@@ -37,17 +45,22 @@ class TargetFragmentSelector extends Component {
     }
 
     updateGeometry({ xywh }) {
+        const { updateValue } = this.props;
+        const { activeTool } = this.state;
         this.setState({ xywh });
-        this.changeTool('edit');
+        updateValue({ value: xywh });
+        if(xywh && activeTool !=='edit') {
+            this.setState({ activeTool: 'edit'});
+        }
     }
 
     render() {
-        const { classes, windowId } = this.props;
+        const { classes, windowId, value } = this.props;
         const { activeTool, strokeColor, xywh, strokeWidth, closedMode } = this.state;
 
         return (
             <div className={classes.selector}>
-                <AnnotationFragmentDrawing activeTool={activeTool} strokeColor={strokeColor} strokeWidth={strokeWidth} closed={closedMode} xywh={xywh} updateGeometry={this.updateGeometry} windowId={windowId} />
+                <AnnotationFragmentDrawing activeTool={activeTool} strokeColor={strokeColor} strokeWidth={strokeWidth} closed={closedMode} xywh={value} updateGeometry={this.updateGeometry} windowId={windowId} />
                 {
                     activeTool=='edit'
                     ? <div>Sie die gesetzte Markierung verschieben, vergrößern oder verkleinern</div>

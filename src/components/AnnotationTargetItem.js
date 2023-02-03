@@ -18,13 +18,15 @@ class AnnotationTargetItem extends Component {
 
         const targetState = {
             value: null,
-            type: null
+            type: null,
+            color: null
         }
 
         this.state = {
-            edit: false,
-            targetOptionState: 0,
             ...targetState,
+            edit: false,
+            targetOptionState: 1,
+
         }
 
         this.edit = this.edit.bind(this);
@@ -33,6 +35,7 @@ class AnnotationTargetItem extends Component {
         this.delete = this.delete.bind(this);
         this.handleTextFieldInput = this.handleTextFieldInput.bind(this);
         this.handleSelectedTargetOption = this.handleSelectedTargetOption.bind(this);
+        this.updateTargetValue = this.updateTargetValue.bind(this);
     }
 
     componentDidMount() {
@@ -46,6 +49,10 @@ class AnnotationTargetItem extends Component {
             switch(target.type) {
                 case 'SvgSelector':
                     this.setState({ purposeOptionState: 1 });
+                    if(target.value) {
+                        var val = target.value.split('fill="');
+                        this.setState({ color: val[1].substr(0,7) })
+                    }
                     break;
                 default:
                     this.setState({ purposeOptionState: 0 });
@@ -60,6 +67,18 @@ class AnnotationTargetItem extends Component {
             this.setState({
                 edit: true
             });
+        }
+    }
+
+    updateTargetValue({ value }) {
+        const { edit, type } = this.state;
+        // add
+        if(value && type=='SvgSelector') {
+            var val = value.split('fill="');
+            this.setState({ color: val[1].substr(0,7) });
+        }
+        if(edit) {
+            this.setState({ value });
         }
     }
 
@@ -99,7 +118,7 @@ class AnnotationTargetItem extends Component {
             if(target.value) {
                 this.setState({ value: target.value });
             } else {
-                this.setState({ value: '' });
+                this.setState({ value: null });
             }
             if(target.type) {
                 this.setState({ type: target.type });
@@ -125,8 +144,8 @@ class AnnotationTargetItem extends Component {
     }
 
     render() {
-        const { target, classes, t, targetPos, windowId } = this.props;
-        const { edit, value, type, targetOptionState } = this.state;
+        const { target, classes, t, targetPos, windowId, _temp_id } = this.props;
+        const { edit, value, type, targetOptionState, color } = this.state;
         const targetOptions = ['FragmentSelector', 'SvgSelector'];
 
         return (
@@ -134,7 +153,7 @@ class AnnotationTargetItem extends Component {
                 <div>
                     <Grid container spacing={1}>
                         <Grid item xs={8}>
-                            <ListItemText style={{ lineHeight: '1rem'}} primary={type} secondary={value} />
+                            <ListItemText style={{ lineHeight: '1rem'}} primary={type} secondary={ color ? color : value } />
                         </Grid>
                         <Grid item xs={4}>
                             <IconButton size="small" onClick={() => edit ? this.confirm() : this.edit()}>
@@ -171,10 +190,9 @@ class AnnotationTargetItem extends Component {
                                 </FormControl>
                                 {
                                     targetOptionState==1
-                                    ? <TargetSvgSelector windowId={windowId} />
-                                    : <TargetFragmentSelector windowId={windowId} />
+                                    ? <TargetSvgSelector key={`${_temp_id}-SvgSelector`} value={value} updateValue={this.updateTargetValue} windowId={windowId} />
+                                    : <TargetFragmentSelector key={`${_temp_id}-FragmentSelector`} value={value} updateValue={this.updateTargetValue} windowId={windowId} />
                                 }
-                                {/*<TextField id={`${target}-target`} label={t('annotationMetadataTarget')} value={value} onChange={this.handleTextFieldInput} variant="standard" />*/}
                             </Grid>
                         </Grid>
                     </Collapse>
