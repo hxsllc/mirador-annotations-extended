@@ -2,15 +2,23 @@
 export default class WebAnnotation {
     /** */
     constructor({
-        canvasId, id, xywh, body, tags, svg, manifestId,
+        canvasId, id, body, creator, motivation, manifestId, target
     }) {
-        this.id = id;
+        /*this.id = id;
         this.canvasId = canvasId;
-        this.xywh = xywh;
+        this.target = target;
         this.body = body;
-        this.tags = tags;
-        this.svg = svg;
-        this.manifestId = manifestId;
+        this.creator = creator;
+        this.motivation = motivation;
+        this.manifestId = manifestId;*/
+        console.log('this is body:');
+        console.log(body);
+        console.log('this is creator: ');
+        console.log(creator);
+        console.log('this is motivation');
+        console.log(motivation);
+        console.log('this is target');
+        console.log(target);
     }
 
     /** */

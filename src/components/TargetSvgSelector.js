@@ -18,7 +18,7 @@ class TargetSvgSelector extends Component {
         const toolState = {
             activeTool: 'rectangle',
             strokeColor: "#cc0000",
-            strokeWidth: 1,
+            strokeWidth: 3,
             closedMode: true,
         };
 

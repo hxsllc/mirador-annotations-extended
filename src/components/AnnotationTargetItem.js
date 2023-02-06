@@ -33,16 +33,16 @@ class AnnotationTargetItem extends Component {
         this.confirm = this.confirm.bind(this);
         this.cancel = this.cancel.bind(this);
         this.delete = this.delete.bind(this);
-        this.handleTextFieldInput = this.handleTextFieldInput.bind(this);
         this.handleSelectedTargetOption = this.handleSelectedTargetOption.bind(this);
         this.updateTargetValue = this.updateTargetValue.bind(this);
     }
 
     componentDidMount() {
         const { target } = this.props;
-        const { value, type, targetOptionState } = this.state;
         if(target.value) {
-            this.setState({ value: target.value })
+            this.setState({ value: target.value });
+        } else {
+            this.setState({ edit: true });
         }
         if(target.type) {
             this.setState({ type: target.type })
@@ -50,7 +50,7 @@ class AnnotationTargetItem extends Component {
                 case 'SvgSelector':
                     this.setState({ purposeOptionState: 1 });
                     if(target.value) {
-                        var val = target.value.split('fill="');
+                        var val = target.value.split('stroke="');
                         this.setState({ color: val[1].substr(0,7) })
                     }
                     break;
@@ -72,9 +72,8 @@ class AnnotationTargetItem extends Component {
 
     updateTargetValue({ value }) {
         const { edit, type } = this.state;
-        // add
         if(value && type=='SvgSelector') {
-            var val = value.split('fill="');
+            var val = value.split('stroke="');
             this.setState({ color: val[1].substr(0,7) });
         }
         if(edit) {
@@ -94,7 +93,6 @@ class AnnotationTargetItem extends Component {
     }
 
     handleSelectedTargetOption(e) {
-        const { type, targetOptionState } = this.state;
         this.setState({ type: e.target.value });
         switch(e.target.value) {
             case 'SvgSelector':
@@ -106,13 +104,8 @@ class AnnotationTargetItem extends Component {
         }
     }
 
-    handleTextFieldInput(e) {
-        const { value } = this.state;
-        this.setState({ value: e.target.value });
-    }
-
     cancel() {
-        const { edit, value, type, targetOptionState } = this.state;
+        const { edit } = this.state;
         const { target } = this.props;
         if(edit) {
             if(target.value) {
@@ -131,6 +124,7 @@ class AnnotationTargetItem extends Component {
                         break;
                 }
             }
+            this.setState({ edit: false });
         }
     }
 

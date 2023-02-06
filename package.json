@@ -29,7 +29,8 @@
     "immutable": "^4.0.0-rc.12",
     "material-ui-color-components": "^0.3.0",
     "paper": "^0.12.11",
-    "react-color": "^2.18.1"
+    "react-color": "^2.18.1",
+    "react-html-parser": "^2.0.2"
   },
   "peerDependencies": {
     "@material-ui/core": "^4.9.13",

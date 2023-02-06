@@ -57,33 +57,95 @@ class AnnotationCreation extends Component {
             } else {
                 annoState.annoId = uuid();
             }
-            if (Array.isArray(props.annotation.body)) {
-                annoState.tags = [];
-                props.annotation.body.forEach((body) => {
-                    if (body.purpose === 'tagging') {
-                        annoState.tags.push(body.value);
-                    } else {
-                        annoState.annoBody = body.value;
-                    }
-                });
-            } else {
-                annoState.annoBody = props.annotation.body.value;
+            annoState.metadata = [];
+            annoState.metadataCount = 0;
+
+            var tempCreator = {
+                type : 'creator',
+                value: props.annotation.creator ? props.annotation.creator : null,
+                _temp_id: annoState.annoId + '-metadata-item-' + annoState.metadataCount
+            };
+            annoState.metadata.push(tempCreator);
+            annoState.metadataCount++;
+
+            var tempMotivation = {
+                type: 'motivation',
+                value: props.annotation.motivation ? props.annotation.motivation : null,
+                _temp_id: annoState.annoId + '-metadata-item-' + annoState.metadataCount
+            };
+            annoState.metadata.push(tempMotivation);
+            annoState.metadataCount++;
+
+            annoState.body = [];
+            annoState.bodyCount = 0;
+            if(props.annotation.body) {
+                if (Array.isArray(props.annotation.body)) {
+                    props.annotation.body.forEach((body) => {
+                        var tempBody = {
+                            type: body.type ? body.type : null,
+                            purpose: body.purpose ? body.purpose : null,
+                            value: body.value,
+                            _temp_id: annoState.annoId + '-body-item-' + annoState.bodyCount
+                        };
+                        annoState.body.push(tempBody);
+                        annoState.bodyCount++;
+                    });
+                } else {
+                    var tempBody = {
+                        type: props.annotation.body.type ? props.annotation.body.type : null,
+                        purpose: props.annotation.body.purpose ? props.annotation.body.purpose : null,
+                        value: props.annotation.body.value,
+                        _temp_id: annoState.annoId + '-body-item-' + annoState.bodyCount
+                    };
+                    annoState.body.push(tempBody);
+                    annoState.bodyCount++;
+                }
             }
+            annoState.target = [];
+            annoState.targetCount = 0;
             if (props.annotation.target.selector) {
                 if (Array.isArray(props.annotation.target.selector)) {
                     props.annotation.target.selector.forEach((selector) => {
-                        if (selector.type === 'SvgSelector') {
-                            annoState.svg = selector.value;
-                        } else if (selector.type === 'FragmentSelector') {
-                            annoState.xywh = selector.value.replace('xywh=', '');
-                        }
+                        var tempTarget = {
+                            type: selector.type ? selector.type : null,
+                            value: selector.value,
+                            _temp_id: annoState.annoId + '-target-item-' + annoState.targetCount
+                        };
+                        annoState.target.push(tempTarget);
+                        annoState.targetCount++;
                     });
                 } else {
-                    annoState.svg = props.annotation.target.selector.value;
+                    var tempTarget = {
+                        type: props.annotation.target.selector.type ? props.annotation.target.selector.type : null,
+                        value: props.annotation.target.selector.value,
+                        _temp_id: annoState.annoId + '-target-item-' + annoState.targetCount
+                    };
+                    annoState.target.push(tempTarget);
+                    annoState.targetCount++;
                 }
             }
-        }
+        } else {
+            annoState.annoId = uuid();
+            annoState.metadata = [];
+            annoState.metadataCount = 0;
 
+            var tempCreator = {
+                type : 'creator',
+                value: null,
+                _temp_id: annoState.annoId + '-metadata-item-' + annoState.metadataCount
+            };
+            annoState.metadata.push(tempCreator);
+            annoState.metadataCount++;
+
+            var tempMotivation = {
+                type: 'motivation',
+                value: null,
+                _temp_id: annoState.annoId + '-metadata-item-' + annoState.metadataCount
+            };
+            annoState.metadata.push(tempMotivation);
+            annoState.metadataCount++;
+
+        }
 
         this.state = {
             annoId: null,
@@ -96,7 +158,7 @@ class AnnotationCreation extends Component {
             ...annoState,
         };
 
-        this.submitForm = this.submitForm.bind(this);
+        this.submitAnnotation = this.submitAnnotation.bind(this);
         this.deleteAnnotationItem = this.deleteAnnotationItem.bind(this);
         this.updateAnnotationItem = this.updateAnnotationItem.bind(this);
         this.createAnnotationItem = this.createAnnotationItem.bind(this);
@@ -136,7 +198,7 @@ class AnnotationCreation extends Component {
                 this.setState({ target: newData, targetCount: targetCount + 1 });
                 break;
             case "body":
-                const bodyBase = { type: 'TextualBody', value: null, purpose: 'describing', _temp_id: annoId + '-body-item-' + bodyCount };
+                const bodyBase = { type: 'TextualBody', value: null, purpose: null, _temp_id: annoId + '-body-item-' + bodyCount };
                 var newData = body.concat(bodyBase);
                 this.setState({ body: newData, bodyCount: bodyCount +1 });
                 break;
@@ -152,10 +214,6 @@ class AnnotationCreation extends Component {
 
     updateAnnotationItem(type, content, pos) {
         const { body, metadata, target } = this.state;
-        console.log('i really have fun doing shit');
-        console.log(type);
-        console.log(content);
-        console.log(pos);
         switch(type) {
             case "target":
                 var newData = target;
@@ -178,8 +236,41 @@ class AnnotationCreation extends Component {
     }
 
     /** */
-    submitForm(e) {
-        e.preventDefault();
+    submitAnnotation() {
+        const { annotation, canvases, receiveAnnotation, config, } = this.props;
+        const { metadata, target, body, annoId } = this.state;
+        console.log('this is body');
+        console.log(body);
+        console.log(body.forEach(a => delete a._temp_id));
+        console.log('this is target');
+        console.log(target);
+        console.log(target.forEach(a => delete a._temp_id));
+        console.log('this is creator');
+        console.log(metadata);
+        console.log(metadata.find(item => { if(item.type =='creator') return item.value }));
+        console.log('this is motivation');
+        console.log(metadata);
+        console.log(metadata.find(item => { if(item.type=='motivation') return item.value }));
+        canvases.forEach((canvas) => {
+            /*const storageAdatper = config.annotation.adapter(canvas.id);
+                    Das ist nur für Johannes
+                    (｡◕‿◕｡)
+                    (╯°□°）╯︵ ┻━┻
+            const anno = new WebAnnotation({
+                body: body.forEach(a => delete a._temp_id),
+                canvasId: canvas.id,
+                id: (annotation && annotation.id) || annoId,
+                manifestId: canvas.options.resource.id,
+                target: target.forEach(a => delete a._temp_id),
+                creator: metadata.find(item => { if(item.type =='creator') return item.value }),
+                motivation: metadata.find(item => { if(item.type=='motivation') return item.value }),
+            }).toJson();
+            if(annotation) {
+                storageAdatper.update(anno).then(annoPage => receiveAnnotation(canvas.id, storageAdatper.annotationPageId, annoPage));
+            } else {
+                storageAdatper.create(anno).then(annoPage => receiveAnnotation(canvas.id, storageAdatper.annotationPageId, annoPage));
+            }*/
+        });
     }
 
     /** */
@@ -209,11 +300,6 @@ class AnnotationCreation extends Component {
                                 <AnnotationMetadataItem key={value._temp_id} metadata={value} metadataPos={index} handleDelete={this.deleteAnnotationItem} handleSubmit={this.updateAnnotationItem} />
                             ))}
                         </List>
-                        <div className={classes.addSection}>
-                            <MiradorMenuButton aria-label="hooray" className={classes.button} onClick={() => this.createAnnotationItem('metadata')}>
-                                <Add />
-                            </MiradorMenuButton>
-                        </div>
                     </CollapsibleSection>
                 </div>
 
@@ -254,7 +340,7 @@ class AnnotationCreation extends Component {
                     <Button onClick={closeCompanionWindow}>
                         {t('annotationPanelCancel')}
                     </Button>
-                    <Button variant="contained" color="primary" onClick={() => console.log('you submited')}>
+                    <Button variant="contained" color="primary" onClick={this.submitAnnotation}>
                         {t('annotationPanelSubmit')}
                     </Button>
                 </div>

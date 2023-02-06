@@ -9,7 +9,8 @@ import IconButton from '@material-ui/core/IconButton';
 import { Collapse } from '@material-ui/core';
 import { TextField } from '@material-ui/core';
 import { NativeSelect, FormControl, InputLabel } from '@material-ui/core';
-
+import AnnotationTextEditorItem from '../containers/AnnotationTextEditorItem';
+import ReactHtmlParser from 'react-html-parser';
 
 class AnnotationBodyItem extends Component {
     constructor(props) {
@@ -32,14 +33,16 @@ class AnnotationBodyItem extends Component {
         this.cancel = this.cancel.bind(this);
         this.delete = this.delete.bind(this);
         this.handleTextFieldInput = this.handleTextFieldInput.bind(this);
-        this.handleSelcetedPurposeOption = this.handleSelcetedPurposeOption.bind(this);
+        this.handleSelectedPurposeOption = this.handleSelectedPurposeOption.bind(this);
+        this.updateBodyValue = this.updateBodyValue.bind(this);
     }
 
     componentDidMount() {
         const { body } = this.props;
-        const { value, type, purpose, purposeOptionState } = this.state;
         if(body.value) {
             this.setState({ value: body.value });
+        } else {
+            this.setState({ edit: true });
         }
         if(body.type) {
             this.setState({ type: body.type });
@@ -48,10 +51,10 @@ class AnnotationBodyItem extends Component {
             this.setState({ purpose: body.purpose });
             switch(body.purpose) {
                 case 'describing':
-                    this.setState({ purposeOptionState: 1 });
+                    this.setState({ purposeOptionState: 0 });
                     break;
-                case 'classifying':
-                    this.setState({ purposeOptionState: 2 });
+                case 'tagging':
+                    this.setState({ purposeOptionState: 1 });
                     break;
                 default:
                     this.setState({ purposeOptionState: 0 });
@@ -80,15 +83,14 @@ class AnnotationBodyItem extends Component {
         }
     }
 
-    handleSelcetedPurposeOption(e) {
-        const { purpose, purposeOptionState } = this.state;
+    handleSelectedPurposeOption(e) {;
         this.setState({ purpose: e.target.value });
         switch(e.target.value) {
             case 'describing':
-                this.setState({ purposeOptionState: 1 });
+                this.setState({ purposeOptionState: 0 });
                 break;
-            case 'classifying':
-                this.setState({ purposeOptionState: 2 });
+            case 'tagging':
+                this.setState({ purposeOptionState: 1 });
                 break;
             default:
                 this.setState({ purposeOptionState: 0 });
@@ -97,17 +99,25 @@ class AnnotationBodyItem extends Component {
     }
 
     handleTextFieldInput(e) {
-        const { value } = this.state;
         this.setState({ value: e.target.value });
     }
 
+    updateBodyValue(newValue) {
+        const { edit } = this.state;
+        if(edit) {
+            this.setState({ value: newValue });
+        }
+    }
+
     cancel() {
-        const { edit, value, type, purpose } = this.state;
+        const { edit } = this.state;
         const { body } = this.props;
         if(edit) {
             if(body.value) {
                 this.setState({ value: body.value });
-            };
+            } else {
+                this.setState({ value: null });
+            }
             if(body.type) {
                 this.setState({ type: body.type });
             };
@@ -115,16 +125,17 @@ class AnnotationBodyItem extends Component {
                 this.setState({ purpose: body.purpose });
                 switch(body.purpose) {
                     case 'describing':
-                        this.setState({ purposeOptionState: 1 });
+                        this.setState({ purposeOptionState: 0 });
                         break;
-                    case 'classifying':
-                        this.setState({ purposeOptionState: 2 });
+                    case 'tagging':
+                        this.setState({ purposeOptionState: 1 });
                         break;
                     default:
                         this.setState({ purposeOptionState: 0 });
                         break;
                 }
             };
+            this.setState({ edit: false });
         }
     }
 
@@ -138,16 +149,16 @@ class AnnotationBodyItem extends Component {
     }
 
     render() {
-        const { body, classes, t } = this.props;
+        const { body, classes, t, windowId } = this.props;
         const { edit, value, purpose, type, purposeOptionState } = this.state;
-        const purposeOptions = ['tagging', 'describing', 'classifying'];
+        const purposeOptions = ['describing', 'tagging'];
 
         return (
             <ListItem divider className={classes.editAnnotationListItem}>
                 <div>
                     <Grid container spacing={1}>
                         <Grid item xs={8}>
-                            <ListItemText style={{ lineHeight: '1rem'}} primary={type} secondary={purpose} />
+                            <ListItemText style={{ lineHeight: '1rem'}} primary={body.value ? ReactHtmlParser(body.value) : 'no text'} secondary={`${type} | ${purpose}`} />
                         </Grid>
                         <Grid item xs={4}>
                             <IconButton size="small" onClick={() => edit ? this.confirm() : this.edit()}>
@@ -176,13 +187,17 @@ class AnnotationBodyItem extends Component {
                                         purpose
                                     </InputLabel>
                                     {/* maybe add a key */}
-                                    <NativeSelect value={purposeOptions[purposeOptionState]} inputProps={{ name: 'metadata', id: 'uncontrolled-native' }} onChange={this.handleSelcetedPurposeOption}>
+                                    <NativeSelect value={purposeOptions[purposeOptionState]} inputProps={{ name: 'metadata', id: 'uncontrolled-native' }} onChange={this.handleSelectedPurposeOption}>
                                         {purposeOptions.map((value, index) => (
                                             <option value={value}>{value}</option>
                                         ))}
                                     </NativeSelect>
                                 </FormControl>
-                                <TextField id={`${body}-body`} label={t('annotationMetadataBody')} value={value} onChange={this.handleTextFieldInput} variant="standard" />
+                                {
+                                    purposeOptionState=="0"
+                                    ? <AnnotationTextEditorItem key={`${body._temp_id}-TextEditorItem`} value={value} updateValue={this.updateBodyValue} windowId={windowId}  />
+                                    : <TextField id={`${body}-body`} label={t('annotationMetadataBody')} value={value} onChange={this.handleTextFieldInput} variant="standard" />
+                                }
                             </Grid>
                         </Grid>
                     </Collapse>

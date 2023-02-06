@@ -36,10 +36,11 @@ class AnnotationMetadataItem extends Component {
 
     componentDidMount() {
         const { metadata, metadataPos } = this.props;
-        const { value, type, myPos } = this.state;
         this.setState({ myPos: metadataPos });
         if(metadata.value) {
             this.setState({ value: metadata.value })
+        } else {
+            this.setState({ edit: true });
         }
         if(metadata.type) {
             this.setState({ type: metadata.type })
@@ -67,12 +68,11 @@ class AnnotationMetadataItem extends Component {
     }
 
     handleTextFieldInput(e) {
-        const { value } = this.state;
         this.setState({ value: e.target.value });
     }
 
     cancel() {
-        const { edit, value, type } = this.state;
+        const { edit } = this.state;
         const { metadata } = this.props;
         if(edit) {
             if(metadata.value) {
@@ -81,6 +81,7 @@ class AnnotationMetadataItem extends Component {
             if(metadata.type) {
                 this.setState({ type: metadata.type })
             }
+            this.setState({ edit: false });
         }
     }
 
@@ -94,55 +95,55 @@ class AnnotationMetadataItem extends Component {
     }
 
     render() {
-        const { metadata, classes, t, handleDelete} = this.props;
-        const { edit, value, type, myPos } = this.state;
+        const { metadata, classes, t} = this.props;
+        const { edit, value, type } = this.state;
         const metadataOptions = ['creator', 'motivation'];
 
         return (
-            <ListItem divider className={classes.editAnnotationListItem}>
-                <div>
-                    <Grid container spacing={1}>
-                        <Grid item xs={8}>
-                            <ListItemText style={{ lineHeight: '1rem'}} primary={type} secondary={value}/>
-                        </Grid>
-                        <Grid item xs={4}>
-                            <IconButton size="small" onClick={() => edit ? this.confirm() : this.edit()}>
-                                {
-                                    edit
-                                    ? <Check />
-                                    : <EditIcon />
-                                }
-                            </IconButton>
-                            <IconButton size="small" onClick={() => edit ? this.cancel() : this.delete()}>
-                                {
-                                    edit
-                                    ? <Cancel />
-                                    : <DeleteIcon />
-                                }
-                            </IconButton>
-                        </Grid>
-                    </Grid>
-                </div>
-                <div className={classes.editAnnotation}>
-                    <Collapse className={classes.editAnnotationCollapse} in={edit} unmountOnExit>
-                        <Grid container spacing={1}>
-                            <Grid item xs={12}>
-                                <FormControl>
-                                    <InputLabel variant="standard" htmlFor='uncontrolled-native'>
-                                        metadata
-                                    </InputLabel>
-                                    <NativeSelect initialValue={metadataOptions[0]} inputProps={{name: 'metadata', id: 'uncontrolled-native'}}>
-                                        {metadataOptions.map((value) => (
-                                            <option value={value}>{value}</option>
-                                        ))}
-                                    </NativeSelect>
-                                </FormControl>
-                                <TextField id={`${metadata}-creator`} label={t('annotationMetadataCreator')} value={value} onChange={this.handleTextFieldInput} variant="standard" />
+            <>
+                {
+                    metadata.type == 'creator'
+                    ? (<ListItem divider className={classes.editAnnotationListItem}>
+                        <div>
+                            <Grid container spacing={1}>
+                                <Grid item xs={8}>
+                                    <ListItemText style={{ lineHeight: '1rem'}} primary={metadata.type} secondary={ metadata.value ? metadata.value : 'n.a.' }/>
+                                </Grid>
+                                <Grid item xs={4}>
+                                    <IconButton size="small" onClick={() => edit ? this.confirm() : this.edit()}>
+                                        {
+                                            edit
+                                            ? <Check />
+                                            : <EditIcon />
+                                        }
+                                    </IconButton>
+                                    <IconButton size="small" onClick={() => edit ? this.cancel() : null}>
+                                        {
+                                            edit
+                                            ? <Cancel />
+                                            : <></>
+                                        }
+                                    </IconButton>
+                                </Grid>
                             </Grid>
-                        </Grid>
-                    </Collapse>
-                </div>
-            </ListItem>
+                        </div>
+                        <div className={classes.editAnnotation}>
+                            <Collapse className={classes.editAnnotationCollapse} in={edit} unmountOnExit>
+                                <Grid container spacing={1}>
+                                    <Grid item xs={12}>
+                                        {
+                                            metadata.type == 'creator'
+                                            ? <TextField id={`${metadata}-creator`} label={t('annotationMetadataCreator')} value={value} onChange={this.handleTextFieldInput} variant="standard" />
+                                            : <></>
+                                        }
+                                    </Grid>
+                                </Grid>
+                            </Collapse>
+                        </div>
+                    </ListItem>)
+                    : null
+                }
+            </>
         )
     }
 }
