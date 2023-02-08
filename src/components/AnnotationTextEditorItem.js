@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes, { bool } from 'prop-types';
+import PropTypes from 'prop-types';
 import { Editor, EditorState, RichUtils } from 'draft-js';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
@@ -35,7 +35,6 @@ class AnnotationTextEditorItem extends Component {
                     ITALIC: { element: 'i' },
                 },
             };
-            //console.log(stateToHTML(editorState.getCurrentContent(), options).toString());
             updateValue(stateToHTML(editorState.getCurrentContent(), options).toString());
         }
     }

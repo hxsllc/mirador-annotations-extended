@@ -24,7 +24,6 @@ class AnnotationTargetItem extends Component {
 
         this.state = {
             ...targetState,
-            edit: false,
             targetOptionState: 1,
 
         }
@@ -41,8 +40,6 @@ class AnnotationTargetItem extends Component {
         const { target } = this.props;
         if(target.value) {
             this.setState({ value: target.value });
-        } else {
-            this.setState({ edit: true });
         }
         if(target.type) {
             this.setState({ type: target.type })
@@ -62,33 +59,27 @@ class AnnotationTargetItem extends Component {
     }
 
     edit() {
-        const { edit } = this.state;
-        if(!edit) {
-            this.setState({
-                edit: true
-            });
+        const { edit, targetPos, handleEdit } = this.props;
+        if(edit == null) {
+            handleEdit(targetPos, 'target');
         }
     }
 
     updateTargetValue({ value }) {
-        const { edit, type } = this.state;
+        const { type } = this.state;
         if(value && type=='SvgSelector') {
             var val = value.split('stroke="');
             this.setState({ color: val[1].substr(0,7) });
         }
-        if(edit) {
-            this.setState({ value });
-        }
+        this.setState({ value });
     }
 
     confirm() {
-        const { edit , value, type } = this.state;
-        const { targetPos, handleSubmit, target } = this.props;
-        if(edit) {
-            handleSubmit('target', { value: value, type: type, _temp_id: target._temp_id }, targetPos);
-            this.setState({
-                edit: false
-            });
+        const { value, type } = this.state;
+        const { handleSubmit, target, edit, targetPos, handleEdit } = this.props;
+        if(edit == targetPos) {
+            handleSubmit('target', { value: value, type: type, _temp_id: target._temp_id, _temp_name: target._temp_name }, targetPos);
+            handleEdit(null, 'target');
         }
     }
 
@@ -105,41 +96,39 @@ class AnnotationTargetItem extends Component {
     }
 
     cancel() {
-        const { edit } = this.state;
-        const { target } = this.props;
-        if(edit) {
+        const { target, edit, targetPos, handleEdit } = this.props;
+
+        if(edit == targetPos) {
             if(target.value) {
+                if(target.type == 'SvgSelector') {
+                    var val = target.value.split('stroke="');
+                    if(val) {
+                        this.setState({ targetOptionState: 1, color: val[1].substr(0,7), type: target.type });
+                    } else {
+                        this.setState({ targetOptionState: 1, color: null, type: target.type });
+                    }
+                } else {
+                    this.setState({ targetOptionState: 0, color: null, type: target.type ? target.type : 'FragmentSelector' });
+                }
                 this.setState({ value: target.value });
             } else {
-                this.setState({ value: null });
+                this.setState({ value: null, targetOptionState: 1, color: null, type: 'SvgSelector' });
             }
-            if(target.type) {
-                this.setState({ type: target.type });
-                switch(target.type) {
-                    case 'SvgSelector':
-                        this.setState({ targetOptionState: 1 });
-                        break;
-                    default:
-                        this.setState({ targetOptionState: 0 });
-                        break;
-                }
-            }
-            this.setState({ edit: false });
+            handleEdit(null, 'target');
         }
     }
 
     delete() {
-        const { edit } = this.state;
-        const { targetPos, handleDelete } = this.props;
-        if(!edit) {
+        const { handleDelete, edit, targetPos } = this.props;
+        if(edit == null) {
             handleDelete('target', targetPos);
             // you can only delete when you are not editing
         }
     }
 
     render() {
-        const { target, classes, t, targetPos, windowId, _temp_id } = this.props;
-        const { edit, value, type, targetOptionState, color } = this.state;
+        const { target, classes, t, targetPos, windowId, _temp_id, edit } = this.props;
+        const { value, type, targetOptionState, color } = this.state;
         const targetOptions = ['FragmentSelector', 'SvgSelector'];
 
         return (
@@ -147,19 +136,19 @@ class AnnotationTargetItem extends Component {
                 <div>
                     <Grid container spacing={1}>
                         <Grid item xs={8}>
-                            <ListItemText style={{ lineHeight: '1rem'}} primary={type} secondary={ color ? color : value } />
+                            <ListItemText style={{ lineHeight: '1rem'}} primary={target._temp_name} secondaryTypographyProps={ color ? { style: { color: color } } : {}} secondary={ color ? color : value } />
                         </Grid>
                         <Grid item xs={4}>
-                            <IconButton size="small" onClick={() => edit ? this.confirm() : this.edit()}>
+                            <IconButton disabled={ edit!==null && edit !== targetPos } size="small" onClick={() => edit == targetPos ? this.confirm() : this.edit()}>
                                 {
-                                    edit
+                                    edit == targetPos
                                     ? <Check />
                                     : <EditIcon />
                                 }
                             </IconButton>
-                            <IconButton size="small" onClick={() => edit ? this.cancel() : this.delete()}>
+                            <IconButton disabled={ edit!==null && edit !== targetPos } size="small" onClick={() => edit == targetPos ? this.cancel() : this.delete()}>
                                 {
-                                    edit
+                                    edit == targetPos
                                     ? <Cancel />
                                     : <DeleteIcon />
                                 }
@@ -168,10 +157,10 @@ class AnnotationTargetItem extends Component {
                     </Grid>
                 </div>
                 <div className={classes.editAnnotation}>
-                    <Collapse className={classes.editAnnotationCollapse} in={edit} unmountOnExit>
+                    <Collapse className={classes.editAnnotationCollapse} in={edit==targetPos} unmountOnExit>
                         <Grid container spacing={1}>
                             <Grid item xs={12}>
-                            <FormControl>
+                            <FormControl className={classes.hidden}>
                                     <InputLabel variant="standard" htmlFor='uncontrolled-native-target'>
                                         type
                                     </InputLabel>

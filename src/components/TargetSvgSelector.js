@@ -46,8 +46,8 @@ class TargetSvgSelector extends Component {
 
     changeTool(e, tool) {
         const { activeTool } = this.state;
+
         if(activeTool !== 'edit') {
-            console.log(tool);
             this.setState({
                 activeTool: tool,
             });
@@ -102,7 +102,7 @@ class TargetSvgSelector extends Component {
                     <ToggleButton value="ellipse" aria-label="circle" disabled={activeTool =='edit'}>
                         <CircleIcon />
                     </ToggleButton>
-                    <ToggleButton value="polygon" aria-label="polygon" disabled={activeTool =='edit'}>
+                    <ToggleButton className={classes.hidden} value="polygon" aria-label="polygon" disabled={activeTool =='edit'}>
                         <PolygonIcon />
                     </ToggleButton>
                     <ToggleButton value="freehand" aria-label="freehand" disabled={activeTool =='edit'}>

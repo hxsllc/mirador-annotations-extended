@@ -9,18 +9,6 @@ class CanvasListItem extends React.Component {
 
     constructor(props) {
         super(props);
-
-        this.state = {
-            isHovering: false,
-        };
-
-        this.handleMouseHover = this.handleMouseHover.bind(this);
-    }
-
-    handleMouseHover() {
-        this.setState((prevState) => ({
-            isHovering: !prevState.isHovering,
-        }));
     }
 
     editable() {
@@ -42,13 +30,9 @@ class CanvasListItem extends React.Component {
 
     render() {
         const { children, t } = this.props;
-        const { isHovering } = this.state;
         return (
-            <div
-                onMouseEnter={this.handleMouseHover}
-                onMouseLeave={this.handleMouseHover}
-            >
-                {isHovering && this.editable() && (<CanvasListItemTools {...this.props} />)}
+            <div>
+                {this.editable() && (<CanvasListItemTools {...this.props} />)}
                 <li
                     {...this.props} // eslint-disable-line react/jsx-props-no-spreading
                 >

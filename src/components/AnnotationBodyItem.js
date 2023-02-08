@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes, { bool } from 'prop-types';
+import PropTypes from 'prop-types';
 import { ListItem, ListItemText } from '@material-ui/core';
 import { Check, Cancel } from '@material-ui/icons';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
@@ -10,6 +10,7 @@ import { Collapse } from '@material-ui/core';
 import { TextField } from '@material-ui/core';
 import { NativeSelect, FormControl, InputLabel } from '@material-ui/core';
 import AnnotationTextEditorItem from '../containers/AnnotationTextEditorItem';
+import AnnotationTextFieldItem from '../containers/AnnotationTextFieldItem';
 import ReactHtmlParser from 'react-html-parser';
 
 class AnnotationBodyItem extends Component {
@@ -23,7 +24,6 @@ class AnnotationBodyItem extends Component {
         }
 
         this.state = {
-            edit: false,
             purposeOptionState: 0,
             ...bodyState,
         }
@@ -32,17 +32,17 @@ class AnnotationBodyItem extends Component {
         this.confirm = this.confirm.bind(this);
         this.cancel = this.cancel.bind(this);
         this.delete = this.delete.bind(this);
-        this.handleTextFieldInput = this.handleTextFieldInput.bind(this);
         this.handleSelectedPurposeOption = this.handleSelectedPurposeOption.bind(this);
         this.updateBodyValue = this.updateBodyValue.bind(this);
     }
 
     componentDidMount() {
-        const { body } = this.props;
+        const { body, edit, handleEdit, bodyPos } = this.props;
         if(body.value) {
             this.setState({ value: body.value });
-        } else {
-            this.setState({ edit: true });
+        }
+        if(edit == null) {
+            handleEdit(bodyPos, 'body');
         }
         if(body.type) {
             this.setState({ type: body.type });
@@ -64,23 +64,18 @@ class AnnotationBodyItem extends Component {
     }
 
     edit() {
-        const { edit } = this.state;
-        if(!edit) {
-            this.setState({
-                edit: true
-            });
+        const { edit, bodyPos, handleEdit } = this.props;
+        if(edit == null) {
+            handleEdit(bodyPos, 'body');
         }
     }
 
     confirm() {
-        const { edit, value, type, purpose } = this.state;
-        const { bodyPos, handleSubmit, body } = this.props;
-        if(edit) {
-            handleSubmit('body', { value: value, type: type, purpose: purpose, _temp_id: body._temp_id }, bodyPos);
-            this.setState({
-                edit: false
-            });
-        }
+        const { value, type, purpose } = this.state;
+        const { bodyPos, handleSubmit, body, handleEdit } = this.props;
+
+        handleSubmit('body', { value: value, type: type, purpose: purpose, _temp_id: body._temp_id }, bodyPos);
+        handleEdit(null, 'body');
     }
 
     handleSelectedPurposeOption(e) {;
@@ -98,21 +93,16 @@ class AnnotationBodyItem extends Component {
         }
     }
 
-    handleTextFieldInput(e) {
-        this.setState({ value: e.target.value });
-    }
-
     updateBodyValue(newValue) {
-        const { edit } = this.state;
-        if(edit) {
+        const { edit, bodyPos } = this.props;
+        if(edit == bodyPos) {
             this.setState({ value: newValue });
         }
     }
 
     cancel() {
-        const { edit } = this.state;
-        const { body } = this.props;
-        if(edit) {
+        const { body, edit, bodyPos, handleEdit } = this.props;
+        if(edit == bodyPos) {
             if(body.value) {
                 this.setState({ value: body.value });
             } else {
@@ -135,22 +125,20 @@ class AnnotationBodyItem extends Component {
                         break;
                 }
             };
-            this.setState({ edit: false });
+            handleEdit(null, 'body');
         }
     }
 
     delete() {
-        const { edit } = this.state;
-        const { bodyPos, handleDelete } = this.props;
-        if(!edit) {
+        const { bodyPos, handleDelete, edit } = this.props;
+        if(edit == null) {
             handleDelete('body', bodyPos);
-            // you can only delete when you are not editing
         }
     }
 
     render() {
-        const { body, classes, t, windowId } = this.props;
-        const { edit, value, purpose, type, purposeOptionState } = this.state;
+        const { body, classes, t, windowId, edit, bodyPos } = this.props;
+        const { value, purpose, type, purposeOptionState } = this.state;
         const purposeOptions = ['describing', 'tagging'];
 
         return (
@@ -161,16 +149,16 @@ class AnnotationBodyItem extends Component {
                             <ListItemText style={{ lineHeight: '1rem'}} primary={body.value ? ReactHtmlParser(body.value) : 'no text'} secondary={`${type} | ${purpose}`} />
                         </Grid>
                         <Grid item xs={4}>
-                            <IconButton size="small" onClick={() => edit ? this.confirm() : this.edit()}>
+                            <IconButton disabled={edit!==null && edit!==bodyPos} size="small" onClick={() => edit==bodyPos ? this.confirm() : this.edit()}>
                                 {
-                                    edit
+                                    edit==bodyPos
                                     ? <Check />
                                     : <EditIcon />
                                 }
                             </IconButton>
-                            <IconButton size="small" onClick={() => edit ? this.cancel() : this.delete()}>
+                            <IconButton disabled={edit!==null && edit!==bodyPos} size="small" onClick={() => edit==bodyPos ? this.cancel() : this.delete()}>
                                 {
-                                    edit
+                                    edit==bodyPos
                                     ? <Cancel />
                                     : <DeleteIcon />
                                 }
@@ -179,7 +167,7 @@ class AnnotationBodyItem extends Component {
                     </Grid>
                 </div>
                 <div className={classes.editAnnotation}>
-                    <Collapse className={classes.editAnnotationCollapse} in={edit} unmountOnExit>
+                    <Collapse className={classes.editAnnotationCollapse} in={edit==bodyPos} unmountOnExit>
                         <Grid container spacing={1}>
                             <Grid item xs={12}>
                             <FormControl>
@@ -196,7 +184,7 @@ class AnnotationBodyItem extends Component {
                                 {
                                     purposeOptionState=="0"
                                     ? <AnnotationTextEditorItem key={`${body._temp_id}-TextEditorItem`} value={value} updateValue={this.updateBodyValue} windowId={windowId}  />
-                                    : <TextField id={`${body}-body`} label={t('annotationMetadataBody')} value={value} onChange={this.handleTextFieldInput} variant="standard" />
+                                    : <AnnotationTextFieldItem key={`${body._temp_id}-TextFieldItem`} value={value} updateValue={this.updateBodyValue} windowId={windowId} />
                                 }
                             </Grid>
                         </Grid>

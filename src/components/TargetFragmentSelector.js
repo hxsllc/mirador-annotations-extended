@@ -31,10 +31,9 @@ class TargetFragmentSelector extends Component {
     }
 
     componentDidMount() {
-        const { xywh } = this.state;
         const { value } = this.props;
         if(value) {
-            this.setState({ xywh: value, activeTool: 'edit' });
+            this.setState({ xywh: value.includes('xywh=') ? value.slice(5) : value, activeTool: 'edit' });
         }
     }
 
@@ -48,7 +47,7 @@ class TargetFragmentSelector extends Component {
         const { updateValue } = this.props;
         const { activeTool } = this.state;
         this.setState({ xywh });
-        updateValue({ value: xywh });
+        updateValue({ value: `xywh=${xywh}` });
         if(xywh && activeTool !=='edit') {
             this.setState({ activeTool: 'edit'});
         }

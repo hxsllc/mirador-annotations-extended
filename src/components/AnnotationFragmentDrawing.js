@@ -94,7 +94,6 @@ class AnnotationFragmentDrawing extends Component {
                         const paths = flatten(paper.project.layers.map((layer) => (
                             flatten(mapChildren(layer)).map((aPath) => aPath)
                         )));
-                        console.log(paper);
                         if(xywh) {
                             //paper.createBounds(xywh);
                             // add from Paper Path.Rectangle(point, size, strokeColor)

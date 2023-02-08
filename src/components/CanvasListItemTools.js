@@ -5,6 +5,9 @@ import EditIcon from '@material-ui/icons/Edit';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import AnnotationActionsContext from '../AnnotationActionsContext';
+import IconButton from '@material-ui/core/IconButton';
+import { Box } from '@material-ui/core';
+
 
 
 /** */
@@ -57,11 +60,11 @@ class CanvasListItemTools extends React.Component {
             <div
                 style={{
                     position: 'relative',
-                    top: -20,
+                    top: 0,
                     zIndex: 10000,
                 }}
             >
-                <ToggleButtonGroup
+                <Box
                     aria-label={t('canvasAnnotationTools')}
                     size="small"
                     style={{
@@ -69,21 +72,23 @@ class CanvasListItemTools extends React.Component {
                         right: 0,
                     }}
                 >
-                    <ToggleButton
+                    <IconButton
                         aria-label={t('canvasAnnotationToolsEdit')}
                         onClick={windowViewType === 'single' ? this.handleEdit : toggleSingleCanvasDialogOpen}
                         value="edit"
+                        size="small"
                     >
                         <EditIcon />
-                    </ToggleButton>
-                    <ToggleButton
+                    </IconButton>
+                    <IconButton
                         aria-label={t('canvasAnnotationToolsDelete')}
                         onClick={this.handleDelete}
                         value="delete"
+                        size="small"
                     >
                         <DeleteIcon />
-                    </ToggleButton>
-                </ToggleButtonGroup>
+                    </IconButton>
+                </Box>
             </div>
         );
     }

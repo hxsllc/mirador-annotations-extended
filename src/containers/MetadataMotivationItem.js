@@ -1,14 +1,10 @@
 import { compose } from 'redux';
+import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
 import { withStyles } from '@material-ui/core/styles';
-import TargetSvgSelector from '../components/TargetSvgSelector';
-
+import MetadataMotivationItem from '../components/MetadataMotivationItem';
 
 const styles = (theme) => ({
-    selector: {},
-    hidden: {
-        display: 'none',
-    }
 });
 
 const enhance = compose(
@@ -16,4 +12,4 @@ const enhance = compose(
     withStyles(styles),
 );
 
-export default enhance(TargetSvgSelector);
+export default enhance(MetadataMotivationItem);

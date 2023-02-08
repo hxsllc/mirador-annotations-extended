@@ -40,8 +40,9 @@ class AnnotationSvgDrawing extends Component {
         const svgExports = flatten(path.project.layers.map((layer) => (
             flatten(mapChildren(layer)).map((aPath) => aPath.exportSVG({ asString: true }))
         )));
-        svgExports.unshift("<svg xmlns='http://www.w3.org/2000/svg'>");
-        svgExports.push('</svg>');
+        // no enclosing tags here
+        /*svgExports.unshift("<svg xmlns='http://www.w3.org/2000/svg'>");
+        svgExports.push('</svg>');*/
         updateGeometry({
             svg: svgExports.join('')
         });

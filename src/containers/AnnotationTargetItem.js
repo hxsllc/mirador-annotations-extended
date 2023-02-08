@@ -16,6 +16,9 @@ const styles = (theme) => ({
         paddingLeft: theme.spacing(0),
         paddingRight: theme.spacing(0),
     },
+    hidden: {
+        display: 'none',
+    },
 });
 
 const enhance = compose(

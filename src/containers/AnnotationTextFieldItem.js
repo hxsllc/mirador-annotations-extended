@@ -1,14 +1,11 @@
 import { compose } from 'redux';
 import { withTranslation } from 'react-i18next';
 import { withStyles } from '@material-ui/core/styles';
-import TargetSvgSelector from '../components/TargetSvgSelector';
-
+import AnnotationTextFieldItem from '../components/AnnotationTextFieldItem';
 
 const styles = (theme) => ({
-    selector: {},
-    hidden: {
-        display: 'none',
-    }
+    editorRoot: {
+    },
 });
 
 const enhance = compose(
@@ -16,4 +13,4 @@ const enhance = compose(
     withStyles(styles),
 );
 
-export default enhance(TargetSvgSelector);
+export default enhance(AnnotationTextFieldItem);
