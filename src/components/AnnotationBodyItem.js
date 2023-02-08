@@ -37,12 +37,11 @@ class AnnotationBodyItem extends Component {
     }
 
     componentDidMount() {
-        const { body, edit, handleEdit, bodyPos } = this.props;
+        const { body, edit, handleEdit } = this.props;
         if(body.value) {
             this.setState({ value: body.value });
-        }
-        if(edit == null) {
-            handleEdit(bodyPos, 'body');
+        } else if(edit == null) {
+            handleEdit(body._temp_id, 'body');
         }
         if(body.type) {
             this.setState({ type: body.type });
@@ -64,9 +63,9 @@ class AnnotationBodyItem extends Component {
     }
 
     edit() {
-        const { edit, bodyPos, handleEdit } = this.props;
+        const { edit, handleEdit, body } = this.props;
         if(edit == null) {
-            handleEdit(bodyPos, 'body');
+            handleEdit(body._temp_id, 'body');
         }
     }
 
@@ -94,15 +93,15 @@ class AnnotationBodyItem extends Component {
     }
 
     updateBodyValue(newValue) {
-        const { edit, bodyPos } = this.props;
-        if(edit == bodyPos) {
+        const { edit, body } = this.props;
+        if(edit == body._temp_id) {
             this.setState({ value: newValue });
         }
     }
 
     cancel() {
-        const { body, edit, bodyPos, handleEdit } = this.props;
-        if(edit == bodyPos) {
+        const { body, edit, handleEdit } = this.props;
+        if(edit == body._temp_id) {
             if(body.value) {
                 this.setState({ value: body.value });
             } else {
@@ -137,7 +136,7 @@ class AnnotationBodyItem extends Component {
     }
 
     render() {
-        const { body, classes, t, windowId, edit, bodyPos } = this.props;
+        const { body, classes, t, windowId, edit } = this.props;
         const { value, purpose, type, purposeOptionState } = this.state;
         const purposeOptions = ['describing', 'tagging'];
 
@@ -149,16 +148,16 @@ class AnnotationBodyItem extends Component {
                             <ListItemText style={{ lineHeight: '1rem'}} primary={body.value ? ReactHtmlParser(body.value) : 'no text'} secondary={`${type} | ${purpose}`} />
                         </Grid>
                         <Grid item xs={4}>
-                            <IconButton disabled={edit!==null && edit!==bodyPos} size="small" onClick={() => edit==bodyPos ? this.confirm() : this.edit()}>
+                            <IconButton disabled={edit!==null && edit!==body._temp_id} size="small" onClick={() => edit==body._temp_id ? this.confirm() : this.edit()}>
                                 {
-                                    edit==bodyPos
+                                    edit==body._temp_id
                                     ? <Check />
                                     : <EditIcon />
                                 }
                             </IconButton>
-                            <IconButton disabled={edit!==null && edit!==bodyPos} size="small" onClick={() => edit==bodyPos ? this.cancel() : this.delete()}>
+                            <IconButton disabled={edit!==null && edit!==body._temp_id} size="small" onClick={() => edit==body._temp_id ? this.cancel() : this.delete()}>
                                 {
-                                    edit==bodyPos
+                                    edit==body._temp_id
                                     ? <Cancel />
                                     : <DeleteIcon />
                                 }
@@ -167,7 +166,7 @@ class AnnotationBodyItem extends Component {
                     </Grid>
                 </div>
                 <div className={classes.editAnnotation}>
-                    <Collapse className={classes.editAnnotationCollapse} in={edit==bodyPos} unmountOnExit>
+                    <Collapse className={classes.editAnnotationCollapse} in={edit==body._temp_id} unmountOnExit>
                         <Grid container spacing={1}>
                             <Grid item xs={12}>
                             <FormControl>

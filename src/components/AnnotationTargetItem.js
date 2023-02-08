@@ -59,9 +59,9 @@ class AnnotationTargetItem extends Component {
     }
 
     edit() {
-        const { edit, targetPos, handleEdit } = this.props;
+        const { edit, target, handleEdit } = this.props;
         if(edit == null) {
-            handleEdit(targetPos, 'target');
+            handleEdit(target._temp_id, 'target');
         }
     }
 
@@ -77,7 +77,7 @@ class AnnotationTargetItem extends Component {
     confirm() {
         const { value, type } = this.state;
         const { handleSubmit, target, edit, targetPos, handleEdit } = this.props;
-        if(edit == targetPos) {
+        if(edit == target._temp_id) {
             handleSubmit('target', { value: value, type: type, _temp_id: target._temp_id, _temp_name: target._temp_name }, targetPos);
             handleEdit(null, 'target');
         }
@@ -98,7 +98,7 @@ class AnnotationTargetItem extends Component {
     cancel() {
         const { target, edit, targetPos, handleEdit } = this.props;
 
-        if(edit == targetPos) {
+        if(edit == target._temp_id) {
             if(target.value) {
                 if(target.type == 'SvgSelector') {
                     var val = target.value.split('stroke="');
@@ -139,16 +139,16 @@ class AnnotationTargetItem extends Component {
                             <ListItemText style={{ lineHeight: '1rem'}} primary={target._temp_name} secondaryTypographyProps={ color ? { style: { color: color } } : {}} secondary={ color ? color : value } />
                         </Grid>
                         <Grid item xs={4}>
-                            <IconButton disabled={ edit!==null && edit !== targetPos } size="small" onClick={() => edit == targetPos ? this.confirm() : this.edit()}>
+                            <IconButton disabled={ edit!==null && edit !== target._temp_id } size="small" onClick={() => edit == target._temp_id ? this.confirm() : this.edit()}>
                                 {
-                                    edit == targetPos
+                                    edit == target._temp_id
                                     ? <Check />
                                     : <EditIcon />
                                 }
                             </IconButton>
-                            <IconButton disabled={ edit!==null && edit !== targetPos } size="small" onClick={() => edit == targetPos ? this.cancel() : this.delete()}>
+                            <IconButton disabled={ edit!==null && edit !== target._temp_id } size="small" onClick={() => edit == target._temp_id ? this.cancel() : this.delete()}>
                                 {
-                                    edit == targetPos
+                                    edit == target._temp_id
                                     ? <Cancel />
                                     : <DeleteIcon />
                                 }
@@ -157,7 +157,7 @@ class AnnotationTargetItem extends Component {
                     </Grid>
                 </div>
                 <div className={classes.editAnnotation}>
-                    <Collapse className={classes.editAnnotationCollapse} in={edit==targetPos} unmountOnExit>
+                    <Collapse className={classes.editAnnotationCollapse} in={edit==target._temp_id} unmountOnExit>
                         <Grid container spacing={1}>
                             <Grid item xs={12}>
                             <FormControl className={classes.hidden}>

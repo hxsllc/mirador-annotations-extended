@@ -24,8 +24,6 @@ class AnnotationMetadataItem extends Component {
         }
 
         this.state = {
-            edit: false,
-            myPos: null,
             ...metadataState,
         }
 
@@ -37,13 +35,14 @@ class AnnotationMetadataItem extends Component {
     }
 
     componentDidMount() {
-        const { metadata, metadataPos } = this.props;
+        const { metadata, edit, handleEdit } = this.props;
 
-        this.setState({ myPos: metadataPos });
         if(metadata.value) {
             this.setState({ value: metadata.value })
         } else {
-            this.setState({ edit: true });
+            if(metadata.type =='creator' && edit==null) {
+                handleEdit(metadata._temp_id, 'metadata');
+            }
         }
         if(metadata.type) {
             this.setState({ type: metadata.type })
@@ -51,22 +50,18 @@ class AnnotationMetadataItem extends Component {
     }
 
     edit() {
-        const { edit } = this.state;
-        if(!edit) {
-            this.setState({
-                edit: true
-            });
+        const { edit, metadata, handleEdit } = this.props
+        if(edit == null) {
+            handleEdit(metadata._temp_id, 'metadata');
         }
     }
 
     confirm() {
-        const { edit , value, type } = this.state;
-        const { metadataPos, handleSubmit, metadata } = this.props;
-        if(edit) {
+        const { value, type } = this.state;
+        const { handleSubmit, metadata, edit, metadataPos, handleEdit } = this.props;
+        if(edit == metadata._temp_id) {
             handleSubmit('metadata', { value: value, type: type, _temp_id: metadata._temp_id }, metadataPos);
-            this.setState({
-                edit: false
-            });
+            handleEdit(null, 'metadata');
         }
     }
 
@@ -75,30 +70,28 @@ class AnnotationMetadataItem extends Component {
     }
 
     cancel() {
-        const { edit } = this.state;
-        const { metadata } = this.props;
-        if(edit) {
+        const { metadata, edit, handleEdit } = this.props;
+        if(edit == metadata._temp_id) {
             if(metadata.value) {
                 this.setState({ value: metadata.value })
             }
             if(metadata.type) {
                 this.setState({ type: metadata.type })
             }
-            this.setState({ edit: false });
+            handleEdit(null, 'metadata');
         }
     }
 
     delete() {
-        const { edit } = this.state;
-        const { handleDelete, metadataPos } = this.props;
-        if(!edit) {
+        const { handleDelete, metadataPos, edit } = this.props;
+        if(edit == null) {
             handleDelete('metadata', metadataPos);
         }
     }
 
     render() {
-        const { metadata, classes, t} = this.props;
-        const { edit, value, type, motivationOptions } = this.state;
+        const { metadata, classes, t, edit } = this.props;
+        const { value, type, motivationOptions } = this.state;
 
         return (
 
@@ -110,16 +103,16 @@ class AnnotationMetadataItem extends Component {
                             <ListItemText style={{ lineHeight: '1rem'}} primary={metadata.type} secondary={ metadata.value ? metadata.value : 'n.a.' }/>
                         </Grid>
                         <Grid item xs={4}>
-                            <IconButton size="small" onClick={() => edit ? this.confirm() : this.edit()}>
+                            <IconButton disabled={edit!==null && edit!==metadata._temp_id} size="small" onClick={() => edit==metadata._temp_id ? this.confirm() : this.edit()}>
                                 {
-                                    edit
+                                    edit==metadata._temp_id
                                     ? <Check />
                                     : <EditIcon />
                                 }
                             </IconButton>
-                            <IconButton size="small" onClick={() => edit ? this.cancel() : null}>
+                            <IconButton disabled={edit!==null && edit!==metadata._temp_id} size="small" onClick={() => edit==metadata._temp_id ? this.cancel() : null}>
                                 {
-                                    edit
+                                    edit==metadata._temp_id
                                     ? <Cancel />
                                     : <></>
                                 }
@@ -128,7 +121,7 @@ class AnnotationMetadataItem extends Component {
                     </Grid>
                 </div>
                 <div className={classes.editAnnotation}>
-                    <Collapse className={classes.editAnnotationCollapse} in={edit} unmountOnExit>
+                    <Collapse className={classes.editAnnotationCollapse} in={edit==metadata._temp_id} unmountOnExit>
                         <Grid container spacing={1}>
                             <Grid item xs={12}>
                                 {
