@@ -58,9 +58,9 @@ class AnnotationMetadataItem extends Component {
 
     confirm() {
         const { value, type } = this.state;
-        const { handleSubmit, metadata, edit, metadataPos, handleEdit } = this.props;
+        const { handleSubmit, metadata, edit, handleEdit } = this.props;
         if(edit == metadata._temp_id) {
-            handleSubmit('metadata', { value: value, type: type, _temp_id: metadata._temp_id }, metadataPos);
+            handleSubmit('metadata', { value: value, type: type, _temp_id: metadata._temp_id }, metadata._temp_id);
             handleEdit(null, 'metadata');
         }
     }
@@ -83,15 +83,15 @@ class AnnotationMetadataItem extends Component {
     }
 
     delete() {
-        const { handleDelete, metadataPos, edit } = this.props;
+        const { handleDelete, metadata, edit } = this.props;
         if(edit == null) {
-            handleDelete('metadata', metadataPos);
+            handleDelete('metadata', metadata._temp_id);
         }
     }
 
     render() {
         const { metadata, classes, t, edit } = this.props;
-        const { value, type, motivationOptions } = this.state;
+        const { value } = this.state;
 
         return (
 
@@ -128,7 +128,6 @@ class AnnotationMetadataItem extends Component {
                                     metadata.type == 'creator'
                                     ? <MetadataCreatorItem id={`${metadata}-creator`} value={value} handleChange={this.handleChange}/>
                                     : <MetadataMotivationItem value={value} handleChange={this.handleChange} />
-
                                 }
                             </Grid>
                         </Grid>

@@ -76,9 +76,9 @@ class AnnotationTargetItem extends Component {
 
     confirm() {
         const { value, type } = this.state;
-        const { handleSubmit, target, edit, targetPos, handleEdit } = this.props;
+        const { handleSubmit, target, edit, handleEdit } = this.props;
         if(edit == target._temp_id) {
-            handleSubmit('target', { value: value, type: type, _temp_id: target._temp_id, _temp_name: target._temp_name }, targetPos);
+            handleSubmit('target', { value: value, type: type, _temp_id: target._temp_id, _temp_name: target._temp_name }, target._temp_id);
             handleEdit(null, 'target');
         }
     }
@@ -96,7 +96,7 @@ class AnnotationTargetItem extends Component {
     }
 
     cancel() {
-        const { target, edit, targetPos, handleEdit } = this.props;
+        const { target, edit, handleEdit } = this.props;
 
         if(edit == target._temp_id) {
             if(target.value) {
@@ -119,15 +119,15 @@ class AnnotationTargetItem extends Component {
     }
 
     delete() {
-        const { handleDelete, edit, targetPos } = this.props;
+        const { handleDelete, edit, target } = this.props;
         if(edit == null) {
-            handleDelete('target', targetPos);
+            handleDelete('target', target._temp_id);
             // you can only delete when you are not editing
         }
     }
 
     render() {
-        const { target, classes, t, targetPos, windowId, _temp_id, edit } = this.props;
+        const { target, classes, t, windowId, _temp_id, edit } = this.props;
         const { value, type, targetOptionState, color } = this.state;
         const targetOptions = ['FragmentSelector', 'SvgSelector'];
 

@@ -12,6 +12,24 @@ const config = {
         exportLocalStorageAnnotations: true, // display annotation JSON export button
     },
     id: 'demo',
+    themes: {
+        dark: {
+            palette: {
+                type: 'dark',
+                primary: {
+                    main: '#ffb6c1'
+                },
+            },
+        },
+        light: {
+            palette: {
+                type: 'light',
+                primary: {
+                    main: '#ffb6c1'
+                },
+            },
+        },
+    },
     window: {
         defaultSideBarPanel: 'annotations',
         sideBarOpenByDefault: true,

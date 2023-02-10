@@ -20,7 +20,7 @@ class AnnotationTextFieldItem extends Component {
         const { value, t } = this.props;
 
         return (
-            <TextField label={t('annotationMetadataBody')} value={value} onChange={this.onChange} variant="standard" />
+            <TextField hiddenLabel value={value} onChange={this.onChange} small style={ value ? { width: (value.length * 7.5) } : { width: 10}} variant="standard" />
         )
     }
 }

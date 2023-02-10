@@ -4,40 +4,12 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import RectangleIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import CircleIcon from '@material-ui/icons/RadioButtonUnchecked';
-import PolygonIcon from '@material-ui/icons/Timeline';
-import GestureIcon from '@material-ui/icons/Gesture';
-import ClosedPolygonIcon from '@material-ui/icons/ChangeHistory';
-import OpenPolygonIcon from '@material-ui/icons/ShowChart';
-import FormatColorFillIcon from '@material-ui/icons/FormatColorFill';
-import StrokeColorIcon from '@material-ui/icons/BorderColor';
-import LineWeightIcon from '@material-ui/icons/LineWeight';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import FormatShapesIcon from '@material-ui/icons/FormatShapes';
-import DeleteIcon from '@material-ui/icons/DeleteForever';
-import EditIcon from '@material-ui/icons/Edit';
-import { Add, TransferWithinAStationOutlined } from '@material-ui/icons';
-import Popover from '@material-ui/core/Popover';
-import Divider from '@material-ui/core/Divider';
-import MenuItem from '@material-ui/core/MenuItem';
-import { TextField } from '@material-ui/core';
-import { ExpandMore, ExpandLess } from '@material-ui/icons';
-import { Collapse } from '@material-ui/core';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import MenuList from '@material-ui/core/MenuList';
-import { List, ListItem, ListItemText } from '@material-ui/core';
-import { SketchPicker } from 'react-color';
+import { Add } from '@material-ui/icons';
+import { List } from '@material-ui/core';
 import { v4 as uuid } from 'uuid';
 import CompanionWindow from 'mirador/dist/es/src/containers/CompanionWindow';
 import CollapsibleSection from 'mirador/dist/es/src/containers/CollapsibleSection';
-import AnnotationDrawing from './AnnotationDrawing';
-import TextEditor from '../containers/TextEditor';
 import WebAnnotation from '../WebAnnotation';
-import CursorIcon from '../icons/Cursor';
-import { Check } from '@material-ui/icons';
 import IconButton from '@material-ui/core/IconButton';
 import { Visibility } from '@material-ui/icons';
 import { VisibilityOff } from '@material-ui/icons';
@@ -203,22 +175,46 @@ class AnnotationCreation extends Component {
         this.toggleAllTargets = this.toggleAllTargets.bind(this);
     }
 
-    deleteAnnotationItem(type, pos) {
+    deleteAnnotationItem(type, _temp_id) {
         const { body, metadata, target } = this.state;
         switch(type) {
             case "target":
+                var dataPos = null;
+                var index = 0;
+                while (index < target.length && !dataPos) {
+                    if(target[index]._temp_id == _temp_id) {
+                        dataPos = index;
+                    };
+                    index++;
+                }
                 var newData = target;
-                newData.splice(pos, 1);
+                newData.splice(dataPos, 1);
                 this.setState({ target: newData });
                 break;
             case "metadata":
+                var dataPos = null;
+                var index = 0;
+                while (index < metadata.length && !dataPos) {
+                    if(metadata[index]._temp_id == _temp_id) {
+                        dataPos = index;
+                    };
+                    index++;
+                }
                 var newData = metadata;
-                newData.splice(pos, 1);
+                newData.splice(dataPos, 1);
                 this.setState({ metadata: newData });
                 break;
             case "body":
+                var dataPos = null;
+                var index = 0;
+                while (index < body.length && !dataPos) {
+                    if(body[index]._temp_id == _temp_id) {
+                        dataPos = index;
+                    };
+                    index++;
+                }
                 var newData = body;
-                newData.splice(pos, 1);
+                newData.splice(dataPos, 1);
                 this.setState({ body: newData });
                 break;
             default:
@@ -227,8 +223,8 @@ class AnnotationCreation extends Component {
     }
 
     /** add dynamic generatet ids whichare only used to get freaking rerendering done */
-    createAnnotationItem(type) {
-        const { body, metadata, target, metadataCount, bodyCount, targetCount, annoId, nickName } = this.state;
+    createAnnotationItem(type, subType = null) {
+        const { body, target, bodyCount, targetCount, annoId, nickName } = this.state;
 
         switch(type) {
             case "target":
@@ -237,7 +233,7 @@ class AnnotationCreation extends Component {
                 this.setState({ target: newData, targetCount: targetCount + 1 });
                 break;
             case "body":
-                const bodyBase = { type: 'TextualBody', value: null, purpose: null, _temp_id: annoId + '-body-item-' + bodyCount };
+                const bodyBase = { type: 'TextualBody', value: null, purpose: subType, _temp_id: annoId + '-body-item-' + bodyCount };
                 var newData = body.concat(bodyBase);
                 this.setState({ body: newData, bodyCount: bodyCount +1 });
                 break;
@@ -246,22 +242,46 @@ class AnnotationCreation extends Component {
         }
     }
 
-    updateAnnotationItem(type, content, pos) {
+    updateAnnotationItem(type, content, _temp_id) {
         const { body, metadata, target } = this.state;
         switch(type) {
             case "target":
+                var dataPos = null;
+                var index = 0;
+                while (index < target.length && !dataPos) {
+                    if(target[index]._temp_id == _temp_id) {
+                        dataPos = index;
+                    };
+                    index++;
+                }
                 var newData = target;
-                newData[pos] = content;
+                newData[dataPos] = content;
                 this.setState({ target: newData });
                 break;
             case "metadata":
+                var dataPos = null;
+                var index = 0;
+                while (index < metadata.length && !dataPos) {
+                    if(metadata[index]._temp_id == _temp_id) {
+                        dataPos = index;
+                    };
+                    index++;
+                }
                 var newData = metadata;
-                newData[pos] = content;
+                newData[dataPos] = content;
                 this.setState({ metadata: newData });
                 break;
             case "body":
+                var dataPos = null;
+                var index = 0;
+                while (index < body.length && !dataPos) {
+                    if(body[index]._temp_id == _temp_id) {
+                        dataPos = index;
+                    };
+                    index++;
+                }
                 var newData = body;
-                newData[pos] = content;
+                newData[dataPos] = content;
                 this.setState({ body: newData });
                 break;
             default:
@@ -360,60 +380,99 @@ class AnnotationCreation extends Component {
 
                 {/* metadata testing section */}
                 <div className={classes.section}>
-                    <CollapsibleSection id={`${id}-metadata`} label={t('metadata')}>
+                    <div id={`${id}-metadata`} className={classes.container}>
+                        <Typography variant="h5" color="primary">{t('annotationCreationMetadata')}</Typography>
                         <List disablePadding>
                             {metadata?.map((value, index) => (
                                 <AnnotationMetadataItem edit={metadataEditState} key={value._temp_id} handleEdit={this.setEditState} metadata={value} metadataPos={index} handleDelete={this.deleteAnnotationItem} handleSubmit={this.updateAnnotationItem} />
                             ))}
                         </List>
-                    </CollapsibleSection>
+                    </div>
                 </div>
 
                 {/* target testing section */}
                 <div className={classes.section}>
-                    <CollapsibleSection id={`${id}-targets`} label="Targets">
-                        <IconButton size="small" onClick={this.toggleAllTargets}>
-                            { showTarget ? <VisibilityOff /> : <Visibility /> }
-                        </IconButton>
-                            { showTarget ? <AnnotationTargetDisplay windowId={windowId} svgs={target} /> : null }
+                    <div id={`${id}-targets`} className={classes.container}>
+                        <div>
+                            <Grid container>
+                                <Grid item xs={8}>
+                                    <Typography variant="h5" color="primary">
+                                        {t('annotationCreationTarget')}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={4}>
+                                    <div className={classes.addSection}>
+                                        <IconButton size="small" onClick={this.toggleAllTargets}>
+                                            { showTarget ? <VisibilityOff /> : <Visibility /> }
+                                        </IconButton>
+                                        { showTarget ? <AnnotationTargetDisplay windowId={windowId} svgs={target} /> : null }
+                                        <MiradorMenuButton aria-label={t('createNewTarget')} className={classes.button} onClick={() => this.createAnnotationItem('target')}>
+                                            <Add />
+                                        </MiradorMenuButton>
+                                    </div>
+                                </Grid>
+                            </Grid>
+                        </div>
                         <List disablePadding>
                             {target?.map((value, index) => (
                                 <AnnotationTargetItem edit={targetEditState} handleEdit={this.setEditState} key={value._temp_id} target={value} targetPos={index} handleDelete={this.deleteAnnotationItem} handleSubmit={this.updateAnnotationItem} windowId={windowId} />
                             ))}
                         </List>
-                        <div className={classes.addSection}>
-                            <MiradorMenuButton aria-label="hooray" className={classes.button} onClick={() => this.createAnnotationItem('target')}>
-                                <Add />
-                            </MiradorMenuButton>
-                        </div>
-                    </CollapsibleSection>
+                    </div>
                 </div>
 
                 {/* testing body section */}
                 <div className={classes.section}>
-                    <CollapsibleSection id={`${id}-bodies`} label="Bodies">
-                        Texte
-                        <List component="div" disablePadding>
-                            {body.filter(item => item.type!=='tagging')?.map((value, index) => (
-                                <AnnotationBodyItem edit={bodyEditState} key={value._temp_id} body={value} bodyPos={index} handleEdit={this.setEditState} handleDelete={this.deleteAnnotationItem} handleSubmit={this.updateAnnotationItem} />
+                    <div id={`${id}-bodies`} className={classes.container}>
+                        <Typography variant="h5" color="primary">{t('annotationCreationBody')}</Typography>
+                        <div>
+                            <Grid container>
+                                <Grid item xs={10}>
+                                    <Typography variant="h6">
+                                        {t('annotationCreationBodyTags')}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={2}>
+                                    <div className={classes.addSection}>
+                                        <MiradorMenuButton aria-label={t('createNewTag')} className={classes.button} onClick={() => this.createAnnotationItem('body', 'tagging')}>
+                                            <Add />
+                                        </MiradorMenuButton>
+                                    </div>
+                                </Grid>
+                            </Grid>
+                        </div>
+                        <div style={{ marginBottom: 30 }}>
+                            <List component="div" disablePadding>
+                                {body.filter(item => item.purpose=='tagging')?.map((value, index) => (
+                                    <AnnotationBodyItem edit={bodyEditState} key={value._temp_id} body={value} bodyPos={index} handleEdit={this.setEditState} handleDelete={this.deleteAnnotationItem} handleSubmit={this.updateAnnotationItem} />
 
+                                ))}
+                            </List>
+                        </div>
+
+
+                        <div>
+                            <Grid container>
+                                <Grid item xs={10}>
+                                    <Typography variant="h6">
+                                    {t('annotationCreationBodyTexts')}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={2}>
+                                    <div className={classes.addSection}>
+                                        <MiradorMenuButton aria-label={t('createNewDescribing')} className={classes.button} onClick={() => this.createAnnotationItem('body', 'describing')}>
+                                            <Add />
+                                        </MiradorMenuButton>
+                                    </div>
+                                </Grid>
+                            </Grid>
+                        </div>
+                        <List component="div" disablePadding>
+                            {body.filter(item => item.purpose!=='tagging')?.map((value, index) => (
+                                <AnnotationBodyItem edit={bodyEditState} key={value._temp_id} body={value} bodyPos={index} handleEdit={this.setEditState} handleDelete={this.deleteAnnotationItem} handleSubmit={this.updateAnnotationItem} />
                             ))}
                         </List>
-
-                        {/*Tags
-                        <List component="div" disablePadding>
-                            {body.filter(item => item.type=='tagging')?.map((value, index) => (
-                                <AnnotationBodyItem edit={bodyEditState} key={value._temp_id} body={value} bodyPos={index} handleEdit={this.setEditState} handleDelete={this.deleteAnnotationItem} handleSubmit={this.updateAnnotationItem} />
-
-                            ))}
-                            </List>*/}
-
-                        <div className={classes.addSection}>
-                            <MiradorMenuButton aria-label="hooray" className={classes.button} onClick={() => this.createAnnotationItem('body')}>
-                                <Add />
-                            </MiradorMenuButton>
-                        </div>
-                    </CollapsibleSection>
+                    </div>
                 </div>
 
                 <div>
