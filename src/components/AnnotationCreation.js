@@ -9,6 +9,7 @@ import { List } from '@material-ui/core';
 import { v4 as uuid } from 'uuid';
 import CompanionWindow from 'mirador/dist/es/src/containers/CompanionWindow';
 import CollapsibleSection from 'mirador/dist/es/src/containers/CollapsibleSection';
+import { Divider } from '@material-ui/core';
 import WebAnnotation from '../WebAnnotation';
 import IconButton from '@material-ui/core/IconButton';
 import { Visibility } from '@material-ui/icons';
@@ -140,7 +141,7 @@ class AnnotationCreation extends Component {
 
             var tempMotivation = {
                 type: 'motivation',
-                value: null,
+                value: 'commenting',
                 _temp_id: annoState.annoId + '-metadata-item-' + annoState.metadataCount
             };
             annoState.metadata.push(tempMotivation);
@@ -402,7 +403,7 @@ class AnnotationCreation extends Component {
                                 </Grid>
                                 <Grid item xs={4}>
                                     <div className={classes.addSection}>
-                                        <IconButton size="small" onClick={this.toggleAllTargets}>
+                                        <IconButton disabled={!target.length} size="small" onClick={this.toggleAllTargets}>
                                             { showTarget ? <VisibilityOff /> : <Visibility /> }
                                         </IconButton>
                                         { showTarget ? <AnnotationTargetDisplay windowId={windowId} svgs={target} /> : null }
@@ -449,6 +450,8 @@ class AnnotationCreation extends Component {
                                 ))}
                             </List>
                         </div>
+
+                        <Divider style={{ marginBottom: '25px' }} />
 
 
                         <div>

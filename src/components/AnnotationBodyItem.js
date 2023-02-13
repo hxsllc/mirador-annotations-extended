@@ -151,7 +151,7 @@ class AnnotationBodyItem extends Component {
                             label={
                                 edit==body._temp_id
                                 ? (<AnnotationTextFieldItem key={`${body._temp_id}-TextFieldItem`} value={value} updateValue={this.updateBodyValue} windowId={windowId} />)
-                                : (body.value ? body.value : '❤ (｡◕‿◕｡) ❤')}
+                                : (body.value ? body.value : "no text")}
                             variant={edit==body._temp_id ? "default" : "outlined"}
                             color={edit==body._temp_id ? "primary" : ""}
                             onClick={() => edit==body._temp_id ? null : this.edit()}
@@ -162,7 +162,7 @@ class AnnotationBodyItem extends Component {
                         <div>
                             <Grid container spacing={1}>
                                 <Grid item xs={8}>
-                                    <ListItemText style={{ lineHeight: '1rem'}} primary={body.value ? ReactHtmlParser(body.value) : 'no text'} secondary={`${type} | ${purpose}`} />
+                                    <ListItemText style={{ lineHeight: '1rem'}} primary={body.value ? ReactHtmlParser(body.value) : 'no text'} />
                                 </Grid>
                                 <Grid item xs={4}>
                                     <IconButton disabled={edit!==null && edit!==body._temp_id} size="small" onClick={() => edit==body._temp_id ? this.confirm() : this.edit()}>

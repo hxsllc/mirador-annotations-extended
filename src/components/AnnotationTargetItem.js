@@ -11,6 +11,7 @@ import { TextField } from '@material-ui/core';
 import { NativeSelect, FormControl, InputLabel } from '@material-ui/core';
 import TargetFragmentSelector from '../containers/TargetFragmentSelector';
 import TargetSvgSelector from '../containers/TargetSvgSelector';
+import { Favorite } from '@material-ui/icons';
 
 class AnnotationTargetItem extends Component {
     constructor(props) {
@@ -37,7 +38,7 @@ class AnnotationTargetItem extends Component {
     }
 
     componentDidMount() {
-        const { target } = this.props;
+        const { target, edit, handleEdit } = this.props;
         if(target.value) {
             this.setState({ value: target.value });
         }
@@ -49,6 +50,10 @@ class AnnotationTargetItem extends Component {
                     if(target.value) {
                         var val = target.value.split('stroke="');
                         this.setState({ color: val[1].substr(0,7) })
+                    } else {
+                        if(edit==null) {
+                            handleEdit(target._temp_id, 'target');
+                        }
                     }
                     break;
                 default:
@@ -136,7 +141,7 @@ class AnnotationTargetItem extends Component {
                 <div>
                     <Grid container spacing={1}>
                         <Grid item xs={8}>
-                            <ListItemText style={{ lineHeight: '1rem'}} primary={target._temp_name} secondaryTypographyProps={ color ? { style: { color: color } } : {}} secondary={ color ? color : value } />
+                            <ListItemText style={{ lineHeight: '1rem'}} primary={target._temp_name} /*secondaryTypographyProps={ color ? { style: { color: color } } : {}}*/ secondary={ color ? <> {t('Color')} <Favorite style={{ color: color, marginLeft: '25px' }}/> </> : value } />
                         </Grid>
                         <Grid item xs={4}>
                             <IconButton disabled={ edit!==null && edit !== target._temp_id } size="small" onClick={() => edit == target._temp_id ? this.confirm() : this.edit()}>

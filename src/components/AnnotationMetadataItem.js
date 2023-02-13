@@ -40,9 +40,9 @@ class AnnotationMetadataItem extends Component {
         if(metadata.value) {
             this.setState({ value: metadata.value })
         } else {
-            if(metadata.type =='creator' && edit==null) {
+            /*if(metadata.type =='creator' && edit==null) {
                 handleEdit(metadata._temp_id, 'metadata');
-            }
+            }*/
         }
         if(metadata.type) {
             this.setState({ type: metadata.type })
