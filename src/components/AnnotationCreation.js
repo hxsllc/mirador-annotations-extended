@@ -21,7 +21,6 @@ import AnnotationMetadataItem from '../containers/AnnotationMetadataItem';
 import AnnotationTargetItem from '../containers/AnnotationTargetItem';
 import AnnotationTargetDisplay from '../containers/AnnotationTargetDisplay';
 import ToggleTargetVisibilityDialog from '../containers/ToggleTargetVisibilityDialog';
-import FinishEditAnnotationDialog from '../containers/FinishEditAnnotationDialog';
 
 /** */
 class AnnotationCreation extends Component {
@@ -319,46 +318,42 @@ class AnnotationCreation extends Component {
     /** */
     submitAnnotation() {
         const { annotation, canvases, receiveAnnotation, config, closeCompanionWindow } = this.props;
-        const { metadata, target, body, annoId, svgEnclosingTags, metadataEditState, bodyEditState, targetEditState, } = this.state;
+        const { metadata, target, body, annoId, svgEnclosingTags } = this.state;
 
-        if(metadataEditState !== null || bodyEditState !== null || targetEditState !== null) {
-            this.setState({ dialogFinishEditAnnotationOpen: true });
-        } else {
-            canvases.forEach((canvas) => {
-                const storageAdatper = config.annotation.adapter(canvas.id);
-                var tBody = body;
-                var tTarget = target;
-                tTarget.forEach(a => delete a._temp_id);
-                tTarget.forEach(a=> delete a._temp_name);
-                // create single svg
-                const tSvgTargetArray =  svgEnclosingTags.start + tTarget.filter(a => a.type == 'SvgSelector')?.map(a => a.value).join('') + svgEnclosingTags.end;
+        canvases.forEach((canvas) => {
+            const storageAdatper = config.annotation.adapter(canvas.id);
+            var tBody = body;
+            var tTarget = target;
+            tTarget.forEach(a => delete a._temp_id);
+            tTarget.forEach(a=> delete a._temp_name);
+            // create single svg
+            const tSvgTargetArray =  svgEnclosingTags.start + tTarget.filter(a => a.type == 'SvgSelector')?.map(a => a.value).join('') + svgEnclosingTags.end;
 
-                var redTarget = tTarget.filter(a => a.type !== 'SvgSelector');
-                redTarget.push({ type: 'SvgSelector', value: tSvgTargetArray });
-                tBody.forEach(a => delete a._temp_id);
-                tBody.forEach(a => a.purpose == null ? delete a.purpose : null );
-                    /*    Das ist nur für Johannes
-                        (｡◕‿◕｡)
-                        (╯°□°）╯︵ ┻━┻ */
-                const anno = new WebAnnotation({
-                    body: tBody,
-                    canvasId: canvas.id,
-                    id: (annotation && annotation.id) || annoId,
-                    manifestId: canvas.options.resource.id,
-                    target: redTarget,
-                    creator: metadata.find(item => item.type =='creator').value,
-                    motivation: metadata.find(item => item.type=='motivation').value,
-                }).toJson();
+            var redTarget = tTarget.filter(a => a.type !== 'SvgSelector');
+            redTarget.push({ type: 'SvgSelector', value: tSvgTargetArray });
+            tBody.forEach(a => delete a._temp_id);
+            tBody.forEach(a => a.purpose == null ? delete a.purpose : null );
+                /*    Das ist nur für Johannes
+                    (｡◕‿◕｡)
+                    (╯°□°）╯︵ ┻━┻ */
+            const anno = new WebAnnotation({
+                body: tBody,
+                canvasId: canvas.id,
+                id: (annotation && annotation.id) || annoId,
+                manifestId: canvas.options.resource.id,
+                target: redTarget,
+                creator: metadata.find(item => item.type =='creator').value,
+                motivation: metadata.find(item => item.type=='motivation').value,
+            }).toJson();
 
-                if(annotation) {
-                    storageAdatper.update(anno).then(annoPage => receiveAnnotation(canvas.id, storageAdatper.annotationPageId, annoPage));
-                } else {
-                    storageAdatper.create(anno).then(annoPage => receiveAnnotation(canvas.id, storageAdatper.annotationPageId, annoPage));
-                }
-            });
+            if(annotation) {
+                storageAdatper.update(anno).then(annoPage => receiveAnnotation(canvas.id, storageAdatper.annotationPageId, annoPage));
+            } else {
+                storageAdatper.create(anno).then(annoPage => receiveAnnotation(canvas.id, storageAdatper.annotationPageId, annoPage));
+            }
+        });
 
-            closeCompanionWindow();
-        }
+        closeCompanionWindow();
     }
 
     /** */
@@ -368,7 +363,7 @@ class AnnotationCreation extends Component {
         } = this.props;
 
         const {
-            body, metadata, target, annoId, showTarget, targetEditState, dialogToggleTargetVisibilityOpen, bodyEditState, metadataEditState, dialogFinishEditAnnotationOpen
+            body, metadata, target, annoId, showTarget, targetEditState, dialogToggleTargetVisibilityOpen, bodyEditState, metadataEditState,
         } = this.state;
 
         return (
@@ -385,7 +380,7 @@ class AnnotationCreation extends Component {
                         <Typography variant="h5" color="primary">{t('annotationCreationMetadata')}</Typography>
                         <List disablePadding>
                             {metadata?.map((value, index) => (
-                                <AnnotationMetadataItem edit={metadataEditState} key={value._temp_id} handleEdit={this.setEditState} metadata={value} metadataPos={index} handleDelete={this.deleteAnnotationItem} handleSubmit={this.updateAnnotationItem} />
+                                <AnnotationMetadataItem edit={metadataEditState} key={value._temp_id} handleEdit={this.setEditState} metadata={value} metadataPos={index} handleDelete={this.deleteAnnotationItem} updateContent={this.updateAnnotationItem} />
                             ))}
                         </List>
                     </div>
@@ -416,7 +411,7 @@ class AnnotationCreation extends Component {
                         </div>
                         <List disablePadding>
                             {target?.map((value, index) => (
-                                <AnnotationTargetItem edit={targetEditState} handleEdit={this.setEditState} key={value._temp_id} target={value} targetPos={index} handleDelete={this.deleteAnnotationItem} handleSubmit={this.updateAnnotationItem} windowId={windowId} />
+                                <AnnotationTargetItem edit={targetEditState} handleEdit={this.setEditState} key={value._temp_id} target={value} targetPos={index} handleDelete={this.deleteAnnotationItem} updateContent={this.updateAnnotationItem} windowId={windowId} />
                             ))}
                         </List>
                     </div>
@@ -445,7 +440,7 @@ class AnnotationCreation extends Component {
                         <div style={{ marginBottom: 30 }}>
                             <List component="div" disablePadding>
                                 {body.filter(item => item.purpose=='tagging')?.map((value, index) => (
-                                    <AnnotationBodyItem edit={bodyEditState} key={value._temp_id} body={value} bodyPos={index} handleEdit={this.setEditState} handleDelete={this.deleteAnnotationItem} handleSubmit={this.updateAnnotationItem} />
+                                    <AnnotationBodyItem edit={bodyEditState} key={value._temp_id} body={value} bodyPos={index} handleEdit={this.setEditState} handleDelete={this.deleteAnnotationItem} updateContent={this.updateAnnotationItem} />
 
                                 ))}
                             </List>
@@ -472,7 +467,7 @@ class AnnotationCreation extends Component {
                         </div>
                         <List component="div" disablePadding>
                             {body.filter(item => item.purpose!=='tagging')?.map((value, index) => (
-                                <AnnotationBodyItem edit={bodyEditState} key={value._temp_id} body={value} bodyPos={index} handleEdit={this.setEditState} handleDelete={this.deleteAnnotationItem} handleSubmit={this.updateAnnotationItem} />
+                                <AnnotationBodyItem edit={bodyEditState} key={value._temp_id} body={value} bodyPos={index} handleEdit={this.setEditState} handleDelete={this.deleteAnnotationItem} updateContent={this.updateAnnotationItem} />
                             ))}
                         </List>
                     </div>
@@ -487,7 +482,6 @@ class AnnotationCreation extends Component {
                     </Button>
                 </div>
                 {dialogToggleTargetVisibilityOpen && (<ToggleTargetVisibilityDialog open={dialogToggleTargetVisibilityOpen} handleClose={() => this.setState({ dialogToggleTargetVisibilityOpen: false })} />)}
-                {dialogFinishEditAnnotationOpen && (<FinishEditAnnotationDialog open={dialogFinishEditAnnotationOpen} handleClose={() => this.setState({ dialogFinishEditAnnotationOpen: false })} />)}
             </CompanionWindow>
         );
     }

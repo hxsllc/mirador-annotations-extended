@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { ListItem, ListItemText } from '@material-ui/core';
-import { Check, Cancel } from '@material-ui/icons';
+import { Check } from '@material-ui/icons';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
 import EditIcon from '@material-ui/icons/Edit';
 import Grid from '@material-ui/core/Grid';
@@ -18,20 +18,12 @@ class AnnotationBodyItem extends Component {
     constructor(props) {
         super(props);
 
-        const bodyState = {
-            value: null,
-            type: null,
-            purpose: null
-        }
-
         this.state = {
             purposeOptionState: 0,
-            ...bodyState,
         }
 
         this.edit = this.edit.bind(this);
         this.confirm = this.confirm.bind(this);
-        this.cancel = this.cancel.bind(this);
         this.delete = this.delete.bind(this);
         this.handleSelectedPurposeOption = this.handleSelectedPurposeOption.bind(this);
         this.updateBodyValue = this.updateBodyValue.bind(this);
@@ -39,16 +31,10 @@ class AnnotationBodyItem extends Component {
 
     componentDidMount() {
         const { body, edit, handleEdit } = this.props;
-        if(body.value) {
-            this.setState({ value: body.value });
-        } else if(edit == null) {
+        if(!body.value) {
             handleEdit(body._temp_id, 'body');
         }
-        if(body.type) {
-            this.setState({ type: body.type });
-        }
         if(body.purpose) {
-            this.setState({ purpose: body.purpose });
             switch(body.purpose) {
                 case 'describing':
                     this.setState({ purposeOptionState: 0 });
@@ -64,17 +50,14 @@ class AnnotationBodyItem extends Component {
     }
 
     edit() {
-        const { edit, handleEdit, body } = this.props;
-        if(edit == null) {
-            handleEdit(body._temp_id, 'body');
-        }
+        const { handleEdit, body } = this.props;
+
+        handleEdit(body._temp_id, 'body');
     }
 
     confirm() {
-        const { value, type, purpose } = this.state;
-        const { handleSubmit, body, handleEdit } = this.props;
+        const { handleEdit } = this.props;
 
-        handleSubmit('body', { value: value, type: type, purpose: purpose, _temp_id: body._temp_id }, body._temp_id);
         handleEdit(null, 'body');
     }
 
@@ -94,51 +77,20 @@ class AnnotationBodyItem extends Component {
     }
 
     updateBodyValue(newValue) {
-        const { edit, body } = this.props;
-        if(edit == body._temp_id) {
-            this.setState({ value: newValue });
-        }
-    }
+        const { updateContent, body } = this.props;
 
-    cancel() {
-        const { body, edit, handleEdit } = this.props;
-        if(edit == body._temp_id) {
-            if(body.value) {
-                this.setState({ value: body.value });
-            } else {
-                this.setState({ value: null });
-            }
-            if(body.type) {
-                this.setState({ type: body.type });
-            };
-            if(body.purpose) {
-                this.setState({ purpose: body.purpose });
-                switch(body.purpose) {
-                    case 'describing':
-                        this.setState({ purposeOptionState: 0 });
-                        break;
-                    case 'tagging':
-                        this.setState({ purposeOptionState: 1 });
-                        break;
-                    default:
-                        this.setState({ purposeOptionState: 0 });
-                        break;
-                }
-            };
-            handleEdit(null, 'body');
-        }
+        updateContent('body', { value: newValue, type: body.type, purpose: body.purpose, _temp_id: body._temp_id }, body._temp_id);
     }
 
     delete() {
-        const { body, handleDelete, edit } = this.props;
-        if(edit == null) {
-            handleDelete('body', body._temp_id);
-        }
+        const { body, handleDelete} = this.props;
+
+        handleDelete('body', body._temp_id);
     }
 
     render() {
         const { body, classes, t, windowId, edit } = this.props;
-        const { value, purpose, type, purposeOptionState } = this.state;
+        const { purposeOptionState } = this.state;
         const purposeOptions = ['describing', 'tagging'];
 
         return (
@@ -147,10 +99,9 @@ class AnnotationBodyItem extends Component {
                     body.purpose == 'tagging'
                     ? (
                         <Chip
-                            disabled={edit!==null && edit!=body._temp_id}
                             label={
                                 edit==body._temp_id
-                                ? (<AnnotationTextFieldItem key={`${body._temp_id}-TextFieldItem`} value={value} updateValue={this.updateBodyValue} windowId={windowId} />)
+                                ? (<AnnotationTextFieldItem key={`${body._temp_id}-TextFieldItem`} value={body.value} updateValue={this.updateBodyValue} windowId={windowId} />)
                                 : (body.value ? body.value : "no text")}
                             variant={edit==body._temp_id ? "default" : "outlined"}
                             color={edit==body._temp_id ? "primary" : ""}
@@ -165,19 +116,15 @@ class AnnotationBodyItem extends Component {
                                     <ListItemText style={{ lineHeight: '1rem'}} primary={body.value ? ReactHtmlParser(body.value) : 'no text'} />
                                 </Grid>
                                 <Grid item xs={4}>
-                                    <IconButton disabled={edit!==null && edit!==body._temp_id} size="small" onClick={() => edit==body._temp_id ? this.confirm() : this.edit()}>
+                                    <IconButton size="small" onClick={() => edit==body._temp_id ? this.confirm() : this.edit()}>
                                         {
                                             edit==body._temp_id
                                             ? <Check />
                                             : <EditIcon />
                                         }
                                     </IconButton>
-                                    <IconButton disabled={edit!==null && edit!==body._temp_id} size="small" onClick={() => edit==body._temp_id ? this.cancel() : this.delete()}>
-                                        {
-                                            edit==body._temp_id
-                                            ? <Cancel />
-                                            : <DeleteIcon />
-                                        }
+                                    <IconButton size="small" onClick={this.delete}>
+                                        <DeleteIcon />
                                     </IconButton>
                                 </Grid>
                             </Grid>
@@ -199,8 +146,8 @@ class AnnotationBodyItem extends Component {
                                         </FormControl>
                                         {
                                             purposeOptionState=="0"
-                                            ? <AnnotationTextEditorItem key={`${body._temp_id}-TextEditorItem`} value={value} updateValue={this.updateBodyValue} windowId={windowId}  />
-                                            : <AnnotationTextFieldItem key={`${body._temp_id}-TextFieldItem`} value={value} updateValue={this.updateBodyValue} windowId={windowId} />
+                                            ? <AnnotationTextEditorItem key={`${body._temp_id}-TextEditorItem`} value={body.value} updateValue={this.updateBodyValue} windowId={windowId}  />
+                                            : <AnnotationTextFieldItem key={`${body._temp_id}-TextFieldItem`} value={body.value} updateValue={this.updateBodyValue} windowId={windowId} />
                                         }
                                     </Grid>
                                 </Grid>

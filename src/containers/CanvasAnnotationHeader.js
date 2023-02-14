@@ -1,8 +1,7 @@
 import { compose } from 'redux';
 import { withTranslation } from 'react-i18next';
 import { withStyles } from '@material-ui/core/styles';
-import FinishEditAnnotationDialog from '../components/FinishEditAnnotationDialog';
-
+import CanvasAnnotationHeader from '../components/CanvasAnnotationHeader';
 
 const styles = (theme) => ({
 
@@ -13,4 +12,4 @@ const enhance = compose(
     withStyles(styles),
 );
 
-export default enhance(FinishEditAnnotationDialog);
+export default enhance(CanvasAnnotationHeader);
