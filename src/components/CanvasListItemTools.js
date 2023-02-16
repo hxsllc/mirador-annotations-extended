@@ -55,41 +55,30 @@ class CanvasListItemTools extends React.Component {
 
     render() {
         const { t } = this.props;
-        const { windowViewType, toggleSingleCanvasDialogOpen } = this.context;
+        const { windowViewType, toggleSingleCanvasDialogOpen, createAnnotation} = this.context;
         return (
-            <div
-                style={{
-                    position: 'relative',
-                    top: 0,
-                    zIndex: 10000,
-                }}
+            <Box
+                aria-label={t('canvasAnnotationTools')}
+                size="small"
             >
-                <Box
-                    aria-label={t('canvasAnnotationTools')}
+                <IconButton
+                    aria-label={t('canvasAnnotationToolsEdit')}
+                    disabled={!createAnnotation}
+                    onClick={windowViewType === 'single' ? this.handleEdit : toggleSingleCanvasDialogOpen}
+                    value="edit"
                     size="small"
-                    style={{
-                        position: 'absolute',
-                        right: 0,
-                    }}
                 >
-                    <IconButton
-                        aria-label={t('canvasAnnotationToolsEdit')}
-                        onClick={windowViewType === 'single' ? this.handleEdit : toggleSingleCanvasDialogOpen}
-                        value="edit"
-                        size="small"
-                    >
-                        <EditIcon />
-                    </IconButton>
-                    <IconButton
-                        aria-label={t('canvasAnnotationToolsDelete')}
-                        onClick={this.handleDelete}
-                        value="delete"
-                        size="small"
-                    >
-                        <DeleteIcon />
-                    </IconButton>
-                </Box>
-            </div>
+                    <EditIcon />
+                </IconButton>
+                <IconButton
+                    aria-label={t('canvasAnnotationToolsDelete')}
+                    onClick={this.handleDelete}
+                    value="delete"
+                    size="small"
+                >
+                    <DeleteIcon />
+                </IconButton>
+            </Box>
         );
     }
 }

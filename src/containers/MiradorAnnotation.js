@@ -5,6 +5,8 @@ import * as actions from 'mirador/dist/es/src/state/actions';
 import { getWindowViewType } from 'mirador/dist/es/src/state/selectors';
 import { getVisibleCanvases } from 'mirador/dist/es/src/state/selectors/canvases';
 import MiradorAnnotation from '../components/MiradorAnnotation';
+import { getCompanionWindowsForContent } from 'mirador/dist/es/src/state/selectors/companionWindows';
+
 
 const mapDispatchToProps = (dispatch, props) => ({
     addCompanionWindow: (content, additionalProps) => dispatch(
@@ -15,11 +17,20 @@ const mapDispatchToProps = (dispatch, props) => ({
     ),
 });
 
-const mapStateToProps = (state, { targetProps: { windowId } }) => ({
-    canvases: getVisibleCanvases(state, { windowId }),
-    config: state.config,
-    windowViewType: getWindowViewType(state, { windowId }),
-});
+function mapStateToProps(state, { targetProps: { windowId } }) {
+    const annotationCreationCompanionWindows = getCompanionWindowsForContent(state, { content: 'annotationCreation', windowId });
+    var annotationEdit = true;
+    if(Object.keys(annotationCreationCompanionWindows).length !== 0) {
+        annotationEdit = false;
+    }
+
+    return {
+        canvases: getVisibleCanvases(state, { windowId }),
+        config: state.config,
+        windowViewType: getWindowViewType(state, { windowId }),
+        createAnnotation: annotationEdit,
+    }
+};
 
 const enhance = compose(
     withTranslation(),

@@ -59,6 +59,7 @@ class MiradorAnnotation extends Component {
             targetProps,
             windowViewType,
             t,
+            createAnnotation
         } = this.props;
         const { annotationExportDialogOpen, singleCanvasDialogOpen } = this.state;
         const storageAdapter = config.annotation && config.annotation.adapter('poke');
@@ -73,6 +74,7 @@ class MiradorAnnotation extends Component {
                     aria-label={t('createNewAnnotation')}
                     onClick={windowViewType === 'single' ? this.openCreateAnnotationCompanionWindow : this.toggleSingleCanvasDialogOpen}
                     size="small"
+                    disabled={!createAnnotation}
                 >
                     <AddBoxIcon />
                 </MiradorMenuButton>

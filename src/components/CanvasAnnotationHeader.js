@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Grid } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 
 class CanvasAnnotationHeader extends Component {
     constructor(props) {
@@ -8,11 +8,22 @@ class CanvasAnnotationHeader extends Component {
     }
 
     render() {
+        const { classes, id, creator, buttons, } = this.props;
         return (
             <>
-                <Grid>
-                    {/*<div style={{ width: '100%', height: 30, backgroundColor: '#d33120'}}></div>*/}
-                </Grid>
+                <div className={classes.container}>
+                    <div className={classes.heading}>
+                        <Typography
+                            id={id}
+                            variant="overline" >
+                            {creator ? creator : 'n.a.'}
+                        </Typography>
+                    </div>
+
+                    <div className={classes.buttons}>
+                        {buttons}
+                    </div>
+                </div>
             </>
         )
     }

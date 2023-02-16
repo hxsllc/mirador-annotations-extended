@@ -13,6 +13,11 @@ class CanvasAnnotationsWrapper extends Component {
             singleCanvasDialogOpen: false,
         };
         this.toggleSingleCanvasDialogOpen = this.toggleSingleCanvasDialogOpen.bind(this);
+        this.doNothing = this.doNothing.bind(this);
+    }
+
+    doNothing() {
+        return null;
     }
 
     /** */
@@ -27,11 +32,21 @@ class CanvasAnnotationsWrapper extends Component {
     render() {
         const {
             addCompanionWindow, annotationsOnCanvases, canvases, config, receiveAnnotation,
-            switchToSingleCanvasView, TargetComponent, targetProps, windowViewType,
+            switchToSingleCanvasView, TargetComponent, targetProps, windowViewType, createAnnotation
         } = this.props;
         const { singleCanvasDialogOpen } = this.state;
         const props = {
             ...targetProps,
+            /*...(!createAnnotation
+                ? {
+                    containerRef: null,
+                    deselectAnnotation: this.doNothing,
+                    hoverAnnotation: this.doNothing,
+                    hoveredAnnotationIds: '',
+                    selectAnnotation: this.doNothing,
+                    selectedAnnotationId: '',
+                }
+                : {}),*/
             listContainerComponent: CanvasListItem,
         };
         return (
@@ -45,6 +60,7 @@ class CanvasAnnotationsWrapper extends Component {
                     storageAdapter: config.annotation.adapter,
                     toggleSingleCanvasDialogOpen: this.toggleSingleCanvasDialogOpen,
                     windowId: targetProps.windowId,
+                    createAnnotation,
                     windowViewType,
                 }}
             >

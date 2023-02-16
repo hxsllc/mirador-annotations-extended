@@ -34,17 +34,7 @@ class CanvasListItem extends React.Component {
             annotationsOnCanvases, canvases,
         } = this.context;
         const { annotationid } = this.props;
-        let creator = false;
-        /*canvases.some((canvas) => {
-            if (annotationsOnCanvases[canvas.id]) {
-                Object.entries(annotationsOnCanvases[canvas.id]).forEach(([key, value], i) => {
-                    if (value.json && value.json.items) {
-                        annotation = value.json.items.find((anno) => anno.id === annotationid);
-                    }
-                });
-            }
-            return (annotation);
-        });*/
+        var creator = false;
         canvases.some((canvas) => {
             if (annotationsOnCanvases[canvas.id]) {
                 Object.entries(annotationsOnCanvases[canvas.id]).forEach(([key, value], i) => {
@@ -52,8 +42,6 @@ class CanvasListItem extends React.Component {
                         var annotation = value.json.items.find((anno) => anno.id === annotationid);
                         if(annotation.hasOwnProperty('creator')) {
                             if(annotation.creator.name) {
-                                //console.log(annotation.creator.name);
-                                //console.log('fuck it')
                                 creator = annotation.creator.name;
                             } else {
                                 creator = annotation.creator;
@@ -71,8 +59,8 @@ class CanvasListItem extends React.Component {
         const creator = this.creator();
         return (
             <div>
-                {creator ? <CanvasAnnotationHeader /> : null }
-                {this.editable() && (<CanvasListItemTools {...this.props} />)}
+                <CanvasAnnotationHeader creator={creator} buttons={this.editable() && (<CanvasListItemTools {...this.props} />)}/>
+
                 <li
                     {...this.props} // eslint-disable-line react/jsx-props-no-spreading
                 >
