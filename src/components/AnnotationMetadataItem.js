@@ -19,6 +19,7 @@ class AnnotationMetadataItem extends Component {
 
 
         this.edit = this.edit.bind(this);
+        this.editing = this.editing.bind(this);
         this.confirm = this.confirm.bind(this);
         this.delete = this.delete.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -56,24 +57,82 @@ class AnnotationMetadataItem extends Component {
         handleDelete('metadata', metadata._temp_id);
     }
 
+    editing() {
+        const { metadata, edit } = this.props;
+
+        return metadata._temp_id == edit;
+    }
+
+    renderCreator() {
+        const { metadata } = this.props;
+        const edit = this.editing();
+        return (
+            <ListItemText
+                style={{ lineHeight: '1rem'}}
+                primary={metadata.type}
+                secondary={ edit
+                    ? (
+                        <MetadataCreatorItem
+                            id={`${metadata}-creator`}
+                            value={metadata.value}
+                            handleChange={this.handleChange}
+                        />
+                    )
+                    : ( metadata.value ? metadata.value : 'n.a.' )
+                }
+            />
+        )
+    }
+
+    renderMotivation() {
+        const { metadata } = this.props;
+        const edit = this.editing();
+        return (
+            <ListItemText
+                style={{ lineHeight: '1rem'}}
+                primary={metadata.type}
+                secondary={ edit
+                    ? (
+                        <MetadataMotivationItem
+                            value={metadata.value}
+                            handleChange={this.handleChange}
+                        />
+                    )
+                    : ( metadata.value ? metadata.value : 'n.a.' )
+                }
+            />
+        )
+    }
+
     render() {
-        const { metadata, classes, t, edit } = this.props;
+        const { metadata, classes, t } = this.props;
+        const edit = this.editing();
 
         return (
             <>
                 {
-                    metadata.type == 'creator'
-                    ? (
+                    metadata.type !== 'creator'
+                    ? null
+                    : (
                         <ListItem divider className={classes.editAnnotationListItem}>
                             <div>
                                 <Grid container spacing={1}>
                                     <Grid item xs={8}>
-                                        <ListItemText style={{ lineHeight: '1rem'}} primary={metadata.type} secondary={ metadata.value ? metadata.value : 'n.a.' }/>
+                                        {(() => {
+                                            switch(metadata.type) {
+                                                case 'creator':
+                                                    return this.renderCreator();
+                                                case 'motivation':
+                                                    return this.renderMotivation();
+                                                default:
+                                                    return null;
+                                            }
+                                        })()}
                                     </Grid>
                                     <Grid item xs={4}>
-                                        <IconButton size="small" onClick={() => edit==metadata._temp_id ? this.confirm() : this.edit()}>
+                                        <IconButton size="small" onClick={() => edit ? this.confirm() : this.edit()}>
                                             {
-                                                edit==metadata._temp_id
+                                                edit
                                                 ? <Check />
                                                 : <EditIcon />
                                             }
@@ -81,22 +140,8 @@ class AnnotationMetadataItem extends Component {
                                     </Grid>
                                 </Grid>
                             </div>
-                            <div className={classes.editAnnotation}>
-                                <Collapse className={classes.editAnnotationCollapse} in={edit==metadata._temp_id} unmountOnExit>
-                                    <Grid container spacing={1}>
-                                        <Grid item xs={12}>
-                                            {
-                                                metadata.type == 'creator'
-                                                ? <MetadataCreatorItem id={`${metadata}-creator`} value={metadata.value} handleChange={this.handleChange}/>
-                                                : <MetadataMotivationItem value={metadata.value} handleChange={this.handleChange} />
-                                            }
-                                        </Grid>
-                                    </Grid>
-                                </Collapse>
-                            </div>
                         </ListItem>
                     )
-                    : null
                 }
             </>
         )

@@ -19,40 +19,36 @@ class AnnotationTargetItem extends Component {
 
         this.state = {
             color: null,
-            targetOptionState: 1,
-
+            hover: false,
         }
 
         this.edit = this.edit.bind(this);
         this.confirm = this.confirm.bind(this);
         this.delete = this.delete.bind(this);
-        this.handleSelectedTargetOption = this.handleSelectedTargetOption.bind(this);
         this.updateTargetValue = this.updateTargetValue.bind(this);
     }
 
     componentDidMount() {
-        const { target, edit, handleEdit } = this.props;
+        const { target, handleEdit } = this.props;
         if(!target.value) {
             handleEdit(target._temp_id, 'target');
         }
         if(target.type) {
             switch(target.type) {
                 case 'SvgSelector':
-                    this.setState({ purposeOptionState: 1 });
                     if(target.value) {
                         var val = target.value.split('stroke="');
                         this.setState({ color: val[1].substr(0,7) })
                     }
                     break;
                 default:
-                    this.setState({ purposeOptionState: 0 });
                     break;
             }
         }
     }
 
     edit() {
-        const { edit, target, handleEdit } = this.props;
+        const { target, handleEdit } = this.props;
 
         handleEdit(target._temp_id, 'target');
     }
@@ -74,15 +70,10 @@ class AnnotationTargetItem extends Component {
         handleEdit(null, 'target');
     }
 
-    handleSelectedTargetOption(e) {
-        switch(e.target.value) {
-            case 'SvgSelector':
-                this.setState({ targetOptionState: 1 });
-                break;
-            default:
-                this.setState({ targetOptionState: 0 });
-                break;
-        }
+    editing() {
+        const { target, edit } = this.props;
+
+        return target._temp_id == edit;
     }
 
     delete() {
@@ -91,22 +82,26 @@ class AnnotationTargetItem extends Component {
         handleDelete('target', target._temp_id);
     }
 
-    render() {
-        const { target, classes, t, windowId, _temp_id, edit } = this.props;
-        const { targetOptionState, color } = this.state;
-        const targetOptions = ['FragmentSelector', 'SvgSelector'];
-
+    renderSvgSelector() {
+        const { classes, target, windowId, t, _temp_id } = this.props;
+        const { color, hover } = this.state;
+        const edit = this.editing();
         return (
-            <ListItem divider className={classes.editAnnotationListItem}>
+            <ListItem divider className={classes.editAnnotationListItem} >
                 <div>
-                    <Grid container spacing={1}>
+                    <Grid container spacing={1}
+                        onMouseEnter={() => this.setState({hover: true})}
+                        onMouseLeave={() => this.setState({hover: false })}>
                         <Grid item xs={8}>
-                            <ListItemText style={{ lineHeight: '1rem'}} primary={target._temp_name} /*secondaryTypographyProps={ color ? { style: { color: color } } : {}}*/ secondary={ color ? <> {t('Color')} <Favorite style={{ color: color, marginLeft: '25px' }}/> </> : target.value } />
+                            <ListItemText
+                                style={{ lineHeight: '1rem' }}
+                                primary={target._temp_name}
+                                secondary={ color ? <> {t('Color')} <Favorite style={{ color: color, marginLeft: '25px' }}/> </> : target.value } />
                         </Grid>
                         <Grid item xs={4}>
-                            <IconButton size="small" onClick={() => edit == target._temp_id ? this.confirm() : this.edit()}>
+                            <IconButton size="small" onClick={() => edit ? this.confirm() : this.edit()}>
                                 {
-                                    edit == target._temp_id
+                                    edit
                                     ? <Check />
                                     : <EditIcon />
                                 }
@@ -117,31 +112,27 @@ class AnnotationTargetItem extends Component {
                         </Grid>
                     </Grid>
                 </div>
-                <div className={classes.editAnnotation}>
-                    <Collapse className={classes.editAnnotationCollapse} in={edit==target._temp_id} unmountOnExit>
-                        <Grid container spacing={1}>
-                            <Grid item xs={12}>
-                            <FormControl className={classes.hidden}>
-                                    <InputLabel variant="standard" htmlFor='uncontrolled-native-target'>
-                                        type
-                                    </InputLabel>
-                                    {/* maybe add a key */}
-                                    <NativeSelect value={targetOptions[targetOptionState]} inputProps={{ name: 'target', id: 'uncontrolled-native-target' }} onChange={this.handleSelectedTargetOption}>
-                                        {targetOptions.map((value, index) => (
-                                            <option value={value}>{value}</option>
-                                        ))}
-                                    </NativeSelect>
-                                </FormControl>
-                                {
-                                    targetOptionState==1
-                                    ? <TargetSvgSelector key={`${_temp_id}-SvgSelector`} value={target.value} updateValue={this.updateTargetValue} windowId={windowId} />
-                                    : <TargetFragmentSelector key={`${_temp_id}-FragmentSelector`} value={target.value} updateValue={this.updateTargetValue} windowId={windowId} />
-                                }
-                            </Grid>
-                        </Grid>
-                    </Collapse>
+                <div>
+                    <TargetSvgSelector key={`${_temp_id}-SvgSelector`} value={target.value} edit={edit} hover={hover} updateValue={this.updateTargetValue} windowId={windowId} />
                 </div>
             </ListItem>
+        )
+    }
+
+    render() {
+        const { target, } = this.props;
+
+        return (
+            <>
+                {(() => {
+                    switch(target.type) {
+                        case 'SvgSelector':
+                            return this.renderSvgSelector();
+                        default:
+                            return null;
+                    }
+                })()}
+            </>
         )
     }
 }

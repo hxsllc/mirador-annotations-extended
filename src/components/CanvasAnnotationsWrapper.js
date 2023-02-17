@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import CanvasListItem from './CanvasListItem';
+import CanvasListItem from '../containers/CanvasListItem';
 import AnnotationActionsContext from '../AnnotationActionsContext';
 import SingleCanvasDialog from '../containers/SingleCanvasDialog';
 
@@ -11,14 +11,23 @@ class CanvasAnnotationsWrapper extends Component {
         super(props);
         this.state = {
             singleCanvasDialogOpen: false,
+            activeAnnotationId: false,
         };
         this.toggleSingleCanvasDialogOpen = this.toggleSingleCanvasDialogOpen.bind(this);
-        this.doNothing = this.doNothing.bind(this);
+        this.setActiveAnnotationId = this.setActiveAnnotationId.bind(this);
     }
 
-    doNothing() {
-        return null;
+    componentDidUpdate(prevProps) {
+        if(prevProps.createAnnotation !== this.props.createAnnotation) {
+            if(this.props.createAnnotation) {
+                this.setActiveAnnotationId(null);
+            }
+        }
     }
+
+    setActiveAnnotationId(value){
+        this.setState({ activeAnnotationId: value });
+    };
 
     /** */
     toggleSingleCanvasDialogOpen() {
@@ -34,29 +43,21 @@ class CanvasAnnotationsWrapper extends Component {
             addCompanionWindow, annotationsOnCanvases, canvases, config, receiveAnnotation,
             switchToSingleCanvasView, TargetComponent, targetProps, windowViewType, createAnnotation
         } = this.props;
-        const { singleCanvasDialogOpen } = this.state;
+        const { singleCanvasDialogOpen, activeAnnotationId } = this.state;
         const props = {
             ...targetProps,
-            /*...(!createAnnotation
-                ? {
-                    containerRef: null,
-                    deselectAnnotation: this.doNothing,
-                    hoverAnnotation: this.doNothing,
-                    hoveredAnnotationIds: '',
-                    selectAnnotation: this.doNothing,
-                    selectedAnnotationId: '',
-                }
-                : {}),*/
             listContainerComponent: CanvasListItem,
         };
         return (
             <AnnotationActionsContext.Provider
                 value={{
+                    activeAnnotationId,
                     addCompanionWindow,
                     annotationsOnCanvases,
                     canvases,
                     config,
                     receiveAnnotation,
+                    setActiveAnnotationId: this.setActiveAnnotationId,
                     storageAdapter: config.annotation.adapter,
                     toggleSingleCanvasDialogOpen: this.toggleSingleCanvasDialogOpen,
                     windowId: targetProps.windowId,

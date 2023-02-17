@@ -59,16 +59,21 @@ class MiradorAnnotation extends Component {
             targetProps,
             windowViewType,
             t,
-            createAnnotation
+            createAnnotation,
         } = this.props;
+        const props = {
+            ...targetProps,
+            //...(!createAnnotation ? { displayAllDisabled: true } : {})
+        };
         const { annotationExportDialogOpen, singleCanvasDialogOpen } = this.state;
         const storageAdapter = config.annotation && config.annotation.adapter('poke');
         const offerExportDialog = config.annotation && storageAdapter instanceof LocalStorageAdapter
             && config.annotation.exportLocalStorageAnnotations;
+
         return (
             <div>
                 <TargetComponent
-                    {...targetProps} // eslint-disable-line react/jsx-props-no-spreading
+                    {...props} // eslint-disable-line react/jsx-props-no-spreading
                 />
                 <MiradorMenuButton
                     aria-label={t('createNewAnnotation')}

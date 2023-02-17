@@ -398,10 +398,10 @@ class AnnotationCreation extends Component {
                                 </Grid>
                                 <Grid item xs={4}>
                                     <div className={classes.addSection}>
-                                        <IconButton disabled={!target.length} size="small" onClick={this.toggleAllTargets}>
+                                        <IconButton disabled={true/*!target.length*/} size="small" onClick={this.toggleAllTargets}>
                                             { showTarget ? <VisibilityOff /> : <Visibility /> }
                                         </IconButton>
-                                        { showTarget ? <AnnotationTargetDisplay windowId={windowId} svgs={target} /> : null }
+                                        { /*showTarget ? <AnnotationTargetDisplay windowId={windowId} svgs={target} /> : null*/ }
                                         <MiradorMenuButton aria-label={t('createNewTarget')} className={classes.button} onClick={() => this.createAnnotationItem('target')}>
                                             <Add />
                                         </MiradorMenuButton>

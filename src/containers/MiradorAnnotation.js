@@ -17,7 +17,7 @@ const mapDispatchToProps = (dispatch, props) => ({
     ),
 });
 
-function mapStateToProps(state, { targetProps: { windowId } }) {
+function mapStateToProps(state, { targetProps: { windowId, displayAll, toggleAnnotationDisplay } }) {
     const annotationCreationCompanionWindows = getCompanionWindowsForContent(state, { content: 'annotationCreation', windowId });
     var annotationEdit = true;
     if(Object.keys(annotationCreationCompanionWindows).length !== 0) {
@@ -27,8 +27,10 @@ function mapStateToProps(state, { targetProps: { windowId } }) {
     return {
         canvases: getVisibleCanvases(state, { windowId }),
         config: state.config,
-        windowViewType: getWindowViewType(state, { windowId }),
         createAnnotation: annotationEdit,
+        displayAll: displayAll,
+        toggleAnnotationDisplay: toggleAnnotationDisplay,
+        windowViewType: getWindowViewType(state, { windowId }),
     }
 };
 

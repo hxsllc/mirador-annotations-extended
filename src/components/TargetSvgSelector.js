@@ -10,6 +10,7 @@ import GestureIcon from '@material-ui/icons/Gesture';
 import ClosedPolygonIcon from '@material-ui/icons/ChangeHistory';
 import OpenPolygonIcon from '@material-ui/icons/ShowChart';
 import { Radio } from '@material-ui/core';
+import { Collapse } from '@material-ui/core';
 
 class TargetSvgSelector extends Component {
     constructor(props) {
@@ -86,35 +87,37 @@ class TargetSvgSelector extends Component {
     }
 
     render() {
-        const { classes, windowId, value } = this.props;
+        const { classes, windowId, value, edit, hover, } = this.props;
         const { activeTool, strokeColor, svg, strokeWidth, closedMode } = this.state;
 
         const colors = ["#cc0000", "#fcba03", "#32c784", "#403df2"];
 
         return (
             <div className={classes.selector}>
-                <AnnotationSvgDrawing activeTool={activeTool} strokeColor={strokeColor} strokeWidth={strokeWidth} closed={closedMode} svg={value} updateGeometry={this.updateGeometry} windowId={windowId} />
-                <div>
-                <ToggleButtonGroup value={activeTool} exclusive onChange={this.changeTool} aria-Label='tools'>
-                    <ToggleButton value="rectangle" aria-label="rectangle" disabled={activeTool =='edit'}>
-                        <RectangleIcon />
-                    </ToggleButton>
-                    <ToggleButton value="ellipse" aria-label="circle" disabled={activeTool =='edit'}>
-                        <CircleIcon />
-                    </ToggleButton>
-                    <ToggleButton className={classes.hidden} value="polygon" aria-label="polygon" disabled={activeTool =='edit'}>
-                        <PolygonIcon />
-                    </ToggleButton>
-                    <ToggleButton value="freehand" aria-label="freehand" disabled={activeTool =='edit'}>
-                        <GestureIcon />
-                    </ToggleButton>
-                </ToggleButtonGroup>
-                </div>
-                <div>
-                    {colors.map((value) => (
-                        <Radio disabled={activeTool =='edit'} style={ activeTool !== 'edit' ? { color: `${value}` } : {}} checked={strokeColor==value} onChange={this.changeColor} value={value} aria-label={`select color-${value}`} />
-                    ))}
-                </div>
+                {(edit || hover) && <AnnotationSvgDrawing activeTool={activeTool} strokeColor={strokeColor} strokeWidth={strokeWidth} closed={closedMode} svg={value} updateGeometry={this.updateGeometry} windowId={windowId} />}
+                <Collapse className={classes.editAnnotationCollapse} in={edit} unmountOnExit>
+                    <div>
+                    <ToggleButtonGroup value={activeTool} exclusive onChange={this.changeTool} aria-Label='tools'>
+                        <ToggleButton value="rectangle" aria-label="rectangle" disabled={activeTool =='edit'}>
+                            <RectangleIcon />
+                        </ToggleButton>
+                        <ToggleButton value="ellipse" aria-label="circle" disabled={activeTool =='edit'}>
+                            <CircleIcon />
+                        </ToggleButton>
+                        <ToggleButton className={classes.hidden} value="polygon" aria-label="polygon" disabled={activeTool =='edit'}>
+                            <PolygonIcon />
+                        </ToggleButton>
+                        <ToggleButton value="freehand" aria-label="freehand" disabled={activeTool =='edit'}>
+                            <GestureIcon />
+                        </ToggleButton>
+                    </ToggleButtonGroup>
+                    </div>
+                    <div>
+                        {colors.map((value) => (
+                            <Radio disabled={activeTool =='edit'} style={ activeTool !== 'edit' ? { color: `${value}` } : {}} checked={strokeColor==value} onChange={this.changeColor} value={value} aria-label={`select color-${value}`} />
+                        ))}
+                    </div>
+                </Collapse>
             </div>
         )
     }

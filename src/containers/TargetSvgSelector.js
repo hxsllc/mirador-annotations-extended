@@ -8,7 +8,10 @@ const styles = (theme) => ({
     selector: {},
     hidden: {
         display: 'none',
-    }
+    },
+    editAnnotationCollapse: {
+        padding: theme.spacing(1),
+    },
 });
 
 const enhance = compose(

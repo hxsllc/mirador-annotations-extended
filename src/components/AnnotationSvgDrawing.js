@@ -5,7 +5,6 @@ import { OSDReferences } from 'mirador/dist/es/src/plugins/OSDReferences';
 import { renderWithPaperScope, PaperContainer } from '@psychobolt/react-paperjs';
 import {
 EllipseTool,
-PolygonTool,
 RectangleTool,
 FreeformPathTool,
 }
@@ -76,9 +75,6 @@ class AnnotationSvgDrawing extends Component {
                 break;
             case 'ellipse':
                 ActiveTool = EllipseTool;
-                break;
-            case 'polygon':
-                ActiveTool = PolygonTool;
                 break;
             case 'freehand':
                 ActiveTool = FreeformPathTool;

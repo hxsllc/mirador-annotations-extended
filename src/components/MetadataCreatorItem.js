@@ -21,7 +21,6 @@ class MetadataCreatorItem extends Component {
         return (
             <TextField
                 id={id}
-                //label={t('annotationMetadataCreator')}
                 value={value}
                 onChange={this.handleTextFieldInput}
                 variant="standard" />

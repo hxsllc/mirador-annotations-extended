@@ -18,34 +18,17 @@ class AnnotationBodyItem extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            purposeOptionState: 0,
-        }
-
         this.edit = this.edit.bind(this);
         this.confirm = this.confirm.bind(this);
         this.delete = this.delete.bind(this);
-        this.handleSelectedPurposeOption = this.handleSelectedPurposeOption.bind(this);
         this.updateBodyValue = this.updateBodyValue.bind(this);
+        this.editing = this.editing.bind(this);
     }
 
     componentDidMount() {
-        const { body, edit, handleEdit } = this.props;
+        const { body, handleEdit } = this.props;
         if(!body.value) {
             handleEdit(body._temp_id, 'body');
-        }
-        if(body.purpose) {
-            switch(body.purpose) {
-                case 'describing':
-                    this.setState({ purposeOptionState: 0 });
-                    break;
-                case 'tagging':
-                    this.setState({ purposeOptionState: 1 });
-                    break;
-                default:
-                    this.setState({ purposeOptionState: 0 });
-                    break;
-            }
         }
     }
 
@@ -61,21 +44,6 @@ class AnnotationBodyItem extends Component {
         handleEdit(null, 'body');
     }
 
-    handleSelectedPurposeOption(e) {;
-        this.setState({ purpose: e.target.value });
-        switch(e.target.value) {
-            case 'describing':
-                this.setState({ purposeOptionState: 0 });
-                break;
-            case 'tagging':
-                this.setState({ purposeOptionState: 1 });
-                break;
-            default:
-                this.setState({ purposeOptionState: 0 });
-                break;
-        }
-    }
-
     updateBodyValue(newValue) {
         const { updateContent, body } = this.props;
 
@@ -88,73 +56,94 @@ class AnnotationBodyItem extends Component {
         handleDelete('body', body._temp_id);
     }
 
+    editing() {
+        const { body, edit } = this.props;
+
+        return body._temp_id == edit;
+    }
+
+    renderSwitch() {
+        const { body } = this.props;
+
+        switch(body.type) {
+            case 'describing':
+                return <MetadataCreatorItem id={`${metadata}-creator`} value={metadata.value} handleChange={this.handleChange}/>;
+            default:
+                return null;
+        }
+    }
+
+    renderTag() {
+        const { body, windowId } = this.props;
+        const edit = this.editing();
+
+        return (
+            <Chip
+                label={
+                    edit
+                    ? (<AnnotationTextFieldItem key={`${body._temp_id}-TextFieldItem`} value={body.value} updateValue={this.updateBodyValue} windowId={windowId} />)
+                    : (body.value ? body.value : 'n.a.')
+                }
+                variant={ edit ? "default" : "ourlined" }
+                color={ edit ? "primary" : undefined }
+                onClick={ () => edit ? null: this.edit() }
+                deleteIcon={ edit ? <Check /> : <DeleteIcon />}
+                onDelete={ () => edit ? this.confirm() : this.delete() }
+            />
+        )
+    }
+
+    renderTextField() {
+        const { body, windowId, classes } = this.props;
+        const edit = this.editing();
+
+        return (
+            <ListItem
+                divider
+                className={classes.editAnnotationListItem}
+            >
+                <Grid container spacing={1}>
+                    <Grid item xs={8}>
+                        <ListItemText
+                            style={{ lineHeight: '1rem'}}
+                            primary={
+                                edit
+                                ?  <AnnotationTextEditorItem key={`${body._temp_id}-TextEditorItem`} value={body.value} updateValue={this.updateBodyValue} windowId={windowId}  />
+                                : ( body.value ? ReactHtmlParser(body.value) : 'no text' )
+                            }
+                        />
+                    </Grid>
+                    <Grid item xs={4}>
+                        <IconButton size="small" onClick={() => edit ? this.confirm() : this.edit()}>
+                            {
+                                edit
+                                ? <Check />
+                                : <EditIcon />
+                            }
+                        </IconButton>
+                        <IconButton size="small" onClick={this.delete}>
+                            <DeleteIcon />
+                        </IconButton>
+                    </Grid>
+                </Grid>
+            </ListItem>
+
+        )
+    }
+
     render() {
-        const { body, classes, t, windowId, edit } = this.props;
-        const { purposeOptionState } = this.state;
-        const purposeOptions = ['describing', 'tagging'];
+        const { body } = this.props;
 
         return (
             <>
-                {
-                    body.purpose == 'tagging'
-                    ? (
-                        <Chip
-                            label={
-                                edit==body._temp_id
-                                ? (<AnnotationTextFieldItem key={`${body._temp_id}-TextFieldItem`} value={body.value} updateValue={this.updateBodyValue} windowId={windowId} />)
-                                : (body.value ? body.value : "no text")}
-                            variant={edit==body._temp_id ? "default" : "outlined"}
-                            color={edit==body._temp_id ? "primary" : ""}
-                            onClick={() => edit==body._temp_id ? null : this.edit()}
-                            deleteIcon={edit==body._temp_id ? <Check /> : <DeleteIcon />}
-                            onDelete={() => edit==body._temp_id ? this.confirm() : this.delete()}/>
-                        )
-                    : (<ListItem divider className={classes.editAnnotationListItem}>
-                        <div>
-                            <Grid container spacing={1}>
-                                <Grid item xs={8}>
-                                    <ListItemText style={{ lineHeight: '1rem'}} primary={body.value ? ReactHtmlParser(body.value) : 'no text'} />
-                                </Grid>
-                                <Grid item xs={4}>
-                                    <IconButton size="small" onClick={() => edit==body._temp_id ? this.confirm() : this.edit()}>
-                                        {
-                                            edit==body._temp_id
-                                            ? <Check />
-                                            : <EditIcon />
-                                        }
-                                    </IconButton>
-                                    <IconButton size="small" onClick={this.delete}>
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </Grid>
-                            </Grid>
-                        </div>
-                        <div className={classes.editAnnotation}>
-                            <Collapse className={classes.editAnnotationCollapse} in={edit==body._temp_id} unmountOnExit>
-                                <Grid container spacing={1}>
-                                    <Grid item xs={12}>
-                                    <FormControl style={{display: 'none'}}>
-                                            <InputLabel variant="standard" htmlFor='uncontrolled-native'>
-                                                purpose
-                                            </InputLabel>
-                                            {/* maybe add a key */}
-                                            <NativeSelect value={purposeOptions[purposeOptionState]} inputProps={{ name: 'metadata', id: 'uncontrolled-native' }} onChange={this.handleSelectedPurposeOption}>
-                                                {purposeOptions.map((value, index) => (
-                                                    <option value={value}>{value}</option>
-                                                ))}
-                                            </NativeSelect>
-                                        </FormControl>
-                                        {
-                                            purposeOptionState=="0"
-                                            ? <AnnotationTextEditorItem key={`${body._temp_id}-TextEditorItem`} value={body.value} updateValue={this.updateBodyValue} windowId={windowId}  />
-                                            : <AnnotationTextFieldItem key={`${body._temp_id}-TextFieldItem`} value={body.value} updateValue={this.updateBodyValue} windowId={windowId} />
-                                        }
-                                    </Grid>
-                                </Grid>
-                            </Collapse>
-                        </div>
-                    </ListItem>)
-                }
+                {(() => {
+                    switch(body.purpose) {
+                        case 'tagging':
+                            return this.renderTag();
+                        default:
+                            return this.renderTextField();
+                    }
+                })()}
             </>
         )
     }
