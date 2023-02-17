@@ -16,17 +16,19 @@ class AnnotationTextEditorItem extends Component {
             editorState: EditorState.createWithContent(stateFromHTML(props.value ? props.value : '')),
         };
 
-        this.onChange = this.onChange.bind(this);
         this.handleFormating = this.handleFormating.bind(this);
+        this.onChange = this.onChange.bind(this);
     }
 
     handleFormating(e, newFormat) {
         const { editorState } = this.state;
+
         this.onChange(RichUtils.toggleInlineStyle(editorState, newFormat));
     }
 
     onChange(editorState) {
         const { updateValue } = this.props;
+
         this.setState({ editorState });
         if (updateValue) {
             const options = {

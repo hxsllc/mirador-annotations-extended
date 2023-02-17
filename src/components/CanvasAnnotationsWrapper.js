@@ -9,10 +9,12 @@ class CanvasAnnotationsWrapper extends Component {
     /** */
     constructor(props) {
         super(props);
+
         this.state = {
             singleCanvasDialogOpen: false,
             activeAnnotationId: false,
         };
+
         this.toggleSingleCanvasDialogOpen = this.toggleSingleCanvasDialogOpen.bind(this);
         this.setActiveAnnotationId = this.setActiveAnnotationId.bind(this);
     }
@@ -40,14 +42,28 @@ class CanvasAnnotationsWrapper extends Component {
     /** */
     render() {
         const {
-            addCompanionWindow, annotationsOnCanvases, canvases, config, receiveAnnotation,
-            switchToSingleCanvasView, TargetComponent, targetProps, windowViewType, createAnnotation
+            addCompanionWindow,
+            annotationsOnCanvases,
+            canvases,
+            config,
+            createAnnotation,
+            receiveAnnotation,
+            switchToSingleCanvasView,
+            TargetComponent,
+            targetProps,
+            windowViewType,
         } = this.props;
-        const { singleCanvasDialogOpen, activeAnnotationId } = this.state;
+
+        const {
+            activeAnnotationId,
+            singleCanvasDialogOpen,
+        } = this.state;
+
         const props = {
             ...targetProps,
             listContainerComponent: CanvasListItem,
         };
+
         return (
             <AnnotationActionsContext.Provider
                 value={{
@@ -91,6 +107,7 @@ CanvasAnnotationsWrapper.propTypes = {
             adapter: PropTypes.func,
         }),
     }).isRequired,
+    createAnnotation: PropTypes.bool,
     receiveAnnotation: PropTypes.func.isRequired,
     switchToSingleCanvasView: PropTypes.func.isRequired,
     TargetComponent: PropTypes.oneOfType([

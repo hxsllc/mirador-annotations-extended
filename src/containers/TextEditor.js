@@ -1,5 +1,6 @@
 import { compose } from 'redux';
 import { withStyles } from '@material-ui/core/styles';
+import { withTranslation } from 'react-i18next';
 import TextEditor from '../components/TextEditor';
 
 const styles = (theme) => ({

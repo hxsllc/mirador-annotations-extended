@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import flatten from 'lodash/flatten';
 import AnnotationActionsContext from '../AnnotationActionsContext';
@@ -7,7 +7,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import { Box, Typography, IconButton } from '@material-ui/core';
 
 /** */
-class CanvasListItem extends React.Component {
+class CanvasListItem extends Component {
 
     constructor(props) {
         super(props);
@@ -17,8 +17,14 @@ class CanvasListItem extends React.Component {
     }
 
     handleDelete() {
-        const { canvases, receiveAnnotation, storageAdapter } = this.context;
+        const {
+            canvases,
+            receiveAnnotation,
+            storageAdapter
+        } = this.context;
+
         const { annotationid } = this.props;
+
         canvases.forEach((canvas) => {
             const adapter = storageAdapter(canvas.id);
             adapter.delete(annotationid).then((annoPage) => {
@@ -29,10 +35,15 @@ class CanvasListItem extends React.Component {
 
     handleEdit() {
         const {
-            addCompanionWindow, canvases, annotationsOnCanvases, setActiveAnnotationId,
+            addCompanionWindow,
+            annotationsOnCanvases,
+            canvases,
+            setActiveAnnotationId,
         } = this.context;
+
         const { annotationid } = this.props;
         let annotation;
+
         canvases.some((canvas) => {
             if (annotationsOnCanvases[canvas.id]) {
                 Object.entries(annotationsOnCanvases[canvas.id]).forEach(([key, value], i) => {
@@ -52,8 +63,13 @@ class CanvasListItem extends React.Component {
     }
 
     editable() {
-        const { annotationsOnCanvases, canvases } = this.context;
+        const {
+            annotationsOnCanvases,
+            canvases,
+        } = this.context;
+
         const { annotationid } = this.props;
+
         const annoIds = canvases.map((canvas) => {
             if (annotationsOnCanvases[canvas.id]) {
                 return flatten(Object.entries(annotationsOnCanvases[canvas.id]).map(([key, value], i) => {
@@ -69,8 +85,13 @@ class CanvasListItem extends React.Component {
     }
 
     editing() {
-        const { activeAnnotationId, createAnnotation } = this.context;
+        const {
+            activeAnnotationId,
+            createAnnotation,
+        } = this.context;
+
         const { annotationid } = this.props;
+
         if(!createAnnotation) {
             if(activeAnnotationId == annotationid) {
                 return true;
@@ -81,10 +102,14 @@ class CanvasListItem extends React.Component {
 
     creator() {
         const {
-            annotationsOnCanvases, canvases,
+            annotationsOnCanvases,
+            canvases,
         } = this.context;
+
         const { annotationid } = this.props;
+
         var creator = false;
+
         canvases.some((canvas) => {
             if (annotationsOnCanvases[canvas.id]) {
                 Object.entries(annotationsOnCanvases[canvas.id]).forEach(([key, value], i) => {
@@ -105,13 +130,23 @@ class CanvasListItem extends React.Component {
     }
 
     render() {
-        const { children, classes, t } = this.props;
-        const { windowViewType, toggleSingleCanvasDialogOpen, createAnnotation} = this.context;
+        const {
+            children,
+            classes,
+            t,
+        } = this.props;
+
+        const {
+            createAnnotation,
+            windowViewType,
+            toggleSingleCanvasDialogOpen,
+        } = this.context;
+
         const creator = this.creator();
 
         return (
             <div>
-                <div className={ this.editing() ? classes.containeractive : classes.container}>
+                <div className={this.editing() ? classes.containeractive : classes.container}>
                     <div className={classes.heading}>
                         <Typography
                             variant="overline" >
@@ -148,7 +183,6 @@ class CanvasListItem extends React.Component {
                         }
                     </div>
                 </div>
-
                 <li
                     {...this.props} // eslint-disable-line react/jsx-props-no-spreading
                 >

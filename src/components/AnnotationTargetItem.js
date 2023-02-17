@@ -1,17 +1,13 @@
 import React, { Component } from 'react';
-import PropTypes, { bool } from 'prop-types';
+import PropTypes from 'prop-types';
 import { ListItem, ListItemText } from '@material-ui/core';
 import { Check } from '@material-ui/icons';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
 import EditIcon from '@material-ui/icons/Edit';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
-import { Collapse } from '@material-ui/core';
-import { TextField } from '@material-ui/core';
-import { NativeSelect, FormControl, InputLabel } from '@material-ui/core';
-import TargetFragmentSelector from '../containers/TargetFragmentSelector';
 import TargetSvgSelector from '../containers/TargetSvgSelector';
-import { Favorite } from '@material-ui/icons';
+import ColorIcon  from '../icons/Color';
 
 class AnnotationTargetItem extends Component {
     constructor(props) {
@@ -22,14 +18,18 @@ class AnnotationTargetItem extends Component {
             hover: false,
         }
 
-        this.edit = this.edit.bind(this);
         this.confirm = this.confirm.bind(this);
         this.delete = this.delete.bind(this);
+        this.edit = this.edit.bind(this);
         this.updateTargetValue = this.updateTargetValue.bind(this);
     }
 
     componentDidMount() {
-        const { target, handleEdit } = this.props;
+        const {
+            handleEdit,
+            target,
+        } = this.props;
+
         if(!target.value) {
             handleEdit(target._temp_id, 'target');
         }
@@ -48,13 +48,19 @@ class AnnotationTargetItem extends Component {
     }
 
     edit() {
-        const { target, handleEdit } = this.props;
+        const {
+            handleEdit,
+            target,
+        } = this.props;
 
         handleEdit(target._temp_id, 'target');
     }
 
     updateTargetValue({ value }) {
-        const { target, updateContent } = this.props;
+        const {
+            target,
+            updateContent
+        } = this.props;
 
         if(value && target.type=='SvgSelector') {
             var val = value.split('stroke="');
@@ -71,32 +77,56 @@ class AnnotationTargetItem extends Component {
     }
 
     editing() {
-        const { target, edit } = this.props;
+        const {
+            edit,
+            target,
+        } = this.props;
 
         return target._temp_id == edit;
     }
 
     delete() {
-        const { handleDelete, target } = this.props;
+        const {
+            handleDelete,
+            target,
+        } = this.props;
 
         handleDelete('target', target._temp_id);
     }
 
     renderSvgSelector() {
-        const { classes, target, windowId, t, _temp_id } = this.props;
-        const { color, hover } = this.state;
+        const {
+            _temp_id,
+            classes,
+            t,
+            target,
+            windowId,
+        } = this.props;
+
+        const {
+            color,
+            hover,
+        } = this.state;
+
         const edit = this.editing();
+
         return (
-            <ListItem divider className={classes.editAnnotationListItem} >
+            <ListItem className={classes.editAnnotationListItem} divider>
                 <div>
                     <Grid container spacing={1}
                         onMouseEnter={() => this.setState({hover: true})}
-                        onMouseLeave={() => this.setState({hover: false })}>
+                        onMouseLeave={() => this.setState({hover: false })}
+                    >
                         <Grid item xs={8}>
                             <ListItemText
                                 style={{ lineHeight: '1rem' }}
                                 primary={target._temp_name}
-                                secondary={ color ? <> {t('Color')} <Favorite style={{ color: color, marginLeft: '25px' }}/> </> : target.value } />
+                                secondary={
+                                    color
+                                    ? <> {t('Color')} <ColorIcon style={{ color: color, marginLeft: '25px' }}/> </>
+                                    : target.value
+                                }
+                            />
                         </Grid>
                         <Grid item xs={4}>
                             <IconButton size="small" onClick={() => edit ? this.confirm() : this.edit()}>
@@ -113,14 +143,21 @@ class AnnotationTargetItem extends Component {
                     </Grid>
                 </div>
                 <div>
-                    <TargetSvgSelector key={`${_temp_id}-SvgSelector`} value={target.value} edit={edit} hover={hover} updateValue={this.updateTargetValue} windowId={windowId} />
+                    <TargetSvgSelector
+                        edit={edit}
+                        hover={hover}
+                        key={`${_temp_id}-SvgSelector`}
+                        updateValue={this.updateTargetValue}
+                        value={target.value}
+                        windowId={windowId}
+                    />
                 </div>
             </ListItem>
         )
     }
 
     render() {
-        const { target, } = this.props;
+        const { target } = this.props;
 
         return (
             <>

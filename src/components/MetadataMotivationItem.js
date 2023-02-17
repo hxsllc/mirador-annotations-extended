@@ -21,6 +21,7 @@ class MetadataMotivationItem extends Component {
 
     componentDidMount() {
         const { value } = this.props;
+
         switch (value) {
             case 'commenting':
                 this.setState({ motivationOption: 0 });
@@ -42,6 +43,7 @@ class MetadataMotivationItem extends Component {
 
     handleSelectedMotivationOption(e) {
         const { handleChange } = this.props;
+
         handleChange(e.target.value);
         switch(e.target.value) {
             case 'commenting':
@@ -66,21 +68,31 @@ class MetadataMotivationItem extends Component {
 
     render() {
         const { t } = this.props;
-        const { motivation, motivationOption } = this.state;
+        const {
+            motivation,
+            motivationOption,
+        } = this.state;
 
         return (
             <FormControl>
                 <InputLabel variant="standard" htmlFor='uncontrolled-native-target'>
                     {t('motivation')}
                 </InputLabel>
-                <NativeSelect value={motivation[motivationOption]} inputProps={{ name: 'motivation', id: 'uncontrolled-native-motivation' }} onChange={this.handleSelectedMotivationOption}>
-                {motivation.map((value, index) => (
-                    <option value={value}>{value}</option>
-                ))}
-            </NativeSelect>
-        </FormControl>
+                <NativeSelect
+                    inputProps={{ name: 'motivation', id: 'uncontrolled-native-motivation' }}
+                    onChange={this.handleSelectedMotivationOption}
+                    value={motivation[motivationOption]}
+                >
+                    {motivation.map((value, index) => (
+                        <option value={value}>{value}</option>
+                    ))}
+                </NativeSelect>
+            </FormControl>
         )
     }
 }
+
+MetadataMotivationItem.propTypes = {}
+MetadataMotivationItem.defaultProps = {}
 
 export default MetadataMotivationItem;

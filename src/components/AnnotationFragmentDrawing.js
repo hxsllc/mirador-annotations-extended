@@ -3,14 +3,7 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { OSDReferences } from 'mirador/dist/es/src/plugins/OSDReferences';
 import { renderWithPaperScope, PaperContainer } from '@psychobolt/react-paperjs';
-
-import {
-EllipseTool,
-PolygonTool,
-RectangleTool,
-FreeformPathTool,
-}
-    from '@psychobolt/react-paperjs-editor';
+import { RectangleTool } from '@psychobolt/react-paperjs-editor';
 import { Point } from 'paper';
 import flatten from 'lodash/flatten';
 import EditTool from './EditTool';
@@ -27,7 +20,7 @@ class AnnotationFragmentDrawing extends Component {
 
     /** */
     addPath(path) {
-        const { closed, strokeWidth, updateGeometry } = this.props;
+        const { strokeWidth, updateGeometry } = this.props;
         // TODO: Compute xywh of bounding container of layers
         const { bounds } = path;
         const {

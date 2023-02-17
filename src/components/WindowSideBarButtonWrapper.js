@@ -9,8 +9,14 @@ import PropTypes from 'prop-types';
 class WindowSideBarButtonWrapper extends Component {
     /** */
     render() {
-        const { PluginComponents, TargetComponent, targetProps } = this.props;
+        const {
+            PluginComponents,
+            TargetComponent,
+            targetProps,
+        } = this.props;
+
         targetProps.hasAnyAnnotations = true;
+
         return (
             <TargetComponent
                 {...targetProps} // eslint-disable-line react/jsx-props-no-spreading

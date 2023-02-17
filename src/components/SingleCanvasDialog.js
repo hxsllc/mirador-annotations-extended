@@ -15,6 +15,7 @@ class SingleCanvasDialog extends Component {
     /** */
     constructor(props) {
         super(props);
+
         this.confirm = this.confirm.bind(this);
     }
 
@@ -24,6 +25,7 @@ class SingleCanvasDialog extends Component {
             handleClose,
             switchToSingleCanvasView,
         } = this.props;
+
         switchToSingleCanvasView();
         handleClose();
     }
@@ -35,6 +37,7 @@ class SingleCanvasDialog extends Component {
             open,
             t,
         } = this.props;
+
         return (
             <Dialog
                 aria-labelledby="single-canvas-dialog-title"

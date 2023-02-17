@@ -11,18 +11,36 @@ class AnnotationTextFieldItem extends Component {
 
     onChange(e) {
         const { updateValue } = this.props;
+
         if (updateValue) {
             updateValue(e.target.value);
         }
     }
 
     render() {
-        const { value, t } = this.props;
+        const { value } = this.props;
 
         return (
-            <TextField hiddenLabel value={value} onChange={this.onChange} small style={ value ? { width: (value.length * 7.5) } : { width: 10}} variant="standard" />
+            <TextField
+                hiddenLabel
+                onChange={this.onChange}
+                small
+                style={value ? { width: (value.length * 7.5) } : { width: 10}}
+                value={value}
+                variant="standard"
+            />
         )
     }
+}
+
+AnnotationTextFieldItem.propTypes = {
+    updateValue: PropTypes.func.isRequired,
+    value: PropTypes.string.isRequired,
+}
+
+AnnotationTextFieldItem.defaultProps = {
+    updateValue: () => {},
+    value: '',
 }
 
 export default AnnotationTextFieldItem;

@@ -12,12 +12,18 @@ class MetadataCreatorItem extends Component {
 
     handleTextFieldInput(e) {
         const { handleChange } = this.props;
+
         handleChange(e.target.value);
     }
 
 
     render() {
-        const { id, value, t } = this.props;
+        const {
+            id,
+            value,
+            t,
+        } = this.props;
+
         return (
             <TextField
                 id={id}
@@ -26,6 +32,11 @@ class MetadataCreatorItem extends Component {
                 variant="standard" />
             )
     }
+}
+
+MetadataCreatorItem.propTypes = {}
+MetadataCreatorItem.defaultProps = {
+
 }
 
 export default MetadataCreatorItem;

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import AnnotationSvgDrawing from '../containers/AnnotationSvgDrawing';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
@@ -7,8 +6,6 @@ import RectangleIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CircleIcon from '@material-ui/icons/RadioButtonUnchecked';
 import PolygonIcon from '@material-ui/icons/Timeline';
 import GestureIcon from '@material-ui/icons/Gesture';
-import ClosedPolygonIcon from '@material-ui/icons/ChangeHistory';
-import OpenPolygonIcon from '@material-ui/icons/ShowChart';
 import { Radio } from '@material-ui/core';
 import { Collapse } from '@material-ui/core';
 
@@ -40,6 +37,7 @@ class TargetSvgSelector extends Component {
 
     componentDidMount() {
         const { svg } = this.state;
+
         if(svg) {
             this.setState({ activeTool: 'edit' });
         }
@@ -79,6 +77,7 @@ class TargetSvgSelector extends Component {
     updateGeometry({ svg }) {
         const { updateValue } = this.props;
         const { activeTool } = this.state;
+
         this.setState({ svg });
         updateValue({ value: svg });
         if(svg && activeTool !=='edit') {
@@ -87,40 +86,74 @@ class TargetSvgSelector extends Component {
     }
 
     render() {
-        const { classes, windowId, value, edit, hover, } = this.props;
-        const { activeTool, strokeColor, svg, strokeWidth, closedMode } = this.state;
+        const {
+            classes,
+            edit,
+            hover,
+            value,
+            windowId,
+        } = this.props;
+
+        const {
+            activeTool,
+            closedMode,
+            strokeColor,
+            strokeWidth,
+            svg,
+        } = this.state;
 
         const colors = ["#cc0000", "#fcba03", "#32c784", "#403df2"];
 
         return (
             <div className={classes.selector}>
-                {(edit || hover) && <AnnotationSvgDrawing activeTool={activeTool} strokeColor={strokeColor} strokeWidth={strokeWidth} closed={closedMode} svg={value} updateGeometry={this.updateGeometry} windowId={windowId} />}
+                {
+                    (edit || hover) && (
+                        <AnnotationSvgDrawing
+                            activeTool={activeTool}
+                            closed={closedMode}
+                            strokeColor={strokeColor}
+                            strokeWidth={strokeWidth}
+                            svg={value}
+                            updateGeometry={this.updateGeometry}
+                            windowId={windowId} />
+                    )
+                }
                 <Collapse className={classes.editAnnotationCollapse} in={edit} unmountOnExit>
                     <div>
                     <ToggleButtonGroup value={activeTool} exclusive onChange={this.changeTool} aria-Label='tools'>
-                        <ToggleButton value="rectangle" aria-label="rectangle" disabled={activeTool =='edit'}>
+                        <ToggleButton aria-label="rectangle" disabled={activeTool =='edit'} value="rectangle">
                             <RectangleIcon />
                         </ToggleButton>
-                        <ToggleButton value="ellipse" aria-label="circle" disabled={activeTool =='edit'}>
+                        <ToggleButton aria-label="circle" disabled={activeTool =='edit'} value="ellipse">
                             <CircleIcon />
                         </ToggleButton>
-                        <ToggleButton className={classes.hidden} value="polygon" aria-label="polygon" disabled={activeTool =='edit'}>
+                        <ToggleButton aria-label="polygon" className={classes.hidden} disabled={activeTool =='edit'} value="polygon">
                             <PolygonIcon />
                         </ToggleButton>
-                        <ToggleButton value="freehand" aria-label="freehand" disabled={activeTool =='edit'}>
+                        <ToggleButton aria-label="freehand" disabled={activeTool =='edit'} value="freehand">
                             <GestureIcon />
                         </ToggleButton>
                     </ToggleButtonGroup>
                     </div>
                     <div>
                         {colors.map((value) => (
-                            <Radio disabled={activeTool =='edit'} style={ activeTool !== 'edit' ? { color: `${value}` } : {}} checked={strokeColor==value} onChange={this.changeColor} value={value} aria-label={`select color-${value}`} />
+                            <Radio
+                                aria-label={`select color-${value}`}
+                                checked={strokeColor==value}
+                                disabled={activeTool =='edit'}
+                                onChange={this.changeColor}
+                                style={ activeTool !== 'edit' ? { color: `${value}` } : {}}
+                                value={value}
+                            />
                         ))}
                     </div>
                 </Collapse>
             </div>
         )
     }
-}
+};
+
+TargetSvgSelector.propTypes = {};
+TargetSvgSelector.defaultProps = {};
 
 export default TargetSvgSelector;

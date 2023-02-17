@@ -24,8 +24,14 @@ class AnnotationExportDialog extends Component {
 
     /** */
     componentDidUpdate(prevProps) {
-        const { canvases, config, open } = this.props;
+        const {
+            canvases,
+            config,
+            open,
+        } = this.props;
+
         const { open: prevOpen } = prevProps || {};
+
         if (prevOpen !== open && open) {
             /** */
             const reducer = async (acc, canvas) => {
@@ -57,14 +63,22 @@ class AnnotationExportDialog extends Component {
     /** */
     closeDialog() {
         const { handleClose } = this.props;
+
         this.setState({ exportLinks: [] });
         handleClose();
     }
 
     /** */
     render() {
-        const { classes, handleClose, open, t } = this.props;
+        const {
+            classes,
+            handleClose,
+            open,
+            t,
+        } = this.props;
+
         const { exportLinks } = this.state;
+
         return (
             <Dialog
                 aria-labelledby="annotation-export-dialog-title"

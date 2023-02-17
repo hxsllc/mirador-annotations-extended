@@ -12,10 +12,12 @@ class MiradorAnnotation extends Component {
     /** */
     constructor(props) {
         super(props);
+
         this.state = {
             annotationExportDialogOpen: false,
             singleCanvasDialogOpen: false,
         };
+
         this.openCreateAnnotationCompanionWindow = this.openCreateAnnotationCompanionWindow.bind(this);
         this.toggleCanvasExportDialog = this.toggleCanvasExportDialog.bind(this);
         this.toggleSingleCanvasDialogOpen = this.toggleSingleCanvasDialogOpen.bind(this);
@@ -23,9 +25,7 @@ class MiradorAnnotation extends Component {
 
     /** */
     openCreateAnnotationCompanionWindow(e) {
-        const {
-            addCompanionWindow,
-        } = this.props;
+        const { addCompanionWindow } = this.props;
 
         addCompanionWindow('annotationCreation', {
             position: 'right',
@@ -35,6 +35,7 @@ class MiradorAnnotation extends Component {
     /** */
     toggleSingleCanvasDialogOpen() {
         const { singleCanvasDialogOpen } = this.state;
+
         this.setState({
             singleCanvasDialogOpen: !singleCanvasDialogOpen,
         });
@@ -43,9 +44,11 @@ class MiradorAnnotation extends Component {
     /** */
     toggleCanvasExportDialog(e) {
         const { annotationExportDialogOpen } = this.state;
+
         const newState = {
             annotationExportDialogOpen: !annotationExportDialogOpen,
         };
+
         this.setState(newState);
     }
 
@@ -54,18 +57,24 @@ class MiradorAnnotation extends Component {
         const {
             canvases,
             config,
+            createAnnotation,
             switchToSingleCanvasView,
+            t,
             TargetComponent,
             targetProps,
             windowViewType,
-            t,
-            createAnnotation,
         } = this.props;
+
         const props = {
             ...targetProps,
             //...(!createAnnotation ? { displayAllDisabled: true } : {})
         };
-        const { annotationExportDialogOpen, singleCanvasDialogOpen } = this.state;
+
+        const {
+            annotationExportDialogOpen,
+            singleCanvasDialogOpen,
+        } = this.state;
+
         const storageAdapter = config.annotation && config.annotation.adapter('poke');
         const offerExportDialog = config.annotation && storageAdapter instanceof LocalStorageAdapter
             && config.annotation.exportLocalStorageAnnotations;

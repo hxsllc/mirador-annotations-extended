@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
-import PropTypes, { bool } from 'prop-types';
+import PropTypes from 'prop-types';
 import { ListItem, ListItemText } from '@material-ui/core';
 import { Check } from '@material-ui/icons';
 import EditIcon from '@material-ui/icons/Edit';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
-import { Collapse } from '@material-ui/core';
-import { TextField } from '@material-ui/core';
-import { NativeSelect, FormControl, InputLabel } from '@material-ui/core';
 import MetadataCreatorItem from '../containers/MetadataCreatorItem';
 import MetadataMotivationItem from '../containers/MetadataMotivationItem';
 
@@ -17,7 +14,6 @@ class AnnotationMetadataItem extends Component {
     constructor(props) {
         super(props);
 
-
         this.edit = this.edit.bind(this);
         this.editing = this.editing.bind(this);
         this.confirm = this.confirm.bind(this);
@@ -26,7 +22,10 @@ class AnnotationMetadataItem extends Component {
     }
 
     componentDidMount() {
-        const { metadata, edit, handleEdit } = this.props;
+        const {
+            handleEdit,
+            metadata,
+        } = this.props;
 
         if(!metadata.value) {
             handleEdit(metadata._temp_id, 'metadata');
@@ -34,7 +33,10 @@ class AnnotationMetadataItem extends Component {
     }
 
     edit() {
-        const { metadata, handleEdit } = this.props;
+        const {
+            handleEdit,
+            metadata,
+        } = this.props;
 
         handleEdit(metadata._temp_id, 'metadata');
     }
@@ -46,19 +48,28 @@ class AnnotationMetadataItem extends Component {
     }
 
     handleChange( newValue ) {
-        const { metadata, updateContent } = this.props;
+        const {
+            metadata,
+            updateContent,
+        } = this.props;
 
         updateContent('metadata', { value: newValue, type: metadata.type, _temp_id: metadata._temp_id }, metadata._temp_id);
     }
 
     delete() {
-        const { handleDelete, metadata } = this.props;
+        const {
+            handleDelete,
+            metadata,
+        } = this.props;
 
         handleDelete('metadata', metadata._temp_id);
     }
 
     editing() {
-        const { metadata, edit } = this.props;
+        const {
+            edit,
+            metadata,
+        } = this.props;
 
         return metadata._temp_id == edit;
     }
@@ -66,6 +77,7 @@ class AnnotationMetadataItem extends Component {
     renderCreator() {
         const { metadata } = this.props;
         const edit = this.editing();
+
         return (
             <ListItemText
                 style={{ lineHeight: '1rem'}}
@@ -87,6 +99,7 @@ class AnnotationMetadataItem extends Component {
     renderMotivation() {
         const { metadata } = this.props;
         const edit = this.editing();
+
         return (
             <ListItemText
                 style={{ lineHeight: '1rem'}}
@@ -105,7 +118,11 @@ class AnnotationMetadataItem extends Component {
     }
 
     render() {
-        const { metadata, classes, t } = this.props;
+        const {
+            classes,
+            metadata,
+            t,
+        } = this.props;
         const edit = this.editing();
 
         return (

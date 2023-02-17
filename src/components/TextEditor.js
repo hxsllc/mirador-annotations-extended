@@ -16,6 +16,7 @@ class TextEditor extends Component {
         this.state = {
             editorState: EditorState.createWithContent(stateFromHTML(props.annoHtml)),
         };
+
         this.onChange = this.onChange.bind(this);
         this.handleKeyCommand = this.handleKeyCommand.bind(this);
         this.handleFormating = this.handleFormating.bind(this);
@@ -34,12 +35,14 @@ class TextEditor extends Component {
     /** */
     handleFormating(e, newFormat) {
         const { editorState } = this.state;
+
         this.onChange(RichUtils.toggleInlineStyle(editorState, newFormat));
     }
 
     /** */
     handleKeyCommand(command, editorState) {
         const newState = RichUtils.handleKeyCommand(editorState, command);
+
         if (newState) {
             this.onChange(newState);
             return 'handled';
@@ -50,6 +53,7 @@ class TextEditor extends Component {
     /** */
     onChange(editorState) {
         const { updateAnnotationBody } = this.props;
+
         this.setState({ editorState });
         if (updateAnnotationBody) {
             const options = {
