@@ -22,8 +22,6 @@ class AnnotationCreation extends Component {
     constructor(props) {
         super(props);
 
-        const nickName = ['Norman', 'Johannes', 'Simone', 'Eva', 'Thomas', 'Sophie', 'Astrid', 'Annika', 'Jens', 'Willy'];
-
         const annoState = {};
 
         if (props.annotation) {
@@ -60,7 +58,8 @@ class AnnotationCreation extends Component {
                             type: body.type ? body.type : null,
                             purpose: body.purpose ? body.purpose : null,
                             value: body.value,
-                            _temp_id: annoState.annoId + '-body-item-' + annoState.bodyCount
+                            _temp_id: annoState.annoId + '-body-item-' + annoState.bodyCount,
+                            _temp_name: `Body ${annoState.bodyCount}`,
                         };
                         annoState.body.push(tempBody);
                         annoState.bodyCount++;
@@ -70,7 +69,8 @@ class AnnotationCreation extends Component {
                         type: props.annotation.body.type ? props.annotation.body.type : null,
                         purpose: props.annotation.body.purpose ? props.annotation.body.purpose : null,
                         value: props.annotation.body.value,
-                        _temp_id: annoState.annoId + '-body-item-' + annoState.bodyCount
+                        _temp_id: annoState.annoId + '-body-item-' + annoState.bodyCount,
+                        _temp_name: `Body ${annoState.bodyCount}`,
                     };
                     annoState.body.push(tempBody);
                     annoState.bodyCount++;
@@ -89,7 +89,7 @@ class AnnotationCreation extends Component {
                                     type: selector.type ? selector.type : null,
                                     value: path.outerHTML,
                                     _temp_id: annoState.annoId + '-target-item-' + annoState.targetCount,
-                                    _temp_name: nickName[annoState.targetCount%nickName.length]
+                                    _temp_name: `Target ${annoState.targetCount}`,
                                 };
                                 annoState.target.push(tempTarget);
                                 annoState.targetCount++;
@@ -99,7 +99,7 @@ class AnnotationCreation extends Component {
                                 type: selector.type ? selector.type : null,
                                 value: selector.value,
                                 _temp_id: annoState.annoId + '-target-item-' + annoState.targetCount,
-                                _temp_name: nickName[annoState.targetCount%nickName.length]
+                                _temp_name: `Target ${annoState.targetCount}`,
                             };
                             annoState.target.push(tempTarget);
                             annoState.targetCount++;
@@ -110,7 +110,7 @@ class AnnotationCreation extends Component {
                         type: props.annotation.target.selector.type ? props.annotation.target.selector.type : null,
                         value: props.annotation.target.selector.value,
                         _temp_id: annoState.annoId + '-target-item-' + annoState.targetCount,
-                        _temp_name: nickName[annoState.targetCount%nickName.length]
+                        _temp_name: `Target ${annoState.targetCount}`,
                     };
                     annoState.target.push(tempTarget);
                     annoState.targetCount++;
@@ -149,7 +149,6 @@ class AnnotationCreation extends Component {
             metadataEditState: null,
             metadataCount: 0,
             targetCount: 0,
-            nickName,
             ...annoState,
         };
 
@@ -220,7 +219,6 @@ class AnnotationCreation extends Component {
             bodyCount,
             target,
             targetCount,
-            nickName,
         } = this.state;
 
         switch(type) {
@@ -229,7 +227,7 @@ class AnnotationCreation extends Component {
                     type: 'SvgSelector',
                     value: null,
                     _temp_id: annoId + '-target-item-' + targetCount,
-                    _temp_name: nickName[targetCount%nickName.length]
+                    _temp_name: `Target ${targetCount}`,
                 };
                 var newData = target.concat(targetBase);
                 this.setState({
@@ -242,7 +240,8 @@ class AnnotationCreation extends Component {
                     type: 'TextualBody',
                     value: '',
                     purpose: subType,
-                    _temp_id: annoId + '-body-item-' + bodyCount
+                    _temp_id: annoId + '-body-item-' + bodyCount,
+                    _temp_name: `Body ${bodyCount}`,
                 };
                 var newData = body.concat(bodyBase);
                 this.setState({

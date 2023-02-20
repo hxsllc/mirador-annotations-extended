@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { ListItemText } from '@material-ui/core';
 import { Check } from '@material-ui/icons';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
 import EditIcon from '@material-ui/icons/Edit';
 import AnnotationTextEditorItem from '../containers/AnnotationTextEditorItem';
 import AnnotationTextFieldItem from '../containers/AnnotationTextFieldItem';
-import ReactHtmlParser from 'react-html-parser';
 import CustomListItem from '../containers/CustomListItem';
 import CustomTag from '../containers/CustomTag';
+import SanitizedHtml from 'mirador/dist/es/src/containers/SanitizedHtml';
 import MiradorMenuButton from 'mirador/dist/es/src/containers/MiradorMenuButton';
+import { Typography } from '@material-ui/core';
 
 class AnnotationBodyItem extends Component {
     constructor(props) {
@@ -54,7 +54,7 @@ class AnnotationBodyItem extends Component {
             updateContent,
         } = this.props;
 
-        updateContent('body', { value: newValue, type: body.type, purpose: body.purpose, _temp_id: body._temp_id }, body._temp_id);
+        updateContent('body', { value: newValue, type: body.type, purpose: body.purpose, _temp_id: body._temp_id, _temp_name: body._temp_name }, body._temp_id);
     }
 
     delete() {
@@ -128,6 +128,7 @@ class AnnotationBodyItem extends Component {
         const {
             body,
             classes,
+            htmlSanitizationRuleSet,
             t,
             windowId,
         } = this.props;
@@ -150,6 +151,7 @@ class AnnotationBodyItem extends Component {
                         </MiradorMenuButton>
                     </>
                 }
+                primary={body._temp_name}
             >
                 {
                     edit
@@ -161,7 +163,7 @@ class AnnotationBodyItem extends Component {
                             windowId={windowId}
                         />
                     )
-                    : (body.value ? ReactHtmlParser(body.value) : 'no text')
+                    : (body.value ? <Typography color="textSecondary" variant="body2"><SanitizedHtml ruleSet={htmlSanitizationRuleSet} htmlString={body.value} /></Typography> : '')
                 }
             </CustomListItem>
         )

@@ -16,7 +16,7 @@ class CustomListItem extends Component {
         return (
             <ListItem divider className={classes.container} {...this.props}>
                 <div className={classes.main}>
-                    <ListItemText primary={primary} secondary={secondary}/>
+                    <ListItemText primary={primary} primaryTypographyProps={{ variant: 'body1' }} secondary={secondary} secondaryTypographyProps={{ variant: "body2" }}/>
                     <div className={classes.buttons}>
                         {buttons}
                     </div>
