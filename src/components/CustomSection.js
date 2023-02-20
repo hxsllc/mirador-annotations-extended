@@ -13,18 +13,19 @@ class CustomSection extends Component {
             children,
             classes,
             id,
+            inner,
             primary,
             secondary,
         } = this.props;
 
         return (
-            <div className={classes.section}>
+            <div className={inner ? classes.subsection : classes.section}>
                 <div className={classes.container}>
                     <div className={classes.heading}>
-                        <Typography color="primary" variant="h5">
+                        <Typography className={inner ? classes.secondaryTitle : classes.primaryTitle}>
                             {primary}
                         </Typography>
-                        <Typography variant="subtitle2">
+                        <Typography className={classes.description}>
                             {secondary}
                         </Typography>
                     </div>

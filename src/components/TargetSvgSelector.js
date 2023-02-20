@@ -120,7 +120,7 @@ class TargetSvgSelector extends Component {
                 }
                 <Collapse className={classes.editAnnotationCollapse} in={edit} unmountOnExit>
                     <div>
-                    <ToggleButtonGroup value={activeTool} exclusive onChange={this.changeTool} aria-Label='tools'>
+                    <ToggleButtonGroup value={activeTool} exclusive onChange={this.changeTool} aria-label='tools'>
                         <ToggleButton aria-label="rectangle" disabled={activeTool =='edit'} value="rectangle">
                             <RectangleIcon />
                         </ToggleButton>

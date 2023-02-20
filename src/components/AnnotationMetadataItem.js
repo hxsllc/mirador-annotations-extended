@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { ListItem, ListItemText } from '@material-ui/core';
 import { Check } from '@material-ui/icons';
 import EditIcon from '@material-ui/icons/Edit';
-import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
 import MetadataCreatorItem from '../containers/MetadataCreatorItem';
 import MetadataMotivationItem from '../containers/MetadataMotivationItem';
+import CustomListItem from '../containers/CustomListItem';
+import MiradorMenuButton from 'mirador/dist/es/src/containers/MiradorMenuButton';
 
 // you still have a lot of work to do
 
@@ -79,10 +78,9 @@ class AnnotationMetadataItem extends Component {
         const edit = this.editing();
 
         return (
-            <ListItemText
-                style={{ lineHeight: '1rem'}}
-                primary={metadata.type}
-                secondary={ edit
+            {
+                primary: metadata.type,
+                secondary:  edit
                     ? (
                         <MetadataCreatorItem
                             id={`${metadata}-creator`}
@@ -91,8 +89,7 @@ class AnnotationMetadataItem extends Component {
                         />
                     )
                     : ( metadata.value ? metadata.value : 'n.a.' )
-                }
-            />
+            }
         )
     }
 
@@ -101,10 +98,9 @@ class AnnotationMetadataItem extends Component {
         const edit = this.editing();
 
         return (
-            <ListItemText
-                style={{ lineHeight: '1rem'}}
-                primary={metadata.type}
-                secondary={ edit
+            {
+                primary: metadata.type,
+                secondary: edit
                     ? (
                         <MetadataMotivationItem
                             value={metadata.value}
@@ -112,8 +108,7 @@ class AnnotationMetadataItem extends Component {
                         />
                     )
                     : ( metadata.value ? metadata.value : 'n.a.' )
-                }
-            />
+            }
         )
     }
 
@@ -131,33 +126,27 @@ class AnnotationMetadataItem extends Component {
                     metadata.type !== 'creator'
                     ? null
                     : (
-                        <ListItem divider className={classes.editAnnotationListItem}>
-                            <div>
-                                <Grid container spacing={1}>
-                                    <Grid item xs={8}>
-                                        {(() => {
-                                            switch(metadata.type) {
-                                                case 'creator':
-                                                    return this.renderCreator();
-                                                case 'motivation':
-                                                    return this.renderMotivation();
-                                                default:
-                                                    return null;
-                                            }
-                                        })()}
-                                    </Grid>
-                                    <Grid item xs={4}>
-                                        <IconButton size="small" onClick={() => edit ? this.confirm() : this.edit()}>
-                                            {
-                                                edit
-                                                ? <Check />
-                                                : <EditIcon />
-                                            }
-                                        </IconButton>
-                                    </Grid>
-                                </Grid>
-                            </div>
-                        </ListItem>
+                        <CustomListItem
+                            buttons={
+                                <MiradorMenuButton aria-label={edit ? t('editMetadataButton') : t('confirmMetadataButton')} size="small" onClick={() => edit ? this.confirm() : this.edit()}>
+                                    {
+                                        edit
+                                        ? <Check />
+                                        : <EditIcon />
+                                    }
+                                </MiradorMenuButton>
+                            }
+                            {...(() => {
+                                switch(metadata.type) {
+                                    case 'creator':
+                                        return this.renderCreator();
+                                    case 'motivation':
+                                        return this.renderMotivation();
+                                    default:
+                                        return null;
+                                }
+                            })()}
+                        />
                     )
                 }
             </>

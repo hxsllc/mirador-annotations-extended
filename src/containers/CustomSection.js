@@ -15,8 +15,17 @@ const styles = (theme) => ({
         paddingRight: theme.spacing(2),
         paddingTop: theme.spacing(2),
     },
-    span: {},
-    heading: {},
+    subsection: {
+        borderBottom: `.5px solid ${theme.palette.section_divider}`,
+        paddingTop: theme.spacing(2),
+        paddingBottom: theme.spacing(2),
+    },
+    secondaryTitle: {},
+    primaryTitle: {},
+    description: {},
+    heading: {
+        //marginBottom: theme.spacing(1),
+    },
     buttons: {},
 });
 

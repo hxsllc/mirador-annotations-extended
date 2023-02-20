@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { ListItem, ListItemText } from '@material-ui/core';
 import { Check } from '@material-ui/icons';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
 import EditIcon from '@material-ui/icons/Edit';
-import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
 import TargetSvgSelector from '../containers/TargetSvgSelector';
 import ColorIcon  from '../icons/Color';
+import CustomListItem from '../containers/CustomListItem';
+import MiradorMenuButton from 'mirador/dist/es/src/containers/MiradorMenuButton';
 
 class AnnotationTargetItem extends Component {
     constructor(props) {
@@ -111,39 +110,31 @@ class AnnotationTargetItem extends Component {
         const edit = this.editing();
 
         return (
-            <ListItem className={classes.editAnnotationListItem} divider>
-                <div>
-                    <Grid container spacing={1}
-                        onMouseEnter={() => this.setState({hover: true})}
-                        onMouseLeave={() => this.setState({hover: false })}
-                    >
-                        <Grid item xs={8}>
-                            <ListItemText
-                                style={{ lineHeight: '1rem' }}
-                                primary={target._temp_name}
-                                secondary={
-                                    color
-                                    ? <> {t('Color')} <ColorIcon style={{ color: color, marginLeft: '25px' }}/> </>
-                                    : target.value
-                                }
-                            />
-                        </Grid>
-                        <Grid item xs={4}>
-                            <IconButton size="small" onClick={() => edit ? this.confirm() : this.edit()}>
-                                {
-                                    edit
-                                    ? <Check />
-                                    : <EditIcon />
-                                }
-                            </IconButton>
-                            <IconButton size="small" onClick={this.delete}>
-                                <DeleteIcon />
-                            </IconButton>
-                        </Grid>
-                    </Grid>
-                </div>
-                <div>
-                    <TargetSvgSelector
+            <CustomListItem
+                onMouseEnter={() => this.setState({hover: true})}
+                onMouseLeave={() => this.setState({hover: false })}
+                buttons={
+                    <>
+                        <MiradorMenuButton aria-label={edit ? t('confirmTargetButton') : t('editTargetButton')} size="small" onClick={() => edit ? this.confirm() : this.edit()}>
+                            {
+                                edit
+                                ? <Check />
+                                : <EditIcon />
+                            }
+                        </MiradorMenuButton>
+                        <MiradorMenuButton aria-label={t('deleteTargetButton')} size="small" onClick={this.delete}>
+                            <DeleteIcon />
+                        </MiradorMenuButton>
+                    </>
+                }
+                primary={target._temp_name}
+                secondary={
+                    color
+                    ? <> {t('Color')} <ColorIcon style={{ color: color, marginLeft: '25px' }}/> </>
+                    : target.value
+                }
+            >
+                 <TargetSvgSelector
                         edit={edit}
                         hover={hover}
                         key={`${_temp_id}-SvgSelector`}
@@ -151,8 +142,7 @@ class AnnotationTargetItem extends Component {
                         value={target.value}
                         windowId={windowId}
                     />
-                </div>
-            </ListItem>
+            </CustomListItem>
         )
     }
 

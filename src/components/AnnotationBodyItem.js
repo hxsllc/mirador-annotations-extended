@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { ListItem, ListItemText } from '@material-ui/core';
+import { ListItemText } from '@material-ui/core';
 import { Check } from '@material-ui/icons';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
 import EditIcon from '@material-ui/icons/Edit';
-import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
-import { Chip } from '@material-ui/core';
 import AnnotationTextEditorItem from '../containers/AnnotationTextEditorItem';
 import AnnotationTextFieldItem from '../containers/AnnotationTextFieldItem';
 import ReactHtmlParser from 'react-html-parser';
+import CustomListItem from '../containers/CustomListItem';
+import CustomTag from '../containers/CustomTag';
+import MiradorMenuButton from 'mirador/dist/es/src/containers/MiradorMenuButton';
 
 class AnnotationBodyItem extends Component {
     constructor(props) {
@@ -96,12 +96,13 @@ class AnnotationBodyItem extends Component {
         const {
             body,
             windowId,
+            t,
         } = this.props;
 
         const edit = this.editing();
 
         return (
-            <Chip
+            <CustomTag
                 label={
                     edit
                     ? (
@@ -117,7 +118,7 @@ class AnnotationBodyItem extends Component {
                 variant={edit ? "default" : "outlined"}
                 color={edit ? "primary" : undefined}
                 onClick={() => edit ? null: this.edit()}
-                deleteIcon={edit ? <Check /> : <DeleteIcon />}
+                deleteIcon={<MiradorMenuButton aria-label={edit ? t('confirmBodyButton') : t('deleteBodyButton')}> {edit ? <Check /> : <DeleteIcon />}</MiradorMenuButton>}
                 onDelete={() => edit ? this.confirm() : this.delete()}
             />
         )
@@ -127,46 +128,42 @@ class AnnotationBodyItem extends Component {
         const {
             body,
             classes,
+            t,
             windowId,
         } = this.props;
 
         const edit = this.editing();
 
         return (
-            <ListItem className={classes.editAnnotationListItem} divider>
-                <Grid container spacing={1}>
-                    <Grid item xs={8}>
-                        <ListItemText
-                            style={{ lineHeight: '1rem' }}
-                            primary={
-                                edit
-                                ? (
-                                    <AnnotationTextEditorItem
-                                        key={`${body._temp_id}-TextEditorItem`}
-                                        updateValue={this.updateBodyValue}
-                                        value={body.value}
-                                        windowId={windowId}
-                                    />
-                                )
-                                : (body.value ? ReactHtmlParser(body.value) : 'no text')
-                            }
-                        />
-                    </Grid>
-                    <Grid item xs={4}>
-                        <IconButton size="small" onClick={() => edit ? this.confirm() : this.edit()}>
+            <CustomListItem
+                buttons={
+                    <>
+                        <MiradorMenuButton aria-label={edit ? t('confirmBodyButton') : t('editBodyButton')} size="small" onClick={() => edit ? this.confirm() : this.edit()}>
                             {
                                 edit
                                 ? <Check />
                                 : <EditIcon />
                             }
-                        </IconButton>
-                        <IconButton size="small" onClick={this.delete}>
+                        </MiradorMenuButton>
+                        <MiradorMenuButton aria-label={t('deleteBodyButton')} size="small" onClick={this.delete}>
                             <DeleteIcon />
-                        </IconButton>
-                    </Grid>
-                </Grid>
-            </ListItem>
-
+                        </MiradorMenuButton>
+                    </>
+                }
+            >
+                {
+                    edit
+                    ? (
+                        <AnnotationTextEditorItem
+                            key={`${body._temp_id}-TextEditorItem`}
+                            updateValue={this.updateBodyValue}
+                            value={body.value}
+                            windowId={windowId}
+                        />
+                    )
+                    : (body.value ? ReactHtmlParser(body.value) : 'no text')
+                }
+            </CustomListItem>
         )
     }
 

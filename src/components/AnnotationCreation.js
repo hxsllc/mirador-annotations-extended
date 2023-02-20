@@ -240,7 +240,7 @@ class AnnotationCreation extends Component {
             case "body":
                 const bodyBase = {
                     type: 'TextualBody',
-                    value: null,
+                    value: '',
                     purpose: subType,
                     _temp_id: annoId + '-body-item-' + bodyCount
                 };
@@ -402,10 +402,10 @@ class AnnotationCreation extends Component {
                 paperClassName={ns('window-sidebar-annotation-panel')}
             >
 
-                {/* metadata testing section */}
+                {/* metadata section */}
                 <CustomSection
                     primary={t('annotationCreationMetadata')}
-                    secondary='dummi'
+                    //secondary='dummi'
                     id={`${id}-metadata`}
                 >
                     <List disablePadding>
@@ -422,51 +422,22 @@ class AnnotationCreation extends Component {
                             ))}
                         </List>
                 </CustomSection>
-                {/*<div className={classes.section}>
-                    <div id={`${id}-metadata`} className={classes.container}>
-                        <Typography color="primary" variant="h5">
-                            {t('annotationCreationMetadata')}
-                        </Typography>
-                        <List disablePadding>
-                            {metadata?.map((value, index) => (
-                                <AnnotationMetadataItem
-                                    edit={metadataEditState}
-                                    handleDelete={this.deleteAnnotationItem}
-                                    handleEdit={this.setEditState}
-                                    key={value._temp_id}
-                                    metadata={value}
-                                    metadataPos={index}
-                                    updateContent={this.updateAnnotationItem}
-                                />
-                            ))}
-                        </List>
-                    </div>
-                            </div>*/}
 
                 {/* target section */}
-                <div className={classes.section}>
-                    <div id={`${id}-targets`} className={classes.container}>
-                        <div>
-                            <Grid container>
-                                <Grid item xs={8}>
-                                    <Typography color="primary" variant="h5">
-                                        {t('annotationCreationTarget')}
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={4}>
-                                    <div className={classes.addSection}>
-                                        <MiradorMenuButton
-                                            aria-label={t('createNewTarget')}
-                                            className={classes.button}
-                                            onClick={() => this.createAnnotationItem('target')}
-                                        >
-                                            <Add />
-                                        </MiradorMenuButton>
-                                    </div>
-                                </Grid>
-                            </Grid>
-                        </div>
-                        <List disablePadding>
+                <CustomSection
+                    primary={t('annotationCreationTarget')}
+                    id={`${id}-targets`}
+                    buttons={
+                        <MiradorMenuButton
+                            aria-label={t('createNewTarget')}
+                            className={classes.button}
+                            onClick={() => this.createAnnotationItem('target')}
+                        >
+                            <Add />
+                        </MiradorMenuButton>
+                    }
+                >
+                    <List disablePadding>
                             {target?.map((value, index) => (
                                 <AnnotationTargetItem
                                     edit={targetEditState}
@@ -480,72 +451,55 @@ class AnnotationCreation extends Component {
                                 />
                             ))}
                         </List>
-                    </div>
-                </div>
+                </CustomSection>
 
                 {/* body section */}
-                <div className={classes.section}>
-                    <div className={classes.container} id={`${id}-bodies`}>
-                        <Typography color="primary" variant="h5">
-                            {t('annotationCreationBody')}
-                        </Typography>
-                        <div>
-                            <Grid container>
-                                <Grid item xs={10}>
-                                    <Typography variant="h6">
-                                        {t('annotationCreationBodyTags')}
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={2}>
-                                    <div className={classes.addSection}>
-                                        <MiradorMenuButton
-                                            aria-label={t('createNewTag')}
-                                            className={classes.button}
-                                            onClick={() => this.createAnnotationItem('body', 'tagging')}
-                                        >
-                                            <Add />
-                                        </MiradorMenuButton>
-                                    </div>
-                                </Grid>
-                            </Grid>
-                        </div>
-                        <div style={{ marginBottom: 30 }}>
-                            <List component="div" disablePadding>
-                                {body.filter(item => item.purpose=='tagging')?.map((value, index) => (
-                                    <AnnotationBodyItem
-                                        body={value}
-                                        bodyPos={index}
-                                        edit={bodyEditState}
-                                        handleDelete={this.deleteAnnotationItem}
-                                        handleEdit={this.setEditState}
-                                        key={value._temp_id}
-                                        updateContent={this.updateAnnotationItem}
-                                    />
-                                ))}
-                            </List>
-                        </div>
-
-                        <Divider style={{ marginBottom: '25px' }} />
-                        <div>
-                            <Grid container>
-                                <Grid item xs={10}>
-                                    <Typography variant="h6">
-                                    {t('annotationCreationBodyTexts')}
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={2}>
-                                    <div className={classes.addSection}>
-                                        <MiradorMenuButton
-                                            aria-label={t('createNewDescribing')}
-                                            className={classes.button}
-                                            onClick={() => this.createAnnotationItem('body', 'describing')}
-                                        >
-                                            <Add />
-                                        </MiradorMenuButton>
-                                    </div>
-                                </Grid>
-                            </Grid>
-                        </div>
+                <CustomSection
+                    primary={t('annotationCreationBody')}
+                    id={`${id}-bodies`}
+                >
+                    <CustomSection
+                        inner
+                        id={`${id}-bodies-tags`}
+                        primary={t('annotationCreationBodyTags')}
+                        buttons={
+                            <MiradorMenuButton
+                                aria-label={t('createNewTag')}
+                                className={classes.button}
+                                onClick={() => this.createAnnotationItem('body', 'tagging')}
+                            >
+                                <Add />
+                            </MiradorMenuButton>
+                        }
+                    >
+                        <List component="div" disablePadding>
+                            {body.filter(item => item.purpose=='tagging')?.map((value, index) => (
+                                <AnnotationBodyItem
+                                    body={value}
+                                    bodyPos={index}
+                                    edit={bodyEditState}
+                                    handleDelete={this.deleteAnnotationItem}
+                                    handleEdit={this.setEditState}
+                                    key={value._temp_id}
+                                    updateContent={this.updateAnnotationItem}
+                                />
+                            ))}
+                        </List>
+                    </CustomSection>
+                    <CustomSection
+                        inner
+                        id={`${id}-bodies-texts`}
+                        primary={t('annotationCreationBodyTexts')}
+                        buttons={
+                            <MiradorMenuButton
+                                aria-label={t('createNewDescribing')}
+                                className={classes.button}
+                                onClick={() => this.createAnnotationItem('body', 'describing')}
+                            >
+                                <Add />
+                            </MiradorMenuButton>
+                        }
+                    >
                         <List component="div" disablePadding>
                             {body.filter(item => item.purpose!=='tagging')?.map((value, index) => (
                                 <AnnotationBodyItem
@@ -559,8 +513,8 @@ class AnnotationCreation extends Component {
                                 />
                             ))}
                         </List>
-                    </div>
-                </div>
+                    </CustomSection>
+                </CustomSection>
 
                 <div>
                     <Button onClick={closeCompanionWindow}>

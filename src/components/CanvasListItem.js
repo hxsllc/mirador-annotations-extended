@@ -4,7 +4,8 @@ import flatten from 'lodash/flatten';
 import AnnotationActionsContext from '../AnnotationActionsContext';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
 import EditIcon from '@material-ui/icons/Edit';
-import { Box, Typography, IconButton } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
+import MiradorMenuButton from 'mirador/dist/es/src/containers/MiradorMenuButton';
 
 /** */
 class CanvasListItem extends Component {
@@ -161,7 +162,7 @@ class CanvasListItem extends Component {
                                 aria-label={t('canvasAnnotationTools')}
                                 size="small"
                                 >
-                                <IconButton
+                                <MiradorMenuButton
                                     aria-label={t('canvasAnnotationToolsEdit')}
                                     disabled={!createAnnotation}
                                     onClick={windowViewType === 'single' ? this.handleEdit : toggleSingleCanvasDialogOpen}
@@ -169,8 +170,8 @@ class CanvasListItem extends Component {
                                     size="small"
                                 >
                                     <EditIcon />
-                                </IconButton>
-                                <IconButton
+                                </MiradorMenuButton>
+                                <MiradorMenuButton
                                     aria-label={t('canvasAnnotationToolsDelete')}
                                     disabled={!createAnnotation}
                                     onClick={this.handleDelete}
@@ -178,7 +179,7 @@ class CanvasListItem extends Component {
                                     size="small"
                                 >
                                     <DeleteIcon />
-                                </IconButton>
+                                </MiradorMenuButton>
                             </Box>
                         }
                     </div>
