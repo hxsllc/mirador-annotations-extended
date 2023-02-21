@@ -26,9 +26,9 @@ class AnnotationMetadataItem extends Component {
             metadata,
         } = this.props;
 
-        if(!metadata.value) {
+        /*if(!metadata.value) {
             handleEdit(metadata._temp_id, 'metadata');
-        }
+        }*/
     }
 
     edit() {
@@ -88,7 +88,7 @@ class AnnotationMetadataItem extends Component {
                             handleChange={this.handleChange}
                         />
                     )
-                    : ( metadata.value ? metadata.value : 'n.a.' )
+                    : ( metadata.value ? metadata.value : '' )
             }
         )
     }
@@ -107,7 +107,7 @@ class AnnotationMetadataItem extends Component {
                             handleChange={this.handleChange}
                         />
                     )
-                    : ( metadata.value ? metadata.value : 'n.a.' )
+                    : ( metadata.value ? metadata.value : '' )
             }
         )
     }

@@ -75,23 +75,6 @@ class AnnotationBodyItem extends Component {
         return body._temp_id == edit;
     }
 
-    renderSwitch() {
-        const { body } = this.props;
-
-        switch(body.type) {
-            case 'describing':
-                return (
-                    <MetadataCreatorItem
-                        handleChange={this.handleChange}
-                        id={`${metadata}-creator`}
-                        value={metadata.value}
-                    />
-                );
-            default:
-                return null;
-        }
-    }
-
     renderTag() {
         const {
             body,

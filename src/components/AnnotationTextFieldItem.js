@@ -22,6 +22,7 @@ class AnnotationTextFieldItem extends Component {
 
         return (
             <TextField
+                autoFocus
                 hiddenLabel
                 onChange={this.onChange}
                 small

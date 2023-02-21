@@ -22,7 +22,10 @@ class CustomSection extends Component {
             <div className={inner ? classes.subsection : classes.section}>
                 <div className={classes.container}>
                     <div className={classes.heading}>
-                        <Typography className={inner ? classes.secondaryTitle : classes.primaryTitle} color={inner ? undefined : "primary"}>
+                        <Typography
+                            className={inner ? classes.secondaryTitle : classes.primaryTitle}
+                            color={inner ? undefined : "primary"}
+                        >
                             {primary}
                         </Typography>
                         <Typography className={classes.description}>

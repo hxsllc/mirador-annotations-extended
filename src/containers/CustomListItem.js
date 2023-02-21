@@ -17,6 +17,9 @@ const styles = (theme) => ({
         justifyContent: 'space-between',
         width: '100%'
     },
+    lineText: {
+        lineHeight: 1
+    },
     content: {},
     buttons: {},
 });

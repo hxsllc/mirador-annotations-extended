@@ -26,6 +26,7 @@ class MetadataCreatorItem extends Component {
 
         return (
             <TextField
+                autoFocus
                 id={id}
                 value={value}
                 onChange={this.handleTextFieldInput}

@@ -52,7 +52,11 @@ class AnnotationSvgDrawing extends Component {
         const {
             activeTool, fillColor, strokeColor, strokeWidth, svg,
         } = this.props;
-        if (!activeTool || activeTool === 'cursor') return null;
+        console.log('this is active Tool');
+        console.log(activeTool);
+        if (!activeTool || activeTool === 'cursor') {
+            console.log(' ir return null');
+            return null;}
         // Setup Paper View to have the same center and zoom as the OSD Viewport
         const viewportZoom = this.OSDReference.viewport.getZoom(true);
         const image1 = this.OSDReference.world.getItemAt(0);

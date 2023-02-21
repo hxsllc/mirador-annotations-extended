@@ -8,6 +8,9 @@ import PolygonIcon from '@material-ui/icons/Timeline';
 import GestureIcon from '@material-ui/icons/Gesture';
 import { Radio } from '@material-ui/core';
 import { Collapse } from '@material-ui/core';
+import { IconButton } from '@material-ui/core';
+import Edit from '@material-ui/icons/Edit';
+import { Fingerprint } from '@material-ui/icons';
 
 class TargetSvgSelector extends Component {
     constructor(props) {
@@ -34,6 +37,15 @@ class TargetSvgSelector extends Component {
         this.updateGeometry = this.updateGeometry.bind(this);
         this.changeColor = this.changeColor.bind(this);
     }
+/** ggf weil Dopplung: svg und value? ->
+ * mach den scheiß mal nochmal von vorne!
+ * voll mist ey! warum versemmelt es dich immer,
+ * wenn du den activeTool state wechselst?
+ * und warum bist du so müll und hampelst herum machst so kompletten müll??=?
+ * ey ich geh noch am Stock ! Zefix, irgendwas stimmt mit props und state nicht
+ * umgerendert.. objekt ist immer da wenn gerendert.
+ * aber jetzt wird das grundding nicht jedes mal bei edit neu gerendert, sondern nur annotation drawing
+ * ich muss mal das ding neu denken */
 
     componentDidMount() {
         const { svg } = this.state;
@@ -118,19 +130,24 @@ class TargetSvgSelector extends Component {
                             windowId={windowId} />
                     )
                 }
+                <div>
+                    <IconButton disabled={!edit} color="primary">
+                        <Edit />
+                    </IconButton>
+                    <IconButton disabled={!hover} color="primary">
+                        <Fingerprint />
+                    </IconButton>
+                </div>
                 <Collapse className={classes.editAnnotationCollapse} in={edit} unmountOnExit>
                     <div>
                     <ToggleButtonGroup value={activeTool} exclusive onChange={this.changeTool} aria-label='tools'>
-                        <ToggleButton aria-label="rectangle" disabled={activeTool =='edit'} value="rectangle">
+                        <ToggleButton aria-label="rectangle" disabled={activeTool=='edit'} value="rectangle">
                             <RectangleIcon />
                         </ToggleButton>
-                        <ToggleButton aria-label="circle" disabled={activeTool =='edit'} value="ellipse">
+                        <ToggleButton aria-label="circle" disabled={activeTool=='edit'} value="ellipse">
                             <CircleIcon />
                         </ToggleButton>
-                        <ToggleButton aria-label="polygon" className={classes.hidden} disabled={activeTool =='edit'} value="polygon">
-                            <PolygonIcon />
-                        </ToggleButton>
-                        <ToggleButton aria-label="freehand" disabled={activeTool =='edit'} value="freehand">
+                        <ToggleButton aria-label="freehand" disabled={activeTool=='edit'} value="freehand">
                             <GestureIcon />
                         </ToggleButton>
                     </ToggleButtonGroup>

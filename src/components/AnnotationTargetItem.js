@@ -111,18 +111,30 @@ class AnnotationTargetItem extends Component {
 
         return (
             <CustomListItem
-                onMouseEnter={() => this.setState({hover: true})}
-                onMouseLeave={() => this.setState({hover: false })}
+                onMouseEnter={() => this.setState({ hover: true })}
+                onMouseLeave={() => this.setState({ hover: false })}
                 buttons={
                     <>
-                        <MiradorMenuButton aria-label={edit ? t('confirmTargetButton') : t('editTargetButton')} size="small" onClick={() => edit ? this.confirm() : this.edit()}>
+                        <MiradorMenuButton
+                            aria-label={
+                                edit
+                                ? t('confirmTargetButton')
+                                : t('editTargetButton')
+                            }
+                            size="small"
+                            onClick={() => edit ? this.confirm() : this.edit()}
+                        >
                             {
                                 edit
                                 ? <Check />
                                 : <EditIcon />
                             }
                         </MiradorMenuButton>
-                        <MiradorMenuButton aria-label={t('deleteTargetButton')} size="small" onClick={this.delete}>
+                        <MiradorMenuButton
+                            aria-label={t('deleteTargetButton')}
+                            size="small"
+                            onClick={this.delete}
+                        >
                             <DeleteIcon />
                         </MiradorMenuButton>
                     </>

@@ -151,7 +151,7 @@ class CanvasListItem extends Component {
                     <div className={classes.heading}>
                         <Typography
                             variant="overline" >
-                            {creator ? creator : 'n.a.'}
+                            {creator ? creator : '[Unbekannt]'}
                         </Typography>
                     </div>
 
