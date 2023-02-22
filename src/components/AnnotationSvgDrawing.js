@@ -7,6 +7,7 @@ import {
 EllipseTool,
 RectangleTool,
 FreeformPathTool,
+PanAndZoom,
 }
     from '@psychobolt/react-paperjs-editor';
 import { Point } from 'paper';
@@ -50,13 +51,11 @@ class AnnotationSvgDrawing extends Component {
     /** */
     paperThing() {
         const {
-            activeTool, fillColor, strokeColor, strokeWidth, svg,
+            activeTool, fillColor, strokeColor, strokeWidth, svg, edit
         } = this.props;
-        console.log('this is active Tool');
-        console.log(activeTool);
         if (!activeTool || activeTool === 'cursor') {
-            console.log(' ir return null');
-            return null;}
+            return null;
+        }
         // Setup Paper View to have the same center and zoom as the OSD Viewport
         const viewportZoom = this.OSDReference.viewport.getZoom(true);
         const image1 = this.OSDReference.world.getItemAt(0);
@@ -112,13 +111,17 @@ class AnnotationSvgDrawing extends Component {
                         paper.settings.hitTolerance = 10; // eslint-disable-line no-param-reassign
                         return (
                             <ActiveTool
-                                onPathAdd={this.addPath}
+
                                 pathProps={{
                                     fillColor,
                                     strokeColor,
                                     strokeWidth: strokeWidth / paper.view.zoom,
                                 }}
                                 paper={paper}
+                                onPathAdd={this.addPath}
+                                //...(!createAnnotation ? { displayAllDisabled: true } : {})
+
+                                //{...(edit ? {onPathAdd: this.addPath} : {})}
                             />
                         );
                     })}

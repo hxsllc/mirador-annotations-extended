@@ -6,7 +6,7 @@ import RectangleIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CircleIcon from '@material-ui/icons/RadioButtonUnchecked';
 import PolygonIcon from '@material-ui/icons/Timeline';
 import GestureIcon from '@material-ui/icons/Gesture';
-import { Radio } from '@material-ui/core';
+import { Radio, Typography } from '@material-ui/core';
 import { Collapse } from '@material-ui/core';
 import { IconButton } from '@material-ui/core';
 import Edit from '@material-ui/icons/Edit';
@@ -48,9 +48,9 @@ class TargetSvgSelector extends Component {
  * ich muss mal das ding neu denken */
 
     componentDidMount() {
-        const { svg } = this.state;
+        const { value } = this.props;
 
-        if(svg) {
+        if(value) {
             this.setState({ activeTool: 'edit' });
         }
     }
@@ -70,9 +70,6 @@ class TargetSvgSelector extends Component {
             case 'ellipse':
                 this.setState({ closedMode: true });
                 break;
-            case 'polygon':
-                this.setState({ closedMode: true });
-                break;
             case 'freehand':
                 this.setState({ closedMode: false });
                 break;
@@ -90,7 +87,7 @@ class TargetSvgSelector extends Component {
         const { updateValue } = this.props;
         const { activeTool } = this.state;
 
-        this.setState({ svg });
+        //this.setState({ svg });
         updateValue({ value: svg });
         if(svg && activeTool !=='edit') {
             this.setState({ activeTool: 'edit'});
@@ -118,26 +115,16 @@ class TargetSvgSelector extends Component {
 
         return (
             <div className={classes.selector}>
-                {
-                    (edit || hover) && (
-                        <AnnotationSvgDrawing
-                            activeTool={activeTool}
-                            closed={closedMode}
-                            strokeColor={strokeColor}
-                            strokeWidth={strokeWidth}
-                            svg={value}
-                            updateGeometry={this.updateGeometry}
-                            windowId={windowId} />
-                    )
-                }
-                <div>
+
+                {/*<div>
                     <IconButton disabled={!edit} color="primary">
                         <Edit />
                     </IconButton>
                     <IconButton disabled={!hover} color="primary">
                         <Fingerprint />
                     </IconButton>
-                </div>
+                    <Typography>{value}</Typography>
+            </div>*/}
                 <Collapse className={classes.editAnnotationCollapse} in={edit} unmountOnExit>
                     <div>
                     <ToggleButtonGroup value={activeTool} exclusive onChange={this.changeTool} aria-label='tools'>
@@ -165,6 +152,19 @@ class TargetSvgSelector extends Component {
                         ))}
                     </div>
                 </Collapse>
+                {
+                    (edit || hover) && (
+                        <AnnotationSvgDrawing
+                            activeTool={activeTool}
+                            closed={true}
+                            edit={edit}
+                            strokeColor={strokeColor}
+                            strokeWidth={strokeWidth}
+                            svg={value}
+                            updateGeometry={this.updateGeometry}
+                            windowId={windowId} />
+                    )
+                }
             </div>
         )
     }
