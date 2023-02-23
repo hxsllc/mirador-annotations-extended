@@ -149,6 +149,7 @@ class AnnotationCreation extends Component {
             metadataEditState: null,
             metadataCount: 0,
             targetCount: 0,
+            blockTargetHover: false,
             ...annoState,
         };
 
@@ -157,6 +158,7 @@ class AnnotationCreation extends Component {
         this.updateAnnotationItem = this.updateAnnotationItem.bind(this);
         this.createAnnotationItem = this.createAnnotationItem.bind(this);
         this.setEditState = this.setEditState.bind(this);
+        this.toggleTargetHover = this.toggleTargetHover.bind(this);
     }
 
     deleteAnnotationItem(type, _temp_id) {
@@ -322,6 +324,11 @@ class AnnotationCreation extends Component {
         }
     }
 
+    /** pass bool to prevent rendering failure */
+    toggleTargetHover(block) {
+        this.setState({ blockTargetHover: block });
+    }
+
     /** */
     submitAnnotation() {
         const {
@@ -385,6 +392,7 @@ class AnnotationCreation extends Component {
         } = this.props;
 
         const {
+            blockTargetHover,
             body,
             bodyEditState,
             metadata,
@@ -439,9 +447,11 @@ class AnnotationCreation extends Component {
                     <List disablePadding>
                             {target?.map((value, index) => (
                                 <AnnotationTargetItem
+                                    hoverBlock={blockTargetHover}
                                     edit={targetEditState}
                                     handleDelete={this.deleteAnnotationItem}
                                     handleEdit={this.setEditState}
+                                    toggleHoverBlock={this.toggleTargetHover}
                                     key={value._temp_id}
                                     target={value}
                                     targetPos={index}

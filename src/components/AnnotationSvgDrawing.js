@@ -111,7 +111,6 @@ class AnnotationSvgDrawing extends Component {
                         paper.settings.hitTolerance = 10; // eslint-disable-line no-param-reassign
                         return (
                             <ActiveTool
-
                                 pathProps={{
                                     fillColor,
                                     strokeColor,
@@ -119,9 +118,6 @@ class AnnotationSvgDrawing extends Component {
                                 }}
                                 paper={paper}
                                 onPathAdd={this.addPath}
-                                //...(!createAnnotation ? { displayAllDisabled: true } : {})
-
-                                //{...(edit ? {onPathAdd: this.addPath} : {})}
                             />
                         );
                     })}

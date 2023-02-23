@@ -93,12 +93,18 @@ class AnnotationTargetItem extends Component {
         handleDelete('target', target._temp_id);
     }
 
+    /**
+     * use hoverBlock as dirty fix to prevent rendering failure
+     * blocks hover effect on targets as long as in editing mode and no drawn target
+     */
     renderSvgSelector() {
         const {
             _temp_id,
             classes,
+            hoverBlock,
             t,
             target,
+            toggleHoverBlock,
             windowId,
         } = this.props;
 
@@ -111,8 +117,8 @@ class AnnotationTargetItem extends Component {
 
         return (
             <CustomListItem
-                onMouseEnter={() => this.setState({ hover: true })}
-                onMouseLeave={() => this.setState({ hover: false })}
+                onMouseEnter={() => this.props.edit!==null&&hoverBlock ? {} : this.setState({ hover: true })}
+                onMouseLeave={() => this.props.edit!==null&&hoverBlock ? {} : this.setState({ hover: false })}
                 buttons={
                     <>
                         <MiradorMenuButton
@@ -149,6 +155,7 @@ class AnnotationTargetItem extends Component {
                  <TargetSvgSelector
                         edit={edit}
                         hover={hover}
+                        toggleHoverBlock={toggleHoverBlock}
                         key={`${_temp_id}-SvgSelector`}
                         updateValue={this.updateTargetValue}
                         value={target.value}

@@ -37,21 +37,24 @@ class TargetSvgSelector extends Component {
         this.updateGeometry = this.updateGeometry.bind(this);
         this.changeColor = this.changeColor.bind(this);
     }
-/** ggf weil Dopplung: svg und value? ->
- * mach den scheiß mal nochmal von vorne!
- * voll mist ey! warum versemmelt es dich immer,
- * wenn du den activeTool state wechselst?
- * und warum bist du so müll und hampelst herum machst so kompletten müll??=?
- * ey ich geh noch am Stock ! Zefix, irgendwas stimmt mit props und state nicht
- * umgerendert.. objekt ist immer da wenn gerendert.
- * aber jetzt wird das grundding nicht jedes mal bei edit neu gerendert, sondern nur annotation drawing
- * ich muss mal das ding neu denken */
 
     componentDidMount() {
-        const { value } = this.props;
+        const { value, edit, toggleHoverBlock } = this.props;
 
         if(value) {
             this.setState({ activeTool: 'edit' });
+            toggleHoverBlock(false);
+        } else {
+            if(edit) {
+                toggleHoverBlock(true);
+            }
+        }
+    }
+
+    componentWillUnmount() {
+        const { edit, toggleHoverBlock } = this.props;
+        if(edit) {
+            toggleHoverBlock(false);
         }
     }
 
@@ -84,14 +87,14 @@ class TargetSvgSelector extends Component {
     }
 
     updateGeometry({ svg }) {
-        const { updateValue } = this.props;
+        const { updateValue, toggleHoverBlock } = this.props;
         const { activeTool } = this.state;
 
-        //this.setState({ svg });
         updateValue({ value: svg });
         if(svg && activeTool !=='edit') {
             this.setState({ activeTool: 'edit'});
         }
+        toggleHoverBlock(false);
     }
 
     render() {
