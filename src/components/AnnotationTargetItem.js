@@ -46,6 +46,14 @@ class AnnotationTargetItem extends Component {
         }
     }
 
+    componentWillUnmount() {
+        const { handleEdit } = this.props;
+
+        if(this.editing()) {
+            handleEdit(null, 'target');
+        }
+    }
+
     edit() {
         const {
             handleEdit,

@@ -325,8 +325,11 @@ class AnnotationCreation extends Component {
     }
 
     /** pass bool to prevent rendering failure */
-    toggleTargetHover(block) {
-        this.setState({ blockTargetHover: block });
+    toggleTargetHover(block, _temp_id) {
+        //const { edit } = this.state;
+        //if(edit == _temp_id) {
+            this.setState({ blockTargetHover: block });
+        //}
     }
 
     /** */

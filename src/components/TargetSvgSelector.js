@@ -12,25 +12,97 @@ import { IconButton } from '@material-ui/core';
 import Edit from '@material-ui/icons/Edit';
 import { Fingerprint } from '@material-ui/icons';
 
+
+class SelectorTools extends Component {
+    constructor(props) {
+        super(props);
+    }
+
+    componentDidMount() {
+        const {
+            activeTool,
+            toggleHoverBlock,
+        } = this.props;
+
+        if (activeTool !== 'edit') {
+            toggleHoverBlock(true);
+        }
+    }
+
+    componentWillUnmount() {
+        const { toggleHoverBlock } = this.props;
+
+        toggleHoverBlock(false);
+    }
+
+    render() {
+        const {
+            activeTool,
+            changeColor,
+            changeTool,
+            colors,
+            strokeColor,
+        } = this.props;
+
+        return (
+            <>
+                <div>
+                    <ToggleButtonGroup
+                        aria-label='tools'
+                        exclusive
+                        onChange={changeTool}
+                        value={activeTool}
+                    >
+                        <ToggleButton
+                            aria-label="rectangle"
+                            disabled={activeTool == 'edit'}
+                            value="rectangle"
+                        >
+                            <RectangleIcon />
+                        </ToggleButton>
+                        <ToggleButton
+                            aria-label="circle"
+                            disabled={activeTool == 'edit'}
+                            value="ellipse"
+                        >
+                            <CircleIcon />
+                        </ToggleButton>
+                        <ToggleButton
+                            aria-label="freehand"
+                            disabled={activeTool == 'edit'}
+                            value="freehand"
+                        >
+                            <GestureIcon />
+                        </ToggleButton>
+                    </ToggleButtonGroup>
+                </div>
+                <div>
+                    {colors.map((value) => (
+                        <Radio
+                            aria-label={`select color-${value}`}
+                            checked={strokeColor == value}
+                            disabled={activeTool == 'edit'}
+                            onChange={changeColor}
+                            style={activeTool !== 'edit' ? { color: `${value}` } : {}}
+                            value={value}
+                        />
+                    ))}
+                </div>
+            </>
+        )
+    }
+}
+
+
 class TargetSvgSelector extends Component {
     constructor(props) {
         super(props);
 
-        const toolState = {
+        this.state = {
             activeTool: 'rectangle',
             strokeColor: "#cc0000",
             strokeWidth: 3,
             closedMode: true,
-        };
-
-        const selectorState= {
-            svg: props.value,
-        };
-
-        this.state = {
-            ...toolState,
-            svg: null,
-            ...selectorState
         }
 
         this.changeTool = this.changeTool.bind(this);
@@ -39,34 +111,22 @@ class TargetSvgSelector extends Component {
     }
 
     componentDidMount() {
-        const { value, edit, toggleHoverBlock } = this.props;
+        const { value } = this.props;
 
-        if(value) {
+        if (value) {
             this.setState({ activeTool: 'edit' });
-            toggleHoverBlock(false);
-        } else {
-            if(edit) {
-                toggleHoverBlock(true);
-            }
-        }
-    }
-
-    componentWillUnmount() {
-        const { edit, toggleHoverBlock } = this.props;
-        if(edit) {
-            toggleHoverBlock(false);
         }
     }
 
     changeTool(e, tool) {
         const { activeTool } = this.state;
 
-        if(activeTool !== 'edit') {
+        if (activeTool !== 'edit') {
             this.setState({
                 activeTool: tool,
             });
         };
-        switch(tool) {
+        switch (tool) {
             case 'rectangle':
                 this.setState({ closedMode: true });
                 break;
@@ -90,10 +150,10 @@ class TargetSvgSelector extends Component {
         const { updateValue, toggleHoverBlock } = this.props;
         const { activeTool } = this.state;
 
-        updateValue({ value: svg });
-        if(svg && activeTool !=='edit') {
-            this.setState({ activeTool: 'edit'});
+        if (svg && activeTool !== 'edit') {
+            this.setState({ activeTool: 'edit' });
         }
+        updateValue({ value: svg });
         toggleHoverBlock(false);
     }
 
@@ -104,6 +164,7 @@ class TargetSvgSelector extends Component {
             hover,
             value,
             windowId,
+            toggleHoverBlock,
         } = this.props;
 
         const {
@@ -111,61 +172,38 @@ class TargetSvgSelector extends Component {
             closedMode,
             strokeColor,
             strokeWidth,
-            svg,
         } = this.state;
 
         const colors = ["#cc0000", "#fcba03", "#32c784", "#403df2"];
 
         return (
             <div className={classes.selector}>
-
-                {/*<div>
-                    <IconButton disabled={!edit} color="primary">
-                        <Edit />
-                    </IconButton>
-                    <IconButton disabled={!hover} color="primary">
-                        <Fingerprint />
-                    </IconButton>
-                    <Typography>{value}</Typography>
-            </div>*/}
                 <Collapse className={classes.editAnnotationCollapse} in={edit} unmountOnExit>
-                    <div>
-                    <ToggleButtonGroup value={activeTool} exclusive onChange={this.changeTool} aria-label='tools'>
-                        <ToggleButton aria-label="rectangle" disabled={activeTool=='edit'} value="rectangle">
-                            <RectangleIcon />
-                        </ToggleButton>
-                        <ToggleButton aria-label="circle" disabled={activeTool=='edit'} value="ellipse">
-                            <CircleIcon />
-                        </ToggleButton>
-                        <ToggleButton aria-label="freehand" disabled={activeTool=='edit'} value="freehand">
-                            <GestureIcon />
-                        </ToggleButton>
-                    </ToggleButtonGroup>
-                    </div>
-                    <div>
-                        {colors.map((value) => (
-                            <Radio
-                                aria-label={`select color-${value}`}
-                                checked={strokeColor==value}
-                                disabled={activeTool =='edit'}
-                                onChange={this.changeColor}
-                                style={ activeTool !== 'edit' ? { color: `${value}` } : {}}
-                                value={value}
+                    {
+                        edit && (
+                            <SelectorTools
+                                activeTool={activeTool}
+                                changeTool={this.changeTool}
+                                changeColor={this.changeColor}
+                                colors={colors}
+                                strokeColor={strokeColor}
+                                toggleHoverBlock={toggleHoverBlock}
                             />
-                        ))}
-                    </div>
+                        )
+                    }
                 </Collapse>
                 {
                     (edit || hover) && (
                         <AnnotationSvgDrawing
                             activeTool={activeTool}
-                            closed={true}
+                            closed={closedMode}
                             edit={edit}
                             strokeColor={strokeColor}
                             strokeWidth={strokeWidth}
                             svg={value}
                             updateGeometry={this.updateGeometry}
-                            windowId={windowId} />
+                            windowId={windowId}
+                        />
                     )
                 }
             </div>
