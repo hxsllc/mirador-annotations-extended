@@ -151,7 +151,7 @@ class CanvasListItem extends Component {
                     <div className={classes.heading}>
                         <Typography
                             variant="overline" >
-                            {creator ? creator : '[Unbekannt]'}
+                            {creator ? creator : t('creator_default')}
                         </Typography>
                     </div>
 
@@ -159,11 +159,11 @@ class CanvasListItem extends Component {
                         {
                             this.editable() &&
                             <Box
-                                aria-label={t('canvasAnnotationTools')}
+                                aria-label={t('annotationCanvas_tools')}
                                 size="small"
                                 >
                                 <MiradorMenuButton
-                                    aria-label={t('canvasAnnotationToolsEdit')}
+                                    aria-label={t('annotationBtn_edit')}
                                     disabled={!createAnnotation}
                                     onClick={windowViewType === 'single' ? this.handleEdit : toggleSingleCanvasDialogOpen}
                                     value="edit"
@@ -172,7 +172,7 @@ class CanvasListItem extends Component {
                                     <EditIcon />
                                 </MiradorMenuButton>
                                 <MiradorMenuButton
-                                    aria-label={t('canvasAnnotationToolsDelete')}
+                                    aria-label={t('annotationBtn_delete')}
                                     disabled={!createAnnotation}
                                     onClick={this.handleDelete}
                                     value="delete"

@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 /**
  * Dialog to enforce single view for annotation creation / editing
  */
-class SingleCanvasDialog extends Component {
+class AnnotationSubmitDialog extends Component {
     /** */
     constructor(props) {
         super(props);
@@ -23,10 +23,10 @@ class SingleCanvasDialog extends Component {
     confirm() {
         const {
             handleClose,
-            switchToSingleCanvasView,
+            handleSubmit,
         } = this.props;
 
-        switchToSingleCanvasView();
+        handleSubmit();
         handleClose();
     }
 
@@ -40,29 +40,29 @@ class SingleCanvasDialog extends Component {
 
         return (
             <Dialog
-                aria-labelledby="single-canvas-dialog-title"
+                aria-labelledby="annotation-submit-dialog-title"
                 fullWidth
                 maxWidth="sm"
                 onClose={handleClose}
                 onEscapeKeyDown={handleClose}
                 open={open}
             >
-                <DialogTitle id="single-canvas-dialog-title" disableTypography>
+                <DialogTitle id="annotation-submit-dialog-title" disableTypography>
                     <Typography variant="h2">
-                        {t('dialog_singleCanvas_title')}
+                        {t('dialog_annotationSubmit_title')}
                     </Typography>
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText variant="body1" color="inherit">
-                        {t('dialog_singleCanvas_content')}
+                        {t('dialog_annotationSubmit_content')}
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>
-                        {t('dialog_singleCanvasBtn_cancel')}
+                        {t('dialog_annotationSubmitBtn_cancel')}
                     </Button>
                     <Button color="primary" onClick={this.confirm} variant="contained">
-                        {t('dialog_singleCanvasBtn_submit')}
+                        {t('dialog_annotationSubmitBtn_submit')}
                     </Button>
                 </DialogActions>
             </Dialog>
@@ -70,16 +70,16 @@ class SingleCanvasDialog extends Component {
     }
 }
 
-SingleCanvasDialog.propTypes = {
+AnnotationSubmitDialog.propTypes = {
     handleClose: PropTypes.func.isRequired,
     open: PropTypes.bool,
-    switchToSingleCanvasView: PropTypes.func.isRequired,
+    handleSubmit: PropTypes.func.isRequired,
     t: PropTypes.func.isRequired,
 };
 
-SingleCanvasDialog.defaultProps = {
+AnnotationSubmitDialog.defaultProps = {
     open: false,
     t: key => key,
 };
 
-export default SingleCanvasDialog;
+export default AnnotationSubmitDialog;

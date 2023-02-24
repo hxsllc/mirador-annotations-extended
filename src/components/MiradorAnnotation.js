@@ -65,11 +65,6 @@ class MiradorAnnotation extends Component {
             windowViewType,
         } = this.props;
 
-        const props = {
-            ...targetProps,
-            //...(!createAnnotation ? { displayAllDisabled: true } : {})
-        };
-
         const {
             annotationExportDialogOpen,
             singleCanvasDialogOpen,
@@ -82,10 +77,10 @@ class MiradorAnnotation extends Component {
         return (
             <div>
                 <TargetComponent
-                    {...props} // eslint-disable-line react/jsx-props-no-spreading
+                    {...targetProps} // eslint-disable-line react/jsx-props-no-spreading
                 />
                 <MiradorMenuButton
-                    aria-label={t('createNewAnnotation')}
+                    aria-label={t('annotationBtn_create')}
                     onClick={windowViewType === 'single' ? this.openCreateAnnotationCompanionWindow : this.toggleSingleCanvasDialogOpen}
                     size="small"
                     disabled={!createAnnotation}
@@ -101,7 +96,7 @@ class MiradorAnnotation extends Component {
                 )}
                 {offerExportDialog && (
                     <MiradorMenuButton
-                        aria-label={t('exportAnnotation')}
+                        aria-label={t('annotationBtn_export')}
                         onClick={this.toggleCanvasExportDialog}
                         size="small"
                     >

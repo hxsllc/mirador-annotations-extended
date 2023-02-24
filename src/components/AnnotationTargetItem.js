@@ -112,7 +112,7 @@ class AnnotationTargetItem extends Component {
             hoverBlock,
             t,
             target,
-            toggleHoverBlock,
+            blockTargetHover,
             windowId,
         } = this.props;
 
@@ -132,8 +132,8 @@ class AnnotationTargetItem extends Component {
                         <MiradorMenuButton
                             aria-label={
                                 edit
-                                ? t('confirmTargetButton')
-                                : t('editTargetButton')
+                                ? t('targetBtn_confirm')
+                                : t('targetBtn_edit')
                             }
                             size="small"
                             onClick={() => edit ? this.confirm() : this.edit()}
@@ -145,7 +145,7 @@ class AnnotationTargetItem extends Component {
                             }
                         </MiradorMenuButton>
                         <MiradorMenuButton
-                            aria-label={t('deleteTargetButton')}
+                            aria-label={t('targetBtn_delete')}
                             size="small"
                             onClick={this.delete}
                         >
@@ -156,14 +156,14 @@ class AnnotationTargetItem extends Component {
                 primary={target._temp_name}
                 secondary={
                     color
-                    ? <> {t('Color')} <ColorIcon style={{ color: color, marginLeft: '25px' }}/> </>
+                    ? <> {t('color')} <ColorIcon style={{ color: color, marginLeft: '25px' }}/> </>
                     : target.value
                 }
             >
                  <TargetSvgSelector
                         edit={edit}
                         hover={hover}
-                        toggleHoverBlock={toggleHoverBlock}
+                        blockTargetHover={blockTargetHover}
                         key={`${_temp_id}-SvgSelector`}
                         updateValue={this.updateTargetValue}
                         value={target.value}

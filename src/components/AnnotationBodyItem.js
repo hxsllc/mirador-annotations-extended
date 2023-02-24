@@ -101,7 +101,7 @@ class AnnotationBodyItem extends Component {
                 variant={edit ? "default" : "outlined"}
                 color={edit ? "primary" : undefined}
                 onClick={() => edit ? null: this.edit()}
-                deleteIcon={<MiradorMenuButton aria-label={edit ? t('confirmBodyButton') : t('deleteBodyButton')}> {edit ? <Check /> : <DeleteIcon />}</MiradorMenuButton>}
+                deleteIcon={<MiradorMenuButton aria-label={edit ? t('bodyBtn_confirm') : t('bodyBtn_delete')}> {edit ? <Check /> : <DeleteIcon />}</MiradorMenuButton>}
                 onDelete={() => edit ? this.confirm() : this.delete()}
             />
         )
@@ -122,14 +122,14 @@ class AnnotationBodyItem extends Component {
             <CustomListItem
                 buttons={
                     <>
-                        <MiradorMenuButton aria-label={edit ? t('confirmBodyButton') : t('editBodyButton')} size="small" onClick={() => edit ? this.confirm() : this.edit()}>
+                        <MiradorMenuButton aria-label={edit ? t('bodyBtn_confirm') : t('bodyBtn_edit')} size="small" onClick={() => edit ? this.confirm() : this.edit()}>
                             {
                                 edit
                                 ? <Check />
                                 : <EditIcon />
                             }
                         </MiradorMenuButton>
-                        <MiradorMenuButton aria-label={t('deleteBodyButton')} size="small" onClick={this.delete}>
+                        <MiradorMenuButton aria-label={t('bodyBtn_delete')} size="small" onClick={this.delete}>
                             <DeleteIcon />
                         </MiradorMenuButton>
                     </>

@@ -21,18 +21,18 @@ class SelectorTools extends Component {
     componentDidMount() {
         const {
             activeTool,
-            toggleHoverBlock,
+            blockTargetHover,
         } = this.props;
 
         if (activeTool !== 'edit') {
-            toggleHoverBlock(true);
+            blockTargetHover(true);
         }
     }
 
     componentWillUnmount() {
-        const { toggleHoverBlock } = this.props;
+        const { blockTargetHover } = this.props;
 
-        toggleHoverBlock(false);
+        blockTargetHover(false);
     }
 
     render() {
@@ -42,33 +42,34 @@ class SelectorTools extends Component {
             changeTool,
             colors,
             strokeColor,
+            t,
         } = this.props;
 
         return (
             <>
                 <div>
                     <ToggleButtonGroup
-                        aria-label='tools'
+                        aria-label={t('targetTools_selection')}
                         exclusive
                         onChange={changeTool}
                         value={activeTool}
                     >
                         <ToggleButton
-                            aria-label="rectangle"
+                            aria-label={t('targetTools_rectangle')}
                             disabled={activeTool == 'edit'}
                             value="rectangle"
                         >
                             <RectangleIcon />
                         </ToggleButton>
                         <ToggleButton
-                            aria-label="circle"
+                            aria-label={t('targetTools_ellipse')}
                             disabled={activeTool == 'edit'}
                             value="ellipse"
                         >
                             <CircleIcon />
                         </ToggleButton>
                         <ToggleButton
-                            aria-label="freehand"
+                            aria-label={t('targetTools_freehand')}
                             disabled={activeTool == 'edit'}
                             value="freehand"
                         >
@@ -79,7 +80,7 @@ class SelectorTools extends Component {
                 <div>
                     {colors.map((value) => (
                         <Radio
-                            aria-label={`select color-${value}`}
+                            aria-label={t('targetTools_color', { color: value })}
                             checked={strokeColor == value}
                             disabled={activeTool == 'edit'}
                             onChange={changeColor}
@@ -147,14 +148,14 @@ class TargetSvgSelector extends Component {
     }
 
     updateGeometry({ svg }) {
-        const { updateValue, toggleHoverBlock } = this.props;
+        const { updateValue, blockTargetHover } = this.props;
         const { activeTool } = this.state;
 
         if (svg && activeTool !== 'edit') {
             this.setState({ activeTool: 'edit' });
         }
         updateValue({ value: svg });
-        toggleHoverBlock(false);
+        blockTargetHover(false);
     }
 
     render() {
@@ -164,7 +165,8 @@ class TargetSvgSelector extends Component {
             hover,
             value,
             windowId,
-            toggleHoverBlock,
+            blockTargetHover,
+            t,
         } = this.props;
 
         const {
@@ -187,7 +189,8 @@ class TargetSvgSelector extends Component {
                                 changeColor={this.changeColor}
                                 colors={colors}
                                 strokeColor={strokeColor}
-                                toggleHoverBlock={toggleHoverBlock}
+                                t={t}
+                                blockTargetHover={blockTargetHover}
                             />
                         )
                     }

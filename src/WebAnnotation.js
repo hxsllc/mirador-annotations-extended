@@ -49,7 +49,8 @@ export default class WebAnnotation {
     returnCreator() {
         return {
             type: 'Person',
-            name: this.creator
+            name: this.creator,
+            id: `https://anno.iiif.arthistoricum.net/user/1`
         }
 
     }

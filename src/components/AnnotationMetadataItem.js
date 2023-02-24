@@ -16,19 +16,7 @@ class AnnotationMetadataItem extends Component {
         this.edit = this.edit.bind(this);
         this.editing = this.editing.bind(this);
         this.confirm = this.confirm.bind(this);
-        this.delete = this.delete.bind(this);
         this.handleChange = this.handleChange.bind(this);
-    }
-
-    componentDidMount() {
-        const {
-            handleEdit,
-            metadata,
-        } = this.props;
-
-        /*if(!metadata.value) {
-            handleEdit(metadata._temp_id, 'metadata');
-        }*/
     }
 
     edit() {
@@ -55,15 +43,6 @@ class AnnotationMetadataItem extends Component {
         updateContent('metadata', { value: newValue, type: metadata.type, _temp_id: metadata._temp_id }, metadata._temp_id);
     }
 
-    delete() {
-        const {
-            handleDelete,
-            metadata,
-        } = this.props;
-
-        handleDelete('metadata', metadata._temp_id);
-    }
-
     editing() {
         const {
             edit,
@@ -74,12 +53,15 @@ class AnnotationMetadataItem extends Component {
     }
 
     renderCreator() {
-        const { metadata } = this.props;
+        const {
+            metadata,
+            t,
+        } = this.props;
         const edit = this.editing();
 
         return (
             {
-                primary: metadata.type,
+                primary: t('creator'),
                 secondary:  edit
                     ? (
                         <MetadataCreatorItem
@@ -88,7 +70,7 @@ class AnnotationMetadataItem extends Component {
                             handleChange={this.handleChange}
                         />
                     )
-                    : ( metadata.value ? metadata.value : '' )
+                    : ( metadata.value ? metadata.value : t('creator_default') )
             }
         )
     }
@@ -115,6 +97,7 @@ class AnnotationMetadataItem extends Component {
     render() {
         const {
             classes,
+            editable,
             metadata,
             t,
         } = this.props;
@@ -127,15 +110,22 @@ class AnnotationMetadataItem extends Component {
                     ? null
                     : (
                         <CustomListItem
-                            buttons={
-                                <MiradorMenuButton aria-label={edit ? t('editMetadataButton') : t('confirmMetadataButton')} size="small" onClick={() => edit ? this.confirm() : this.edit()}>
+                            /**
+                             * block metadata editing if this is annotation update
+                             */
+                            {...(editable && { buttons:
+                                <MiradorMenuButton
+                                    aria-label={edit ? t('metadataBtn_edit') : t('metadataBtn_confirm')}
+                                    size="small"
+                                    onClick={() => edit ? this.confirm() : this.edit()}
+                                >
                                     {
                                         edit
                                         ? <Check />
                                         : <EditIcon />
                                     }
                                 </MiradorMenuButton>
-                            }
+                            })}
                             {...(() => {
                                 switch(metadata.type) {
                                     case 'creator':

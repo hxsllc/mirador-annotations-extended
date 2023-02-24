@@ -88,11 +88,11 @@ class AnnotationExportDialog extends Component {
                 open={open}
             >
                 <DialogTitle id="annotation-export-dialog-title" disableTypography>
-                    <Typography variant="h2">{t('dialogExportAnnotationTitle')}</Typography>
+                    <Typography variant="h2">{t('dialog_annotationExport_title')}</Typography>
                 </DialogTitle>
                 <DialogContent>
                     {exportLinks === undefined || exportLinks.length === 0 ? (
-                        <Typography variant="body1">{t('dialogExportAnnotationNoAnnotations')}</Typography>
+                        <Typography variant="body1">{t('dialog_annotationExport_noAnnotation')}</Typography>
                     ) : (
                         <MenuList>
                             {exportLinks.map((dl) => (
@@ -101,7 +101,7 @@ class AnnotationExportDialog extends Component {
                                     className={classes.listitem}
                                     component="a"
                                     key={dl.canvasId}
-                                    aria-label={t('dialogExportAnnotationAnnotion', { annotation: dl.label })}
+                                    aria-label={t('dialog_annotationExport_annotation', { annotation: dl.label })}
                                     href={dl.url}
                                     download={`${dl.id}.json`}
                                 >
@@ -109,7 +109,7 @@ class AnnotationExportDialog extends Component {
                                         <GetAppIcon />
                                     </ListItemIcon>
                                     <ListItemText>
-                                        {t('dialogExportAnnotationAnnotion', { annotation: dl.label })}
+                                        {t('dialog_annotationExport_annotation', { annotation: dl.label })}
                                     </ListItemText>
                                 </MenuItem>
                             ))}

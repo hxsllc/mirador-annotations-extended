@@ -3,13 +3,16 @@ import mirador from 'mirador/dist/es/src/index';
 import annotationPlugins from '../../src';
 import LocalStorageAdapter from '../../src/adapters/LocalStorageAdapter';
 import AnnototAdapter from '../../src/adapters/AnnototAdapter';
+import AnnotationAdapter from '../../src/adapters/AnnotationAdapter';
 
 const endpointUrl = 'http://127.0.0.1:3000/annotations';
+const testEndpointUrl = 'https://anno.iiif.arthistoricum.net/anno'
 const config = {
     annotation: {
-        adapter: (canvasId) => new LocalStorageAdapter(`localStorage://?canvasId=${canvasId}`),
+        adapter: (canvasId) => new AnnotationAdapter(canvasId, testEndpointUrl),
+        // adapter: (canvasId) => new LocalStorageAdapter(`localStorage://?canvasId=${canvasId}`),
         // adapter: (canvasId) => new AnnototAdapter(canvasId, endpointUrl),
-        exportLocalStorageAnnotations: true, // display annotation JSON export button
+        // exportLocalStorageAnnotations: true, // display annotation JSON export button
     },
     id: 'demo',
     themes: {

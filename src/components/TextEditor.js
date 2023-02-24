@@ -77,19 +77,19 @@ class TextEditor extends Component {
                 <ToggleButtonGroup
                     size="small"
                     value={currentStyle.toArray()}
-                    aria-label={t('annotationPanelTextEditorSelection')}
+                    aria-label={t('textEditor_format_selection')}
                 >
                     <ToggleButton
                         onClick={this.handleFormating}
                         value="BOLD"
-                        aria-label={t('annotationPanelTextEditorBold')}
+                        aria-label={t('textEditor_format_bold')}
                     >
                         <BoldIcon />
                     </ToggleButton>
                     <ToggleButton
                         onClick={this.handleFormating}
                         value="ITALIC"
-                        aria-label={t('annotationPanelTextEditorItalic')}
+                        aria-label={t('textEditor_format_italic')}
                     >
                         <ItalicIcon />
                     </ToggleButton>

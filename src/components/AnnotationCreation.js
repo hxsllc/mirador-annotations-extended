@@ -1,38 +1,43 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import { Add } from '@material-ui/icons';
-import { List } from '@material-ui/core';
 import { v4 as uuid } from 'uuid';
-import CompanionWindow from 'mirador/dist/es/src/containers/CompanionWindow';
-import { Divider } from '@material-ui/core';
-import WebAnnotation from '../WebAnnotation';
-import ns from 'mirador/dist/es/src/config/css-ns';
-import MiradorMenuButton from 'mirador/dist/es/src/containers/MiradorMenuButton';
+import { Add } from '@material-ui/icons';
+import { Button, List } from '@material-ui/core';
 import AnnotationBodyItem from '../containers/AnnotationBodyItem';
 import AnnotationMetadataItem from '../containers/AnnotationMetadataItem';
 import AnnotationTargetItem from '../containers/AnnotationTargetItem';
+import AnnotationSubmitDialog from '../containers/AnnotationSubmitDialog';
+import CompanionWindow from 'mirador/dist/es/src/containers/CompanionWindow';
 import CustomSection from '../containers/CustomSection';
+import MiradorMenuButton from 'mirador/dist/es/src/containers/MiradorMenuButton';
+import ns from 'mirador/dist/es/src/config/css-ns';
+import WebAnnotation from '../WebAnnotation';
 
 /** */
 class AnnotationCreation extends Component {
     /** */
     constructor(props) {
         super(props);
+        const { t } = this.props;
 
         const annoState = {};
 
+        /**
+         * apply scheme to annotation for editing form
+         * add/apply default values for missing fields
+         * enhance fields with additional data for rendering
+         */
         if (props.annotation) {
             if(props.annotation.id) {
                 annoState.annoId = props.annotation.id;
             } else {
                 annoState.annoId = uuid();
             }
+
             annoState.metadata = [];
             annoState.metadataCount = 0;
 
+            /** add/transform basic fields for given metadata */
             var tempCreator = {
                 type : 'creator',
                 value: props.annotation.creator && props.annotation.creator.name ? props.annotation.creator.name : null,
@@ -49,6 +54,7 @@ class AnnotationCreation extends Component {
             annoState.metadata.push(tempMotivation);
             annoState.metadataCount++;
 
+            /** transform body elements into given scheme */
             annoState.body = [];
             annoState.bodyCount = 0;
             if(props.annotation.body) {
@@ -59,7 +65,7 @@ class AnnotationCreation extends Component {
                             purpose: body.purpose ? body.purpose : null,
                             value: body.value,
                             _temp_id: annoState.annoId + '-body-item-' + annoState.bodyCount,
-                            _temp_name: `Body ${annoState.bodyCount}`,
+                            _temp_name: t('body', { count: annoState.bodyCount }),
                         };
                         annoState.body.push(tempBody);
                         annoState.bodyCount++;
@@ -70,12 +76,14 @@ class AnnotationCreation extends Component {
                         purpose: props.annotation.body.purpose ? props.annotation.body.purpose : null,
                         value: props.annotation.body.value,
                         _temp_id: annoState.annoId + '-body-item-' + annoState.bodyCount,
-                        _temp_name: `Body ${annoState.bodyCount}`,
+                        _temp_name: t('body', { count: annoState.bodyCount }),
                     };
                     annoState.body.push(tempBody);
                     annoState.bodyCount++;
                 }
             }
+
+            /** transform target elements into given scheme */
             annoState.target = [];
             annoState.targetCount = 0;
             if (props.annotation.target.selector) {
@@ -89,7 +97,7 @@ class AnnotationCreation extends Component {
                                     type: selector.type ? selector.type : null,
                                     value: path.outerHTML,
                                     _temp_id: annoState.annoId + '-target-item-' + annoState.targetCount,
-                                    _temp_name: `Target ${annoState.targetCount}`,
+                                    _temp_name: t('target', { count: annoState.targetCount }),
                                 };
                                 annoState.target.push(tempTarget);
                                 annoState.targetCount++;
@@ -99,7 +107,7 @@ class AnnotationCreation extends Component {
                                 type: selector.type ? selector.type : null,
                                 value: selector.value,
                                 _temp_id: annoState.annoId + '-target-item-' + annoState.targetCount,
-                                _temp_name: `Target ${annoState.targetCount}`,
+                                _temp_name: t('target', { count: annoState.targetCount }),
                             };
                             annoState.target.push(tempTarget);
                             annoState.targetCount++;
@@ -110,13 +118,14 @@ class AnnotationCreation extends Component {
                         type: props.annotation.target.selector.type ? props.annotation.target.selector.type : null,
                         value: props.annotation.target.selector.value,
                         _temp_id: annoState.annoId + '-target-item-' + annoState.targetCount,
-                        _temp_name: `Target ${annoState.targetCount}`,
+                        _temp_name: t('target', { count: annoState.targetCount }),
                     };
                     annoState.target.push(tempTarget);
                     annoState.targetCount++;
                 }
             }
         } else {
+            /** create new annotation object with basic metadata */
             annoState.annoId = uuid();
             annoState.metadata = [];
             annoState.metadataCount = 0;
@@ -140,31 +149,38 @@ class AnnotationCreation extends Component {
 
         this.state = {
             annoId: null,
-            body: [],
-            metadata: [],
-            target: [],
-            bodyCount: 0,
-            targetEditState: null,
-            bodyEditState: null,
-            metadataEditState: null,
-            metadataCount: 0,
-            targetCount: 0,
-            blockTargetHover: false,
+            annotationSubmitDialogOpen: false,
+            blockTargetHover: false, // blocks hover effects on svg drawing target items
+            body: [], // body data
+            bodyCount: 0, // global body count
+            bodyEditState: null, // indicates current edited body item
+            metadata: [], // metadata data
+            metadataCount: 0, // global metadata count
+            metadataEditState: null, // indicates current edited metadata item
+            target: [], // target data
+            targetCount: 0, // global target count
+            targetEditState: null, // indicates current edited target item
             ...annoState,
         };
 
-        this.submitAnnotation = this.submitAnnotation.bind(this);
-        this.deleteAnnotationItem = this.deleteAnnotationItem.bind(this);
-        this.updateAnnotationItem = this.updateAnnotationItem.bind(this);
+        this.confirmAnnotation = this.confirmAnnotation.bind(this);
         this.createAnnotationItem = this.createAnnotationItem.bind(this);
+        this.deleteAnnotationItem = this.deleteAnnotationItem.bind(this);
         this.setEditState = this.setEditState.bind(this);
-        this.toggleTargetHover = this.toggleTargetHover.bind(this);
+        this.setBlockTargetHover = this.setBlockTargetHover.bind(this);
+        this.submitAnnotation = this.submitAnnotation.bind(this);
+        this.toggleAnnotationSubmitDialogOpen = this.toggleAnnotationSubmitDialogOpen.bind(this);
+        this.updateAnnotationItem = this.updateAnnotationItem.bind(this);
     }
 
+    /**
+     * generic delete function
+     * use identifier for item type and id for deletion
+     * version doesn't consider metadata deletion
+     */
     deleteAnnotationItem(type, _temp_id) {
         const {
             body,
-            metadata,
             target,
         } = this.state;
 
@@ -181,19 +197,6 @@ class AnnotationCreation extends Component {
                 var newData = target;
                 newData.splice(dataPos, 1);
                 this.setState({ target: newData });
-                break;
-            case "metadata":
-                var dataPos = null;
-                var index = 0;
-                while (index < metadata.length && !dataPos) {
-                    if(metadata[index]._temp_id == _temp_id) {
-                        dataPos = index;
-                    };
-                    index++;
-                }
-                var newData = metadata;
-                newData.splice(dataPos, 1);
-                this.setState({ metadata: newData });
                 break;
             case "body":
                 var dataPos = null;
@@ -213,7 +216,11 @@ class AnnotationCreation extends Component {
         }
     }
 
-    /** add dynamic generatet ids which are only used to get freaking rerendering done */
+    /**
+     * generic create function
+     * use item type for dynamic item generation
+     * version doesn't consider metadata creation
+     */
     createAnnotationItem(type, subType = null) {
         const {
             annoId,
@@ -223,13 +230,15 @@ class AnnotationCreation extends Component {
             targetCount,
         } = this.state;
 
+        const { t } = this.props;
+
         switch(type) {
             case "target":
                 const targetBase = {
                     type: 'SvgSelector',
                     value: null,
                     _temp_id: annoId + '-target-item-' + targetCount,
-                    _temp_name: `Target ${targetCount}`,
+                    _temp_name: t('target', { count: targetCount }),
                 };
                 var newData = target.concat(targetBase);
                 this.setState({
@@ -243,7 +252,7 @@ class AnnotationCreation extends Component {
                     value: '',
                     purpose: subType,
                     _temp_id: annoId + '-body-item-' + bodyCount,
-                    _temp_name: `Body ${bodyCount}`,
+                    _temp_name: t('body', { count: bodyCount }),
                 };
                 var newData = body.concat(bodyBase);
                 this.setState({
@@ -256,6 +265,10 @@ class AnnotationCreation extends Component {
         }
     }
 
+     /**
+     * generic update function
+     * use item type and id for item update
+     */
     updateAnnotationItem(type, content, _temp_id) {
         const {
             body,
@@ -308,6 +321,9 @@ class AnnotationCreation extends Component {
         }
     }
 
+    /**
+     * prevent multiple parallel editing per type
+     */
     setEditState(editState, type) {
         switch(type) {
             case 'target':
@@ -324,16 +340,37 @@ class AnnotationCreation extends Component {
         }
     }
 
-    /** pass bool to prevent rendering failure */
-    toggleTargetHover(block, _temp_id) {
-        //const { edit } = this.state;
-        //if(edit == _temp_id) {
-            this.setState({ blockTargetHover: block });
-        //}
+    /**
+     * block hover effects on targets
+     * applies if svg target is created but not drwan
+     * dirty fix to prevent rendering issues
+     */
+    setBlockTargetHover(block) {
+        this.setState({ blockTargetHover: block });
+    }
+
+    /** toggle dialog with additional hints for user */
+    toggleAnnotationSubmitDialogOpen() {
+        const { annotationSubmitDialogOpen } = this.state;
+
+        this.setState({ annotationSubmitDialogOpen: !annotationSubmitDialogOpen });
+    }
+
+    /** additional validation on annotation submit */
+    submitAnnotation() {
+        const { annotation } = this.props;
+        const { metadata } = this.state;
+
+        const creator = metadata.find(item => item.type =='creator').value;
+        if(!annotation && !creator) {
+            this.toggleAnnotationSubmitDialogOpen();
+        } else {
+            this.confirmAnnotation();
+        }
     }
 
     /** */
-    submitAnnotation() {
+    confirmAnnotation() {
         const {
             annotation,
             canvases,
@@ -355,12 +392,25 @@ class AnnotationCreation extends Component {
             var tTarget = target;
             tTarget.forEach(a => delete a._temp_id);
             tTarget.forEach(a=> delete a._temp_name);
-            // mirador shows only oe svg target so combine to single svg
-            const tSvgTargetArray =  "<svg xmlns='http://www.w3.org/2000/svg'>" + tTarget.filter(a => a.type == 'SvgSelector')?.map(a => a.value).join('') + "</svg>";
 
-            var redTarget = tTarget.filter(a => a.type !== 'SvgSelector');
-            redTarget.push({ type: 'SvgSelector', value: tSvgTargetArray });
+            var targets = null;
+            if(target.length !== 0) {
+                /**
+                 * combine svg-paths to one path
+                 * necessary as viewer displays only one svg target
+                */
+                const tSvgTargetArray =  "<svg xmlns='http://www.w3.org/2000/svg'>" + tTarget.filter(a => a.type == 'SvgSelector')?.map(a => a.value).join('') + "</svg>";
+
+                /**
+                 * include different targets
+                 * not supported so far
+                 */
+                targets = tTarget.filter(a => a.type !== 'SvgSelector');
+                targets.push({ type: 'SvgSelector', value: tSvgTargetArray });
+            }
+
             tBody.forEach(a => delete a._temp_id);
+            tBody.forEach(a=> delete a._temp_name);
             tBody.forEach(a => a.purpose == null ? delete a.purpose : null );
 
             const anno = new WebAnnotation({
@@ -368,7 +418,7 @@ class AnnotationCreation extends Component {
                 canvasId: canvas.id,
                 id: (annotation && annotation.id) || annoId,
                 manifestId: canvas.options.resource.id,
-                target: redTarget,
+                target: targets,
                 creator: metadata.find(item => item.type =='creator').value,
                 motivation: metadata.find(item => item.type=='motivation').value,
             }).toJson();
@@ -402,11 +452,12 @@ class AnnotationCreation extends Component {
             metadataEditState,
             target,
             targetEditState,
+            annotationSubmitDialogOpen,
         } = this.state;
 
         return (
             <CompanionWindow
-                title={annotation ? t('editAnnotation') : t('addAnnotation')}
+                title={annotation ? t('annotationEdit') : t('annotationAdd')}
                 windowId={windowId}
                 id={id}
                 paperClassName={ns('window-sidebar-annotation-panel')}
@@ -414,15 +465,15 @@ class AnnotationCreation extends Component {
 
                 {/* metadata section */}
                 <CustomSection
-                    primary={t('annotationCreationMetadata')}
-                    //secondary='dummi'
+                    primary={t('headerLabel_metadata')}
+                    //secondary='test'
                     id={`${id}-metadata`}
                 >
                     <List disablePadding>
                             {metadata?.map((value, index) => (
                                 <AnnotationMetadataItem
                                     edit={metadataEditState}
-                                    handleDelete={this.deleteAnnotationItem}
+                                    editable={annotation ? false : true}
                                     handleEdit={this.setEditState}
                                     key={value._temp_id}
                                     metadata={value}
@@ -435,11 +486,11 @@ class AnnotationCreation extends Component {
 
                 {/* target section */}
                 <CustomSection
-                    primary={t('annotationCreationTarget')}
+                    primary={t('headerLabel_target')}
                     id={`${id}-targets`}
                     buttons={
                         <MiradorMenuButton
-                            aria-label={t('createNewTarget')}
+                            aria-label={t('createBtn_target')}
                             className={classes.button}
                             onClick={() => this.createAnnotationItem('target')}
                         >
@@ -454,7 +505,7 @@ class AnnotationCreation extends Component {
                                     edit={targetEditState}
                                     handleDelete={this.deleteAnnotationItem}
                                     handleEdit={this.setEditState}
-                                    toggleHoverBlock={this.toggleTargetHover}
+                                    blockTargetHover={this.setBlockTargetHover}
                                     key={value._temp_id}
                                     target={value}
                                     targetPos={index}
@@ -467,16 +518,16 @@ class AnnotationCreation extends Component {
 
                 {/* body section */}
                 <CustomSection
-                    primary={t('annotationCreationBody')}
+                    primary={t('headerLabel_body')}
                     id={`${id}-bodies`}
                 >
                     <CustomSection
                         inner
                         id={`${id}-bodies-tags`}
-                        primary={t('annotationCreationBodyTags')}
+                        primary={t('headerLabel_tag')}
                         buttons={
                             <MiradorMenuButton
-                                aria-label={t('createNewTag')}
+                                aria-label={t('createBtn_body')}
                                 className={classes.button}
                                 onClick={() => this.createAnnotationItem('body', 'tagging')}
                             >
@@ -501,10 +552,10 @@ class AnnotationCreation extends Component {
                     <CustomSection
                         inner
                         id={`${id}-bodies-texts`}
-                        primary={t('annotationCreationBodyTexts')}
+                        primary={t('headerLabel_describing')}
                         buttons={
                             <MiradorMenuButton
-                                aria-label={t('createNewDescribing')}
+                                aria-label={t('createBtn_body')}
                                 className={classes.button}
                                 onClick={() => this.createAnnotationItem('body', 'describing')}
                             >
@@ -529,13 +580,24 @@ class AnnotationCreation extends Component {
                 </CustomSection>
 
                 <div>
-                    <Button onClick={closeCompanionWindow}>
-                        {t('annotationPanelCancel')}
+                    <Button
+                        onClick={closeCompanionWindow}
+                    >
+                        {t('annotationBtn_cancel')}
                     </Button>
-                    <Button color="primary" onClick={this.submitAnnotation} variant="contained">
-                        {t('annotationPanelSubmit')}
+                    <Button
+                        color="primary"
+                        onClick={this.submitAnnotation}
+                        variant="contained"
+                    >
+                        {t('annotationBtn_submit')}
                     </Button>
                 </div>
+                <AnnotationSubmitDialog
+                    open={annotationSubmitDialogOpen}
+                    handleClose={this.toggleAnnotationSubmitDialogOpen}
+                    handleSubmit={this.confirmAnnotation}
+                />
             </CompanionWindow>
         );
     }
@@ -568,7 +630,7 @@ AnnotationCreation.defaultProps = {
     annotation: null,
     canvases: [],
     classes: {},
-    closeCompanionWindow: () => { },
+    closeCompanionWindow: () => {},
     t: key => key,
 };
 
