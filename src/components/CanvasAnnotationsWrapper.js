@@ -109,7 +109,7 @@ CanvasAnnotationsWrapper.propTypes = {
             adapter: PropTypes.func
         })
     }).isRequired,
-    createAnnotation: PropTypes.bool.isRequired,
+    createAnnotation: PropTypes.string.isRequired,
     receiveAnnotation: PropTypes.func.isRequired,
     switchToSingleCanvasView: PropTypes.func.isRequired,
     targetProps: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
