@@ -39,7 +39,7 @@ class AnnotationTextEditorItem extends Component {
 
     handleKeyCommand(command, editorState) {
         const newState = RichUtils.handleKeyCommand(editorState, command);
-        if(newState) {
+        if (newState) {
             this.onChange(newState);
             return 'handled';
         }
@@ -99,14 +99,16 @@ class AnnotationTextEditorItem extends Component {
 }
 
 AnnotationTextEditorItem.propTypes = {
+    classes: PropTypes.shape({
+        editorRoot: PropTypes.string
+    }).isRequired,
+    updateBodyValue: PropTypes.func.isRequired,
+    updateValue: PropTypes.func.isRequired,
     value: PropTypes.string,
-    classes: PropTypes.shape({ editorRoot: PropTypes.string, }).isRequired,
-    updateBodyValue: PropTypes.func,
-};
+}
 
 AnnotationTextEditorItem.defaultProps = {
     value: '',
-    updateBodyValue: () => {},
 };
 
 export default AnnotationTextEditorItem;

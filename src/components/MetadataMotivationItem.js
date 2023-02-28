@@ -75,7 +75,10 @@ class MetadataMotivationItem extends Component {
 
         return (
             <FormControl>
-                <InputLabel variant="standard" htmlFor='uncontrolled-native-target'>
+                <InputLabel
+                    htmlFor='uncontrolled-native-target'
+                    variant="standard"
+                >
                     {t('motivation')}
                 </InputLabel>
                 <NativeSelect
@@ -92,7 +95,10 @@ class MetadataMotivationItem extends Component {
     }
 }
 
-MetadataMotivationItem.propTypes = {}
-MetadataMotivationItem.defaultProps = {}
+MetadataMotivationItem.propTypes = {
+  handleChange: PropTypes.func.isRequired,
+  t: PropTypes.func.isRequired,
+  value: PropTypes.string.isRequired,
+}
 
 export default MetadataMotivationItem;

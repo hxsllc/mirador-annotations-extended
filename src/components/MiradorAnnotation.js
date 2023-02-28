@@ -117,23 +117,23 @@ class MiradorAnnotation extends Component {
 }
 
 MiradorAnnotation.propTypes = {
-    addCompanionWindow: PropTypes.func.isRequired,
-    canvases: PropTypes.arrayOf(
-        PropTypes.shape({ id: PropTypes.string, index: PropTypes.number }),
-    ).isRequired,
-    config: PropTypes.shape({
-        annotation: PropTypes.shape({
-            adapter: PropTypes.func,
-            exportLocalStorageAnnotations: PropTypes.bool,
-        }),
-    }).isRequired,
-    switchToSingleCanvasView: PropTypes.func.isRequired,
-    TargetComponent: PropTypes.oneOfType([
-        PropTypes.func,
-        PropTypes.node,
-    ]).isRequired,
-    targetProps: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-    windowViewType: PropTypes.string.isRequired,
-};
+  TargetComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
+  addCompanionWindow: PropTypes.func.isRequired,
+  canvases: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string,
+    index: PropTypes.number
+  })).isRequired,
+  config: PropTypes.shape({
+    annotation: PropTypes.shape({
+      adapter: PropTypes.func,
+      exportLocalStorageAnnotations: PropTypes.bool
+    })
+  }).isRequired,
+  createAnnotation: PropTypes.string.isRequired,
+  switchToSingleCanvasView: PropTypes.func.isRequired,
+  t: PropTypes.func.isRequired,
+  targetProps: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+  windowViewType: PropTypes.string.isRequired
+}
 
 export default MiradorAnnotation;

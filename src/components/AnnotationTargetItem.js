@@ -4,7 +4,7 @@ import { Check } from '@material-ui/icons';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
 import EditIcon from '@material-ui/icons/Edit';
 import TargetSvgSelector from '../containers/TargetSvgSelector';
-import ColorIcon  from '../icons/Color';
+import ColorIcon from '../icons/Color';
 import CustomListItem from '../containers/CustomListItem';
 import MiradorMenuButton from 'mirador/dist/es/src/containers/MiradorMenuButton';
 
@@ -29,15 +29,15 @@ class AnnotationTargetItem extends Component {
             target,
         } = this.props;
 
-        if(!target.value) {
+        if (!target.value) {
             handleEdit(target._temp_id, 'target');
         }
-        if(target.type) {
-            switch(target.type) {
+        if (target.type) {
+            switch (target.type) {
                 case 'SvgSelector':
-                    if(target.value) {
+                    if (target.value) {
                         var val = target.value.split('stroke="');
-                        this.setState({ color: val[1].substr(0,7) })
+                        this.setState({ color: val[1].substr(0, 7) })
                     }
                     break;
                 default:
@@ -49,7 +49,7 @@ class AnnotationTargetItem extends Component {
     componentWillUnmount() {
         const { handleEdit } = this.props;
 
-        if(this.editing()) {
+        if (this.editing()) {
             handleEdit(null, 'target');
         }
     }
@@ -69,9 +69,9 @@ class AnnotationTargetItem extends Component {
             updateContent
         } = this.props;
 
-        if(value && target.type=='SvgSelector') {
+        if (value && target.type == 'SvgSelector') {
             var val = value.split('stroke="');
-            this.setState({ color: val[1].substr(0,7) });
+            this.setState({ color: val[1].substr(0, 7) });
         }
 
         updateContent('target', { value: value, type: target.type, _temp_id: target._temp_id, _temp_name: target._temp_name }, target._temp_id);
@@ -108,7 +108,6 @@ class AnnotationTargetItem extends Component {
     renderSvgSelector() {
         const {
             _temp_id,
-            classes,
             hoverBlock,
             t,
             target,
@@ -125,23 +124,23 @@ class AnnotationTargetItem extends Component {
 
         return (
             <CustomListItem
-                onMouseEnter={() => this.props.edit!==null&&hoverBlock ? {} : this.setState({ hover: true })}
-                onMouseLeave={() => this.props.edit!==null&&hoverBlock ? {} : this.setState({ hover: false })}
+                onMouseEnter={() => this.props.edit !== null && hoverBlock ? {} : this.setState({ hover: true })}
+                onMouseLeave={() => this.props.edit !== null && hoverBlock ? {} : this.setState({ hover: false })}
                 buttons={
                     <>
                         <MiradorMenuButton
                             aria-label={
                                 edit
-                                ? t('targetBtn_confirm')
-                                : t('targetBtn_edit')
+                                    ? t('targetBtn_confirm')
+                                    : t('targetBtn_edit')
                             }
                             size="small"
                             onClick={() => edit ? this.confirm() : this.edit()}
                         >
                             {
                                 edit
-                                ? <Check />
-                                : <EditIcon />
+                                    ? <Check />
+                                    : <EditIcon />
                             }
                         </MiradorMenuButton>
                         <MiradorMenuButton
@@ -156,19 +155,29 @@ class AnnotationTargetItem extends Component {
                 primary={target._temp_name}
                 secondary={
                     color
-                    ? <> {t('color')} <ColorIcon style={{ color: color, marginLeft: '25px' }}/> </>
-                    : target.value
+                        ? (
+                            <>
+                                {t('color')}
+                                <ColorIcon
+                                    style={{
+                                        color: color,
+                                        marginLeft: '25px'
+                                    }}
+                                />
+                            </>
+                        )
+                        : target.value
                 }
             >
-                 <TargetSvgSelector
-                        edit={edit}
-                        hover={hover}
-                        blockTargetHover={blockTargetHover}
-                        key={`${_temp_id}-SvgSelector`}
-                        updateValue={this.updateTargetValue}
-                        value={target.value}
-                        windowId={windowId}
-                    />
+                <TargetSvgSelector
+                    edit={edit}
+                    hover={hover}
+                    blockTargetHover={blockTargetHover}
+                    key={`${_temp_id}-SvgSelector`}
+                    updateValue={this.updateTargetValue}
+                    value={target.value}
+                    windowId={windowId}
+                />
             </CustomListItem>
         )
     }
@@ -179,7 +188,7 @@ class AnnotationTargetItem extends Component {
         return (
             <>
                 {(() => {
-                    switch(target.type) {
+                    switch (target.type) {
                         case 'SvgSelector':
                             return this.renderSvgSelector();
                         default:
@@ -192,17 +201,27 @@ class AnnotationTargetItem extends Component {
 }
 
 AnnotationTargetItem.propTypes = {
+    _temp_id: PropTypes.string.isRequired,
+    blockTargetHover: PropTypes.func.isRequired,
     classes: PropTypes.objectOf(PropTypes.string),
-    target: PropTypes.arrayOf(
-        PropTypes.shape({ value: PropTypes.string, type: PropTypes.string, purpose: PropTypes.string }),
-    ),
+    edit: PropTypes.string,
+    handleDelete: PropTypes.func.isRequired,
+    handleEdit: PropTypes.func.isRequired,
+    hoverBlock: PropTypes.bool,
     t: PropTypes.func.isRequired,
+    target: PropTypes.arrayOf(PropTypes.shape({
+        value: PropTypes.string,
+        type: PropTypes.string,
+        purpose: PropTypes.string
+    })).isRequired,
+    updateContent: PropTypes.func.isRequired,
+    windowId: PropTypes.any.isRequired,
 }
 
 AnnotationTargetItem.defaultProps = {
     classes: {},
-    target: {},
-    t: key => key,
+    edit: null,
+    hoverBlock: false,
 }
 
 export default AnnotationTargetItem;

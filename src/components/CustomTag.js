@@ -19,4 +19,14 @@ class CustomTag extends Component {
     }
 }
 
+CustomTag.propTypes = {
+    classes: PropTypes.objectOf(PropTypes.string),
+    label: PropTypes.string,
+}
+
+CustomTag.defaultProps = {
+    classes: {},
+    label: '',
+}
+
 export default CustomTag;

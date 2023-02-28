@@ -21,7 +21,6 @@ class MetadataCreatorItem extends Component {
         const {
             id,
             value,
-            t,
         } = this.props;
 
         return (
@@ -30,14 +29,16 @@ class MetadataCreatorItem extends Component {
                 id={id}
                 value={value}
                 onChange={this.handleTextFieldInput}
-                variant="standard" />
-            )
+                variant="standard"
+            />
+        )
     }
 }
 
-MetadataCreatorItem.propTypes = {}
-MetadataCreatorItem.defaultProps = {
-
+MetadataCreatorItem.propTypes = {
+    handleChange: PropTypes.func.isRequired,
+    id: PropTypes.string.isRequired,
+    value: PropTypes.string.isRequired,
 }
 
 export default MetadataCreatorItem;

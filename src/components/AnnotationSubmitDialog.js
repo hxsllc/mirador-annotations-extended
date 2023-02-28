@@ -47,13 +47,19 @@ class AnnotationSubmitDialog extends Component {
                 onEscapeKeyDown={handleClose}
                 open={open}
             >
-                <DialogTitle id="annotation-submit-dialog-title" disableTypography>
+                <DialogTitle
+                    disableTypography
+                    id="annotation-submit-dialog-title"
+                >
                     <Typography variant="h2">
                         {t('dialog_annotationSubmit_title')}
                     </Typography>
                 </DialogTitle>
                 <DialogContent>
-                    <DialogContentText variant="body1" color="inherit">
+                    <DialogContentText
+                        variant="body1"
+                        color="inherit"
+                    >
                         {t('dialog_annotationSubmit_content')}
                     </DialogContentText>
                 </DialogContent>
@@ -61,7 +67,11 @@ class AnnotationSubmitDialog extends Component {
                     <Button onClick={handleClose}>
                         {t('dialog_annotationSubmitBtn_cancel')}
                     </Button>
-                    <Button color="primary" onClick={this.confirm} variant="contained">
+                    <Button
+                        color="primary"
+                        onClick={this.confirm}
+                        variant="contained"
+                    >
                         {t('dialog_annotationSubmitBtn_submit')}
                     </Button>
                 </DialogActions>
@@ -72,14 +82,13 @@ class AnnotationSubmitDialog extends Component {
 
 AnnotationSubmitDialog.propTypes = {
     handleClose: PropTypes.func.isRequired,
-    open: PropTypes.bool,
     handleSubmit: PropTypes.func.isRequired,
-    t: PropTypes.func.isRequired,
-};
+    open: PropTypes.bool,
+    t: PropTypes.func.isRequired
+}
 
 AnnotationSubmitDialog.defaultProps = {
     open: false,
-    t: key => key,
 };
 
 export default AnnotationSubmitDialog;

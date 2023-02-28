@@ -20,14 +20,14 @@ class CanvasAnnotationsWrapper extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if(prevProps.createAnnotation !== this.props.createAnnotation) {
-            if(this.props.createAnnotation) {
+        if (prevProps.createAnnotation !== this.props.createAnnotation) {
+            if (this.props.createAnnotation) {
                 this.setActiveAnnotationId(null);
             }
         }
     }
 
-    setActiveAnnotationId(value){
+    setActiveAnnotationId(value) {
         this.setState({ activeAnnotationId: value });
     };
 
@@ -97,26 +97,24 @@ class CanvasAnnotationsWrapper extends Component {
 }
 
 CanvasAnnotationsWrapper.propTypes = {
+    TargetComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
     addCompanionWindow: PropTypes.func.isRequired,
     annotationsOnCanvases: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-    canvases: PropTypes.arrayOf(
-        PropTypes.shape({ id: PropTypes.string, index: PropTypes.number }),
-    ),
+    canvases: PropTypes.arrayOf(PropTypes.shape({
+        id: PropTypes.string,
+        index: PropTypes.number
+    })),
     config: PropTypes.shape({
         annotation: PropTypes.shape({
-            adapter: PropTypes.func,
-        }),
+            adapter: PropTypes.func
+        })
     }).isRequired,
-    createAnnotation: PropTypes.bool,
+    createAnnotation: PropTypes.bool.isRequired,
     receiveAnnotation: PropTypes.func.isRequired,
     switchToSingleCanvasView: PropTypes.func.isRequired,
-    TargetComponent: PropTypes.oneOfType([
-        PropTypes.func,
-        PropTypes.node,
-    ]).isRequired,
     targetProps: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-    windowViewType: PropTypes.string.isRequired,
-};
+    windowViewType: PropTypes.string.isRequired
+}
 
 CanvasAnnotationsWrapper.defaultProps = {
     annotationsOnCanvases: {},

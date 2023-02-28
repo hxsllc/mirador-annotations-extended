@@ -93,8 +93,8 @@ class CanvasListItem extends Component {
 
         const { annotationid } = this.props;
 
-        if(!createAnnotation) {
-            if(activeAnnotationId == annotationid) {
+        if (!createAnnotation) {
+            if (activeAnnotationId == annotationid) {
                 return true;
             }
         }
@@ -116,8 +116,8 @@ class CanvasListItem extends Component {
                 Object.entries(annotationsOnCanvases[canvas.id]).forEach(([key, value], i) => {
                     if (value.json && value.json.items) {
                         var annotation = value.json.items.find((anno) => anno.id === annotationid);
-                        if(annotation?.hasOwnProperty('creator')) {
-                            if(annotation.creator.name) {
+                        if (annotation?.hasOwnProperty('creator')) {
+                            if (annotation.creator.name) {
                                 creator = annotation.creator.name;
                             } else {
                                 creator = annotation.creator;
@@ -161,7 +161,7 @@ class CanvasListItem extends Component {
                             <Box
                                 aria-label={t('annotationCanvas_tools')}
                                 size="small"
-                                >
+                            >
                                 <MiradorMenuButton
                                     aria-label={t('annotationBtn_edit')}
                                     disabled={!createAnnotation}
@@ -196,12 +196,14 @@ class CanvasListItem extends Component {
 
 CanvasListItem.propTypes = {
     annotationid: PropTypes.string.isRequired,
-    children: PropTypes.oneOfType([
-        PropTypes.func,
-        PropTypes.node,
-    ]).isRequired,
-    t: PropTypes.func,
-};
+    children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
+    classes: PropTypes.objectOf(PropTypes.string),
+    t: PropTypes.func.isRequired,
+}
+
+CanvasListItem.defaultProps = {
+    classes: {},
+}
 
 CanvasListItem.contextType = AnnotationActionsContext;
 

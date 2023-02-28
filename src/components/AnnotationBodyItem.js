@@ -28,7 +28,7 @@ class AnnotationBodyItem extends Component {
             handleEdit,
         } = this.props;
 
-        if(!body.value) {
+        if (!body.value) {
             handleEdit(body._temp_id, 'body');
         }
     }
@@ -88,20 +88,30 @@ class AnnotationBodyItem extends Component {
             <CustomTag
                 label={
                     edit
-                    ? (
-                        <AnnotationTextFieldItem
-                            key={`${body._temp_id}-TextFieldItem`}
-                            updateValue={this.updateBodyValue}
-                            value={body.value}
-                            windowId={windowId}
-                        />
-                    )
-                    : (body.value ? body.value : 'n.a.')
+                        ? (
+                            <AnnotationTextFieldItem
+                                key={`${body._temp_id}-TextFieldItem`}
+                                updateValue={this.updateBodyValue}
+                                value={body.value}
+                                windowId={windowId}
+                            />
+                        )
+                        : (body.value ? body.value : 'n.a.')
                 }
                 variant={edit ? "default" : "outlined"}
                 color={edit ? "primary" : undefined}
-                onClick={() => edit ? null: this.edit()}
-                deleteIcon={<MiradorMenuButton aria-label={edit ? t('bodyBtn_confirm') : t('bodyBtn_delete')}> {edit ? <Check /> : <DeleteIcon />}</MiradorMenuButton>}
+                onClick={() => edit ? null : this.edit()}
+                deleteIcon={
+                    <MiradorMenuButton
+                        aria-label={edit ? t('bodyBtn_confirm') : t('bodyBtn_delete')}
+                    >
+                        {
+                            edit
+                                ? <Check />
+                                : <DeleteIcon />
+                        }
+                    </MiradorMenuButton>
+                }
                 onDelete={() => edit ? this.confirm() : this.delete()}
             />
         )
@@ -110,7 +120,6 @@ class AnnotationBodyItem extends Component {
     renderTextField() {
         const {
             body,
-            classes,
             htmlSanitizationRuleSet,
             t,
             windowId,
@@ -122,14 +131,22 @@ class AnnotationBodyItem extends Component {
             <CustomListItem
                 buttons={
                     <>
-                        <MiradorMenuButton aria-label={edit ? t('bodyBtn_confirm') : t('bodyBtn_edit')} size="small" onClick={() => edit ? this.confirm() : this.edit()}>
+                        <MiradorMenuButton
+                            aria-label={edit ? t('bodyBtn_confirm') : t('bodyBtn_edit')}
+                            onClick={() => edit ? this.confirm() : this.edit()}
+                            size="small"
+                        >
                             {
                                 edit
-                                ? <Check />
-                                : <EditIcon />
+                                    ? <Check />
+                                    : <EditIcon />
                             }
                         </MiradorMenuButton>
-                        <MiradorMenuButton aria-label={t('bodyBtn_delete')} size="small" onClick={this.delete}>
+                        <MiradorMenuButton
+                            aria-label={t('bodyBtn_delete')}
+                            onClick={this.delete}
+                            size="small"
+                        >
                             <DeleteIcon />
                         </MiradorMenuButton>
                     </>
@@ -138,15 +155,29 @@ class AnnotationBodyItem extends Component {
             >
                 {
                     edit
-                    ? (
-                        <AnnotationTextEditorItem
-                            key={`${body._temp_id}-TextEditorItem`}
-                            updateValue={this.updateBodyValue}
-                            value={body.value}
-                            windowId={windowId}
-                        />
-                    )
-                    : (body.value ? <Typography color="textSecondary" variant="body2"><SanitizedHtml ruleSet={htmlSanitizationRuleSet} htmlString={body.value} /></Typography> : '')
+                        ? (
+                            <AnnotationTextEditorItem
+                                key={`${body._temp_id}-TextEditorItem`}
+                                updateValue={this.updateBodyValue}
+                                value={body.value}
+                                windowId={windowId}
+                            />
+                        )
+                        : (
+                            body.value
+                                ? (
+                                    <Typography
+                                        color="textSecondary"
+                                        variant="body2"
+                                    >
+                                        <SanitizedHtml
+                                            htmlString={body.value}
+                                            ruleSet={htmlSanitizationRuleSet}
+                                        />
+                                    </Typography>
+                                )
+                                : ''
+                        )
                 }
             </CustomListItem>
         )
@@ -158,7 +189,7 @@ class AnnotationBodyItem extends Component {
         return (
             <>
                 {(() => {
-                    switch(body.purpose) {
+                    switch (body.purpose) {
                         case 'tagging':
                             return this.renderTag();
                         default:
@@ -171,17 +202,28 @@ class AnnotationBodyItem extends Component {
 }
 
 AnnotationBodyItem.propTypes = {
-    classes: PropTypes.objectOf(PropTypes.string),
-    body: PropTypes.arrayOf(
-        PropTypes.shape({ value: PropTypes.string, type: PropTypes.string, purpose: PropTypes.string }),
-    ),
+    body: PropTypes.arrayOf(PropTypes.shape({
+        value: PropTypes.string,
+        type: PropTypes.string,
+        purpose: PropTypes.string,
+        _temp_id: PropTypes.string,
+        _temp_name: PropTypes.string
+    })).isRequired,
+    edit: PropTypes.any,
+    handleDelete: PropTypes.func,
+    handleEdit: PropTypes.func,
+    htmlSanitizationRuleSet: PropTypes.string,
     t: PropTypes.func.isRequired,
+    updateContent: PropTypes.func,
+    windowId: PropTypes.string.isRequired,
 }
 
 AnnotationBodyItem.defaultProps = {
-    classes: {},
-    body: {},
-    t: key => key,
+    edit: null,
+    handleDelete: () => { },
+    handleEdit: () => { },
+    htmlSanitizationRuleSet: 'iiif',
+    updateContent: () => { },
 }
 
 export default AnnotationBodyItem;

@@ -28,7 +28,7 @@ class AnnotationCreation extends Component {
          * enhance fields with additional data for rendering
          */
         if (props.annotation) {
-            if(props.annotation.id) {
+            if (props.annotation.id) {
                 annoState.annoId = props.annotation.id;
             } else {
                 annoState.annoId = uuid();
@@ -39,7 +39,7 @@ class AnnotationCreation extends Component {
 
             /** add/transform basic fields for given metadata */
             var tempCreator = {
-                type : 'creator',
+                type: 'creator',
                 value: props.annotation.creator && props.annotation.creator.name ? props.annotation.creator.name : null,
                 _temp_id: annoState.annoId + '-metadata-item-' + annoState.metadataCount
             };
@@ -57,7 +57,7 @@ class AnnotationCreation extends Component {
             /** transform body elements into given scheme */
             annoState.body = [];
             annoState.bodyCount = 0;
-            if(props.annotation.body) {
+            if (props.annotation.body) {
                 if (Array.isArray(props.annotation.body)) {
                     props.annotation.body.forEach((body) => {
                         var tempBody = {
@@ -89,7 +89,7 @@ class AnnotationCreation extends Component {
             if (props.annotation.target.selector) {
                 if (Array.isArray(props.annotation.target.selector)) {
                     props.annotation.target.selector.forEach((selector) => {
-                        if(selector.type == 'SvgSelector') {
+                        if (selector.type == 'SvgSelector') {
                             var svgObject = new DOMParser().parseFromString(selector.value, "image/svg+xml");
                             var pathObjects = svgObject.querySelectorAll('path');
                             pathObjects.forEach(path => {
@@ -130,7 +130,7 @@ class AnnotationCreation extends Component {
             annoState.metadata = [];
             annoState.metadataCount = 0;
             var tempCreator = {
-                type : 'creator',
+                type: 'creator',
                 value: null,
                 _temp_id: annoState.annoId + '-metadata-item-' + annoState.metadataCount
             };
@@ -184,12 +184,12 @@ class AnnotationCreation extends Component {
             target,
         } = this.state;
 
-        switch(type) {
+        switch (type) {
             case "target":
                 var dataPos = null;
                 var index = 0;
                 while (index < target.length && !dataPos) {
-                    if(target[index]._temp_id == _temp_id) {
+                    if (target[index]._temp_id == _temp_id) {
                         dataPos = index;
                     };
                     index++;
@@ -202,7 +202,7 @@ class AnnotationCreation extends Component {
                 var dataPos = null;
                 var index = 0;
                 while (index < body.length && !dataPos) {
-                    if(body[index]._temp_id == _temp_id) {
+                    if (body[index]._temp_id == _temp_id) {
                         dataPos = index;
                     };
                     index++;
@@ -232,7 +232,7 @@ class AnnotationCreation extends Component {
 
         const { t } = this.props;
 
-        switch(type) {
+        switch (type) {
             case "target":
                 const targetBase = {
                     type: 'SvgSelector',
@@ -257,7 +257,7 @@ class AnnotationCreation extends Component {
                 var newData = body.concat(bodyBase);
                 this.setState({
                     body: newData,
-                    bodyCount: bodyCount +1
+                    bodyCount: bodyCount + 1
                 });
                 break;
             default:
@@ -265,10 +265,10 @@ class AnnotationCreation extends Component {
         }
     }
 
-     /**
-     * generic update function
-     * use item type and id for item update
-     */
+    /**
+    * generic update function
+    * use item type and id for item update
+    */
     updateAnnotationItem(type, content, _temp_id) {
         const {
             body,
@@ -276,12 +276,12 @@ class AnnotationCreation extends Component {
             target,
         } = this.state;
 
-        switch(type) {
+        switch (type) {
             case "target":
                 var dataPos = null;
                 var index = 0;
                 while (index < target.length && !dataPos) {
-                    if(target[index]._temp_id == _temp_id) {
+                    if (target[index]._temp_id == _temp_id) {
                         dataPos = index;
                     };
                     index++;
@@ -294,7 +294,7 @@ class AnnotationCreation extends Component {
                 var dataPos = null;
                 var index = 0;
                 while (index < metadata.length && !dataPos) {
-                    if(metadata[index]._temp_id == _temp_id) {
+                    if (metadata[index]._temp_id == _temp_id) {
                         dataPos = index;
                     };
                     index++;
@@ -307,7 +307,7 @@ class AnnotationCreation extends Component {
                 var dataPos = null;
                 var index = 0;
                 while (index < body.length && !dataPos) {
-                    if(body[index]._temp_id == _temp_id) {
+                    if (body[index]._temp_id == _temp_id) {
                         dataPos = index;
                     };
                     index++;
@@ -325,7 +325,7 @@ class AnnotationCreation extends Component {
      * prevent multiple parallel editing per type
      */
     setEditState(editState, type) {
-        switch(type) {
+        switch (type) {
             case 'target':
                 this.setState({ targetEditState: editState });
                 break;
@@ -361,8 +361,8 @@ class AnnotationCreation extends Component {
         const { annotation } = this.props;
         const { metadata } = this.state;
 
-        const creator = metadata.find(item => item.type =='creator').value;
-        if(!annotation && !creator) {
+        const creator = metadata.find(item => item.type == 'creator').value;
+        if (!annotation && !creator) {
             this.toggleAnnotationSubmitDialogOpen();
         } else {
             this.confirmAnnotation();
@@ -387,19 +387,19 @@ class AnnotationCreation extends Component {
         } = this.state;
 
         canvases.forEach((canvas) => {
-            const storageAdatper = config.annotation.adapter(canvas.id);
+            const storageAdapter = config.annotation.adapter(canvas.id);
             var tBody = body;
             var tTarget = target;
             tTarget.forEach(a => delete a._temp_id);
-            tTarget.forEach(a=> delete a._temp_name);
+            tTarget.forEach(a => delete a._temp_name);
 
             var targets = null;
-            if(target.length !== 0) {
+            if (target.length !== 0) {
                 /**
                  * combine svg-paths to one path
                  * necessary as viewer displays only one svg target
                 */
-                const tSvgTargetArray =  "<svg xmlns='http://www.w3.org/2000/svg'>" + tTarget.filter(a => a.type == 'SvgSelector')?.map(a => a.value).join('') + "</svg>";
+                const tSvgTargetArray = "<svg xmlns='http://www.w3.org/2000/svg'>" + tTarget.filter(a => a.type == 'SvgSelector')?.map(a => a.value).join('') + "</svg>";
 
                 /**
                  * include different targets
@@ -410,8 +410,8 @@ class AnnotationCreation extends Component {
             }
 
             tBody.forEach(a => delete a._temp_id);
-            tBody.forEach(a=> delete a._temp_name);
-            tBody.forEach(a => a.purpose == null ? delete a.purpose : null );
+            tBody.forEach(a => delete a._temp_name);
+            tBody.forEach(a => a.purpose == null ? delete a.purpose : null);
 
             const anno = new WebAnnotation({
                 body: tBody,
@@ -419,14 +419,14 @@ class AnnotationCreation extends Component {
                 id: (annotation && annotation.id) || annoId,
                 manifestId: canvas.options.resource.id,
                 target: targets,
-                creator: metadata.find(item => item.type =='creator').value,
-                motivation: metadata.find(item => item.type=='motivation').value,
+                creator: metadata.find(item => item.type == 'creator').value,
+                motivation: metadata.find(item => item.type == 'motivation').value,
             }).toJson();
 
-            if(annotation) {
-                storageAdatper.update(anno).then(annoPage => receiveAnnotation(canvas.id, storageAdatper.annotationPageId, annoPage));
+            if (annotation) {
+                storageAdapter.update(anno).then(annoPage => receiveAnnotation(canvas.id, storageAdapter.annotationPageId, annoPage));
             } else {
-                storageAdatper.create(anno).then(annoPage => receiveAnnotation(canvas.id, storageAdatper.annotationPageId, annoPage));
+                storageAdapter.create(anno).then(annoPage => receiveAnnotation(canvas.id, storageAdapter.annotationPageId, annoPage));
             }
         });
 
@@ -470,18 +470,18 @@ class AnnotationCreation extends Component {
                     id={`${id}-metadata`}
                 >
                     <List disablePadding>
-                            {metadata?.map((value, index) => (
-                                <AnnotationMetadataItem
-                                    edit={metadataEditState}
-                                    editable={annotation ? false : true}
-                                    handleEdit={this.setEditState}
-                                    key={value._temp_id}
-                                    metadata={value}
-                                    metadataPos={index}
-                                    updateContent={this.updateAnnotationItem}
-                                />
-                            ))}
-                        </List>
+                        {metadata?.map((value, index) => (
+                            <AnnotationMetadataItem
+                                edit={metadataEditState}
+                                editable={annotation ? false : true}
+                                handleEdit={this.setEditState}
+                                key={value._temp_id}
+                                metadata={value}
+                                metadataPos={index}
+                                updateContent={this.updateAnnotationItem}
+                            />
+                        ))}
+                    </List>
                 </CustomSection>
 
                 {/* target section */}
@@ -499,21 +499,21 @@ class AnnotationCreation extends Component {
                     }
                 >
                     <List disablePadding>
-                            {target?.map((value, index) => (
-                                <AnnotationTargetItem
-                                    hoverBlock={blockTargetHover}
-                                    edit={targetEditState}
-                                    handleDelete={this.deleteAnnotationItem}
-                                    handleEdit={this.setEditState}
-                                    blockTargetHover={this.setBlockTargetHover}
-                                    key={value._temp_id}
-                                    target={value}
-                                    targetPos={index}
-                                    updateContent={this.updateAnnotationItem}
-                                    windowId={windowId}
-                                />
-                            ))}
-                        </List>
+                        {target?.map((value, index) => (
+                            <AnnotationTargetItem
+                                hoverBlock={blockTargetHover}
+                                edit={targetEditState}
+                                handleDelete={this.deleteAnnotationItem}
+                                handleEdit={this.setEditState}
+                                blockTargetHover={this.setBlockTargetHover}
+                                key={value._temp_id}
+                                target={value}
+                                targetPos={index}
+                                updateContent={this.updateAnnotationItem}
+                                windowId={windowId}
+                            />
+                        ))}
+                    </List>
                 </CustomSection>
 
                 {/* body section */}
@@ -536,7 +536,7 @@ class AnnotationCreation extends Component {
                         }
                     >
                         <List component="div" disablePadding>
-                            {body.filter(item => item.purpose=='tagging')?.map((value, index) => (
+                            {body.filter(item => item.purpose == 'tagging')?.map((value, index) => (
                                 <AnnotationBodyItem
                                     body={value}
                                     bodyPos={index}
@@ -564,7 +564,7 @@ class AnnotationCreation extends Component {
                         }
                     >
                         <List component="div" disablePadding>
-                            {body.filter(item => item.purpose!=='tagging')?.map((value, index) => (
+                            {body.filter(item => item.purpose !== 'tagging')?.map((value, index) => (
                                 <AnnotationBodyItem
                                     body={value}
                                     bodyPos={index}
@@ -605,33 +605,31 @@ class AnnotationCreation extends Component {
 
 AnnotationCreation.propTypes = {
     annotation: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-    canvases: PropTypes.arrayOf(
-        PropTypes.shape({ id: PropTypes.string, index: PropTypes.number }),
-    ),
+    canvases: PropTypes.arrayOf(PropTypes.shape({
+        id: PropTypes.string,
+        index: PropTypes.number
+    })),
     classes: PropTypes.objectOf(PropTypes.string),
     closeCompanionWindow: PropTypes.func,
     config: PropTypes.shape({
         annotation: PropTypes.shape({
             adapter: PropTypes.func,
             defaults: PropTypes.objectOf(
-                PropTypes.oneOfType(
-                    [PropTypes.bool, PropTypes.func, PropTypes.number, PropTypes.string]
-                )
-            ),
-        }),
+                PropTypes.oneOfType([PropTypes.bool, PropTypes.func, PropTypes.number, PropTypes.string])
+            )
+        })
     }).isRequired,
     id: PropTypes.string.isRequired,
     receiveAnnotation: PropTypes.func.isRequired,
-    windowId: PropTypes.string.isRequired,
     t: PropTypes.func.isRequired,
-};
+    windowId: PropTypes.string.isRequired
+}
 
 AnnotationCreation.defaultProps = {
     annotation: null,
     canvases: [],
     classes: {},
-    closeCompanionWindow: () => {},
-    t: key => key,
+    closeCompanionWindow: () => { },
 };
 
 export default AnnotationCreation;

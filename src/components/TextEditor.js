@@ -110,17 +110,14 @@ class TextEditor extends Component {
 
 TextEditor.propTypes = {
     annoHtml: PropTypes.string,
-    classes: PropTypes.shape({
-        editorRoot: PropTypes.string,
-    }).isRequired,
-    updateAnnotationBody: PropTypes.func,
-    t: PropTypes.func,
-};
+    classes: PropTypes.objectOf(PropTypes.string),
+    t: PropTypes.func.isRequired,
+    updateAnnotationBody: PropTypes.func.isRequired,
+}
 
 TextEditor.defaultProps = {
     annoHtml: '',
-    updateAnnotationBody: () => { },
-    t: key => key,
+    classes: {},
 };
 
 export default TextEditor;

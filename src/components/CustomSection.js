@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import PropTypes, { node } from 'prop-types';
 import { Typography } from '@material-ui/core';
 
 class CustomSection extends Component {
@@ -12,7 +12,6 @@ class CustomSection extends Component {
             buttons,
             children,
             classes,
-            id,
             inner,
             primary,
             secondary,
@@ -42,7 +41,20 @@ class CustomSection extends Component {
     }
 }
 
-CustomSection.propTypes = {}
-CustomSection.defaultProps = {}
+CustomSection.propTypes = {
+    buttons: PropTypes.node,
+    children: PropTypes.node.isRequired,
+    classes: PropTypes.objectOf(PropTypes.string),
+    inner: PropTypes.bool,
+    primary: PropTypes.string,
+    secondary: PropTypes.string,
+}
+CustomSection.defaultProps = {
+    buttons: null,
+    classes: {},
+    inner: false,
+    primary: '',
+    secondary: '',
+}
 
 export default CustomSection;

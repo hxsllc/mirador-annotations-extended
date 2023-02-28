@@ -1,17 +1,13 @@
+import PropTypes from "prop-types"
 import React, { Component } from 'react';
 import AnnotationSvgDrawing from '../containers/AnnotationSvgDrawing';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import RectangleIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CircleIcon from '@material-ui/icons/RadioButtonUnchecked';
-import PolygonIcon from '@material-ui/icons/Timeline';
 import GestureIcon from '@material-ui/icons/Gesture';
-import { Radio, Typography } from '@material-ui/core';
+import { Radio } from '@material-ui/core';
 import { Collapse } from '@material-ui/core';
-import { IconButton } from '@material-ui/core';
-import Edit from '@material-ui/icons/Edit';
-import { Fingerprint } from '@material-ui/icons';
-
 
 class SelectorTools extends Component {
     constructor(props) {
@@ -92,6 +88,18 @@ class SelectorTools extends Component {
             </>
         )
     }
+}
+
+SelectorTools.propTypes = {
+    activeTool: PropTypes.string.isRequired,
+    blockTargetHover: PropTypes.func.isRequired,
+    changeColor: PropTypes.func.isRequired,
+    changeTool: PropTypes.func.isRequired,
+    colors: PropTypes.shape({
+        map: PropTypes.func
+    }).isRequired,
+    strokeColor: PropTypes.string.isRequired,
+    t: PropTypes.func.isRequired,
 }
 
 
@@ -180,7 +188,11 @@ class TargetSvgSelector extends Component {
 
         return (
             <div className={classes.selector}>
-                <Collapse className={classes.editAnnotationCollapse} in={edit} unmountOnExit>
+                <Collapse
+                    className={classes.editAnnotationCollapse}
+                    in={edit}
+                    unmountOnExit
+                >
                     {
                         edit && (
                             <SelectorTools
@@ -214,7 +226,18 @@ class TargetSvgSelector extends Component {
     }
 };
 
-TargetSvgSelector.propTypes = {};
-TargetSvgSelector.defaultProps = {};
+TargetSvgSelector.propTypes = {
+    blockTargetHover: PropTypes.func.isRequired,
+    classes: PropTypes.objectOf(PropTypes.string),
+    edit: PropTypes.bool.isRequired,
+    hover: PropTypes.bool.isRequired,
+    t: PropTypes.func.isRequired,
+    updateValue: PropTypes.func.isRequired,
+    value: PropTypes.string.isRequired,
+    windowId: PropTypes.string.isRequired,
+}
+TargetSvgSelector.defaultProps = {
+    classes: {},
+};
 
 export default TargetSvgSelector;

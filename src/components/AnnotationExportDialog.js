@@ -88,33 +88,41 @@ class AnnotationExportDialog extends Component {
                 open={open}
             >
                 <DialogTitle id="annotation-export-dialog-title" disableTypography>
-                    <Typography variant="h2">{t('dialog_annotationExport_title')}</Typography>
+                    <Typography variant="h2">
+                        {t('dialog_annotationExport_title')}
+                    </Typography>
                 </DialogTitle>
                 <DialogContent>
-                    {exportLinks === undefined || exportLinks.length === 0 ? (
-                        <Typography variant="body1">{t('dialog_annotationExport_noAnnotation')}</Typography>
-                    ) : (
-                        <MenuList>
-                            {exportLinks.map((dl) => (
-                                <MenuItem
-                                    button
-                                    className={classes.listitem}
-                                    component="a"
-                                    key={dl.canvasId}
-                                    aria-label={t('dialog_annotationExport_annotation', { annotation: dl.label })}
-                                    href={dl.url}
-                                    download={`${dl.id}.json`}
-                                >
-                                    <ListItemIcon>
-                                        <GetAppIcon />
-                                    </ListItemIcon>
-                                    <ListItemText>
-                                        {t('dialog_annotationExport_annotation', { annotation: dl.label })}
-                                    </ListItemText>
-                                </MenuItem>
-                            ))}
-                        </MenuList>
-                    )}
+                    {
+                        exportLinks === undefined || exportLinks.length === 0
+                        ? (
+                            <Typography variant="body1">
+                                {t('dialog_annotationExport_noAnnotation')}
+                            </Typography>
+                        )
+                        : (
+                            <MenuList>
+                                {exportLinks.map((dl) => (
+                                    <MenuItem
+                                        button
+                                        className={classes.listitem}
+                                        component="a"
+                                        key={dl.canvasId}
+                                        aria-label={t('dialog_annotationExport_annotation', { annotation: dl.label })}
+                                        href={dl.url}
+                                        download={`${dl.id}.json`}
+                                    >
+                                        <ListItemIcon>
+                                            <GetAppIcon />
+                                        </ListItemIcon>
+                                        <ListItemText>
+                                            {t('dialog_annotationExport_annotation', { annotation: dl.label })}
+                                        </ListItemText>
+                                    </MenuItem>
+                                ))}
+                            </MenuList>
+                        )
+                    }
                 </DialogContent>
             </Dialog>
         );

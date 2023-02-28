@@ -43,4 +43,19 @@ class CustomListItem extends Component {
     }
 }
 
+CustomListItem.propTypes = {
+    buttons: PropTypes.node,
+    children: PropTypes.node,
+    classes: PropTypes.objectOf(PropTypes.string),
+    primary: PropTypes.string,
+    secondary: PropTypes.string,
+}
+CustomListItem.defaultProps = {
+    buttons: null,
+    children: null,
+    classes: {},
+    primary: '',
+    secondary: '',
+}
+
 export default CustomListItem;

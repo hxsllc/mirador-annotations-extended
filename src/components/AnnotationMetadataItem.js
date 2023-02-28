@@ -7,7 +7,6 @@ import MetadataMotivationItem from '../containers/MetadataMotivationItem';
 import CustomListItem from '../containers/CustomListItem';
 import MiradorMenuButton from 'mirador/dist/es/src/containers/MiradorMenuButton';
 
-// you still have a lot of work to do
 
 class AnnotationMetadataItem extends Component {
     constructor(props) {
@@ -34,7 +33,7 @@ class AnnotationMetadataItem extends Component {
         handleEdit(null, 'metadata');
     }
 
-    handleChange( newValue ) {
+    handleChange(newValue) {
         const {
             metadata,
             updateContent,
@@ -62,7 +61,7 @@ class AnnotationMetadataItem extends Component {
         return (
             {
                 primary: t('creator'),
-                secondary:  edit
+                secondary: edit
                     ? (
                         <MetadataCreatorItem
                             id={`${metadata}-creator`}
@@ -70,7 +69,7 @@ class AnnotationMetadataItem extends Component {
                             handleChange={this.handleChange}
                         />
                     )
-                    : ( metadata.value ? metadata.value : t('creator_default') )
+                    : (metadata.value ? metadata.value : t('creator_default'))
             }
         )
     }
@@ -89,14 +88,13 @@ class AnnotationMetadataItem extends Component {
                             handleChange={this.handleChange}
                         />
                     )
-                    : ( metadata.value ? metadata.value : '' )
+                    : (metadata.value ? metadata.value : '')
             }
         )
     }
 
     render() {
         const {
-            classes,
             editable,
             metadata,
             t,
@@ -107,37 +105,38 @@ class AnnotationMetadataItem extends Component {
             <>
                 {
                     metadata.type !== 'creator'
-                    ? null
-                    : (
-                        <CustomListItem
-                            /**
-                             * block metadata editing if this is annotation update
-                             */
-                            {...(editable && { buttons:
-                                <MiradorMenuButton
-                                    aria-label={edit ? t('metadataBtn_edit') : t('metadataBtn_confirm')}
-                                    size="small"
-                                    onClick={() => edit ? this.confirm() : this.edit()}
-                                >
-                                    {
-                                        edit
-                                        ? <Check />
-                                        : <EditIcon />
+                        ? null
+                        : (
+                            <CustomListItem
+                                /**
+                                 * block metadata editing if this is annotation update
+                                 */
+                                {...(editable && {
+                                    buttons:
+                                        <MiradorMenuButton
+                                            aria-label={edit ? t('metadataBtn_edit') : t('metadataBtn_confirm')}
+                                            size="small"
+                                            onClick={() => edit ? this.confirm() : this.edit()}
+                                        >
+                                            {
+                                                edit
+                                                    ? <Check />
+                                                    : <EditIcon />
+                                            }
+                                        </MiradorMenuButton>
+                                })}
+                                {...(() => {
+                                    switch (metadata.type) {
+                                        case 'creator':
+                                            return this.renderCreator();
+                                        case 'motivation':
+                                            return this.renderMotivation();
+                                        default:
+                                            return null;
                                     }
-                                </MiradorMenuButton>
-                            })}
-                            {...(() => {
-                                switch(metadata.type) {
-                                    case 'creator':
-                                        return this.renderCreator();
-                                    case 'motivation':
-                                        return this.renderMotivation();
-                                    default:
-                                        return null;
-                                }
-                            })()}
-                        />
-                    )
+                                })()}
+                            />
+                        )
                 }
             </>
         )
@@ -146,16 +145,24 @@ class AnnotationMetadataItem extends Component {
 
 AnnotationMetadataItem.propTypes = {
     classes: PropTypes.objectOf(PropTypes.string),
-    metadata: PropTypes.arrayOf(
-        PropTypes.shape({ value: PropTypes.string, type: PropTypes.string }),
-    ),
+    edit: PropTypes.string,
+    editable: PropTypes.bool,
+    handleEdit: PropTypes.func,
+    metadata: PropTypes.arrayOf(PropTypes.shape({
+        value: PropTypes.string,
+        type: PropTypes.string,
+        _temp_id: PropTypes.string
+    })).isRequired,
     t: PropTypes.func.isRequired,
+    updateContent: PropTypes.func,
 }
 
 AnnotationMetadataItem.defaultProps = {
     classes: {},
-    metadata: {},
-    t: key => key,
+    edit: null,
+    editable: false,
+    handleEdit: () => { },
+    updateContent: () => { },
 }
 
 export default AnnotationMetadataItem;

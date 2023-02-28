@@ -4,10 +4,9 @@ import PropTypes from 'prop-types';
 import { OSDReferences } from 'mirador/dist/es/src/plugins/OSDReferences';
 import { renderWithPaperScope, PaperContainer } from '@psychobolt/react-paperjs';
 import {
-EllipseTool,
-RectangleTool,
-FreeformPathTool,
-PanAndZoom,
+    EllipseTool,
+    RectangleTool,
+    FreeformPathTool,
 }
     from '@psychobolt/react-paperjs-editor';
 import { Point } from 'paper';
@@ -139,13 +138,14 @@ class AnnotationSvgDrawing extends Component {
 AnnotationSvgDrawing.propTypes = {
     activeTool: PropTypes.string,
     closed: PropTypes.bool,
+    edit: PropTypes.any,
     fillColor: PropTypes.string,
     strokeColor: PropTypes.string,
     strokeWidth: PropTypes.number,
     svg: PropTypes.string,
     updateGeometry: PropTypes.func.isRequired,
-    windowId: PropTypes.string.isRequired,
-};
+    windowId: PropTypes.string.isRequired
+}
 
 AnnotationSvgDrawing.defaultProps = {
     activeTool: null,

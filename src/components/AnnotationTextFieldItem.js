@@ -26,7 +26,7 @@ class AnnotationTextFieldItem extends Component {
                 hiddenLabel
                 onChange={this.onChange}
                 small
-                style={value ? { width: (value.length * 7.5) } : { width: 10}}
+                style={value ? { width: (value.length * 7.5) } : { width: 10 }}
                 value={value}
                 variant="standard"
             />
@@ -36,12 +36,7 @@ class AnnotationTextFieldItem extends Component {
 
 AnnotationTextFieldItem.propTypes = {
     updateValue: PropTypes.func.isRequired,
-    value: PropTypes.string.isRequired,
-}
-
-AnnotationTextFieldItem.defaultProps = {
-    updateValue: () => {},
-    value: '',
+    value: PropTypes.string.isRequired
 }
 
 export default AnnotationTextFieldItem;
