@@ -129,7 +129,7 @@ MiradorAnnotation.propTypes = {
       exportLocalStorageAnnotations: PropTypes.bool
     })
   }).isRequired,
-  createAnnotation: PropTypes.string.isRequired,
+  createAnnotation: PropTypes.bool.isRequired,
   switchToSingleCanvasView: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
   targetProps: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types

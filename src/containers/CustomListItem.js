@@ -12,16 +12,6 @@ const styles = (theme) => ({
         paddingLeft: theme.spacing(0),
         paddingRight: theme.spacing(0),
     },
-    main: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        width: '100%'
-    },
-    lineText: {
-        lineHeight: 1
-    },
-    content: {},
-    buttons: {},
 });
 
 const enhance = compose(

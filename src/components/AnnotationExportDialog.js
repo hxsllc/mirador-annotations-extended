@@ -72,7 +72,6 @@ class AnnotationExportDialog extends Component {
     render() {
         const {
             classes,
-            handleClose,
             open,
             t,
         } = this.props;
@@ -83,8 +82,7 @@ class AnnotationExportDialog extends Component {
             <Dialog
                 aria-labelledby="annotation-export-dialog-title"
                 id="annotation-export-dialog"
-                onClose={handleClose}
-                onEscapeKeyDown={this.closeDialog}
+                onClose={this.closeDialog}
                 open={open}
             >
                 <DialogTitle id="annotation-export-dialog-title" disableTypography>

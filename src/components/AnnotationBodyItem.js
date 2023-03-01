@@ -78,7 +78,6 @@ class AnnotationBodyItem extends Component {
     renderTag() {
         const {
             body,
-            windowId,
             t,
         } = this.props;
 
@@ -93,7 +92,6 @@ class AnnotationBodyItem extends Component {
                                 key={`${body._temp_id}-TextFieldItem`}
                                 updateValue={this.updateBodyValue}
                                 value={body.value}
-                                windowId={windowId}
                             />
                         )
                         : (body.value ? body.value : 'n.a.')
@@ -122,7 +120,6 @@ class AnnotationBodyItem extends Component {
             body,
             htmlSanitizationRuleSet,
             t,
-            windowId,
         } = this.props;
 
         const edit = this.editing();
@@ -160,7 +157,6 @@ class AnnotationBodyItem extends Component {
                                 key={`${body._temp_id}-TextEditorItem`}
                                 updateValue={this.updateBodyValue}
                                 value={body.value}
-                                windowId={windowId}
                             />
                         )
                         : (
@@ -202,20 +198,13 @@ class AnnotationBodyItem extends Component {
 }
 
 AnnotationBodyItem.propTypes = {
-    body: PropTypes.arrayOf(PropTypes.shape({
-        value: PropTypes.string,
-        type: PropTypes.string,
-        purpose: PropTypes.string,
-        _temp_id: PropTypes.string,
-        _temp_name: PropTypes.string
-    })).isRequired,
-    edit: PropTypes.any,
+    body: PropTypes.object.isRequired,
+    edit: PropTypes.string,
     handleDelete: PropTypes.func,
     handleEdit: PropTypes.func,
     htmlSanitizationRuleSet: PropTypes.string,
     t: PropTypes.func.isRequired,
     updateContent: PropTypes.func,
-    windowId: PropTypes.string.isRequired,
 }
 
 AnnotationBodyItem.defaultProps = {

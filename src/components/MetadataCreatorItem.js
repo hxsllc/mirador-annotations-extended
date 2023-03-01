@@ -27,7 +27,7 @@ class MetadataCreatorItem extends Component {
             <TextField
                 autoFocus
                 id={id}
-                value={value}
+                value={value ? value : ''}
                 onChange={this.handleTextFieldInput}
                 variant="standard"
             />
@@ -38,7 +38,11 @@ class MetadataCreatorItem extends Component {
 MetadataCreatorItem.propTypes = {
     handleChange: PropTypes.func.isRequired,
     id: PropTypes.string.isRequired,
-    value: PropTypes.string.isRequired,
+    value: PropTypes.string,
+}
+
+MetadataCreatorItem.defaultProps = {
+    value: '',
 }
 
 export default MetadataCreatorItem;

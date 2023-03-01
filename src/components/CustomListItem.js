@@ -19,9 +19,15 @@ class CustomListItem extends Component {
                 className={classes.container}
                 {...this.props}
             >
-                <div className={classes.main}>
+                <div
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        width: '100%'
+                    }}
+                    >
                     <ListItemText
-                        className={classes.lineText}
+                        style={{ lineHeight: 1 }}
                         primary={primary}
                         primaryTypographyProps={{
                             variant: 'body1'
@@ -31,11 +37,11 @@ class CustomListItem extends Component {
                             variant: "body2"
                         }}
                     />
-                    <div className={classes.buttons}>
+                    <div>
                         {buttons}
                     </div>
                 </div>
-                <div className={classes.content}>
+                <div>
                     {children}
                 </div>
             </ListItem>
@@ -48,14 +54,14 @@ CustomListItem.propTypes = {
     children: PropTypes.node,
     classes: PropTypes.objectOf(PropTypes.string),
     primary: PropTypes.string,
-    secondary: PropTypes.string,
+    secondary: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 }
 CustomListItem.defaultProps = {
     buttons: null,
     children: null,
     classes: {},
     primary: '',
-    secondary: '',
+    secondary: null,
 }
 
 export default CustomListItem;

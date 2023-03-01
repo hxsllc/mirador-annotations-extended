@@ -107,7 +107,6 @@ class AnnotationTargetItem extends Component {
      */
     renderSvgSelector() {
         const {
-            _temp_id,
             hoverBlock,
             t,
             target,
@@ -173,7 +172,8 @@ class AnnotationTargetItem extends Component {
                     edit={edit}
                     hover={hover}
                     blockTargetHover={blockTargetHover}
-                    key={`${_temp_id}-SvgSelector`}
+                    key={`${target._temp_id}-SvgSelector`}
+                    targetId={target._temp_id}
                     updateValue={this.updateTargetValue}
                     value={target.value}
                     windowId={windowId}
@@ -201,7 +201,6 @@ class AnnotationTargetItem extends Component {
 }
 
 AnnotationTargetItem.propTypes = {
-    _temp_id: PropTypes.string.isRequired,
     blockTargetHover: PropTypes.func.isRequired,
     classes: PropTypes.objectOf(PropTypes.string),
     edit: PropTypes.string,
@@ -209,13 +208,9 @@ AnnotationTargetItem.propTypes = {
     handleEdit: PropTypes.func.isRequired,
     hoverBlock: PropTypes.bool,
     t: PropTypes.func.isRequired,
-    target: PropTypes.arrayOf(PropTypes.shape({
-        value: PropTypes.string,
-        type: PropTypes.string,
-        purpose: PropTypes.string
-    })).isRequired,
+    target: PropTypes.object.isRequired,
     updateContent: PropTypes.func.isRequired,
-    windowId: PropTypes.any.isRequired,
+    windowId: PropTypes.string.isRequired,
 }
 
 AnnotationTargetItem.defaultProps = {

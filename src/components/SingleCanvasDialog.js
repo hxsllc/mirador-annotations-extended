@@ -44,7 +44,6 @@ class SingleCanvasDialog extends Component {
                 fullWidth
                 maxWidth="sm"
                 onClose={handleClose}
-                onEscapeKeyDown={handleClose}
                 open={open}
             >
                 <DialogTitle

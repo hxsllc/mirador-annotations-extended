@@ -11,7 +11,7 @@ class CustomTag extends Component {
 
         return (
             <Chip
-                className={classes.tag}
+                className={classes.root}
                 label={label}
                 {...this.props}
             />
@@ -21,12 +21,12 @@ class CustomTag extends Component {
 
 CustomTag.propTypes = {
     classes: PropTypes.objectOf(PropTypes.string),
-    label: PropTypes.string,
+    label: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
 }
 
 CustomTag.defaultProps = {
     classes: {},
-    label: '',
+    label: undefined,
 }
 
 export default CustomTag;

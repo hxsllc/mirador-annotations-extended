@@ -198,11 +198,12 @@ CanvasListItem.propTypes = {
     annotationid: PropTypes.string.isRequired,
     children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
     classes: PropTypes.objectOf(PropTypes.string),
-    t: PropTypes.func.isRequired,
+    t: PropTypes.func,
 }
 
 CanvasListItem.defaultProps = {
     classes: {},
+    t: key => key,
 }
 
 CanvasListItem.contextType = AnnotationActionsContext;

@@ -102,7 +102,6 @@ AnnotationTextEditorItem.propTypes = {
     classes: PropTypes.shape({
         editorRoot: PropTypes.string
     }).isRequired,
-    updateBodyValue: PropTypes.func.isRequired,
     updateValue: PropTypes.func.isRequired,
     value: PropTypes.string,
 }

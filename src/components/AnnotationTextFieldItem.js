@@ -25,7 +25,7 @@ class AnnotationTextFieldItem extends Component {
                 autoFocus
                 hiddenLabel
                 onChange={this.onChange}
-                small
+                size="small"
                 style={value ? { width: (value.length * 7.5) } : { width: 10 }}
                 value={value}
                 variant="standard"

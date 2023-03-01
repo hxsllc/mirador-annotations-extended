@@ -47,14 +47,14 @@ CustomSection.propTypes = {
     classes: PropTypes.objectOf(PropTypes.string),
     inner: PropTypes.bool,
     primary: PropTypes.string,
-    secondary: PropTypes.string,
+    secondary: PropTypes.object,
 }
 CustomSection.defaultProps = {
     buttons: null,
     classes: {},
     inner: false,
     primary: '',
-    secondary: '',
+    secondary: null,
 }
 
 export default CustomSection;

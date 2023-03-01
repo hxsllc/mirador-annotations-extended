@@ -39,6 +39,7 @@ class SelectorTools extends Component {
             colors,
             strokeColor,
             t,
+            // add key, nörgels about missing key
         } = this.props;
 
         return (
@@ -74,11 +75,12 @@ class SelectorTools extends Component {
                     </ToggleButtonGroup>
                 </div>
                 <div>
-                    {colors.map((value) => (
+                    {colors.map((value, index) => (
                         <Radio
                             aria-label={t('targetTools_color', { color: value })}
                             checked={strokeColor == value}
                             disabled={activeTool == 'edit'}
+                            key={index}
                             onChange={changeColor}
                             style={activeTool !== 'edit' ? { color: `${value}` } : {}}
                             value={value}
@@ -95,9 +97,7 @@ SelectorTools.propTypes = {
     blockTargetHover: PropTypes.func.isRequired,
     changeColor: PropTypes.func.isRequired,
     changeTool: PropTypes.func.isRequired,
-    colors: PropTypes.shape({
-        map: PropTypes.func
-    }).isRequired,
+    colors: PropTypes.arrayOf(PropTypes.string).isRequired,
     strokeColor: PropTypes.string.isRequired,
     t: PropTypes.func.isRequired,
 }
@@ -168,13 +168,14 @@ class TargetSvgSelector extends Component {
 
     render() {
         const {
+            blockTargetHover,
             classes,
             edit,
             hover,
+            t,
+            targetId,
             value,
             windowId,
-            blockTargetHover,
-            t,
         } = this.props;
 
         const {
@@ -197,12 +198,13 @@ class TargetSvgSelector extends Component {
                         edit && (
                             <SelectorTools
                                 activeTool={activeTool}
+                                blockTargetHover={blockTargetHover}
                                 changeTool={this.changeTool}
                                 changeColor={this.changeColor}
                                 colors={colors}
+                                key={`${targetId}-tools`}
                                 strokeColor={strokeColor}
                                 t={t}
-                                blockTargetHover={blockTargetHover}
                             />
                         )
                     }
@@ -232,12 +234,14 @@ TargetSvgSelector.propTypes = {
     edit: PropTypes.bool.isRequired,
     hover: PropTypes.bool.isRequired,
     t: PropTypes.func.isRequired,
+    targetId: PropTypes.string.isRequired,
     updateValue: PropTypes.func.isRequired,
-    value: PropTypes.string.isRequired,
+    value: PropTypes.string,
     windowId: PropTypes.string.isRequired,
 }
 TargetSvgSelector.defaultProps = {
     classes: {},
+    value: null,
 };
 
 export default TargetSvgSelector;

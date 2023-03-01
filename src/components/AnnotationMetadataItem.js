@@ -148,11 +148,7 @@ AnnotationMetadataItem.propTypes = {
     edit: PropTypes.string,
     editable: PropTypes.bool,
     handleEdit: PropTypes.func,
-    metadata: PropTypes.arrayOf(PropTypes.shape({
-        value: PropTypes.string,
-        type: PropTypes.string,
-        _temp_id: PropTypes.string
-    })).isRequired,
+    metadata: PropTypes.object.isRequired,
     t: PropTypes.func.isRequired,
     updateContent: PropTypes.func,
 }

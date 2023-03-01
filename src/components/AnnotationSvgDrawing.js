@@ -138,7 +138,7 @@ class AnnotationSvgDrawing extends Component {
 AnnotationSvgDrawing.propTypes = {
     activeTool: PropTypes.string,
     closed: PropTypes.bool,
-    edit: PropTypes.any,
+    edit: PropTypes.bool,
     fillColor: PropTypes.string,
     strokeColor: PropTypes.string,
     strokeWidth: PropTypes.number,
