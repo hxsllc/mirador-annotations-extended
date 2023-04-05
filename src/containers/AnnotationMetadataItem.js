@@ -5,22 +5,22 @@ import { withStyles } from '@material-ui/core/styles';
 import AnnotationMetadataItem from "../components/AnnotationMetadataItem";
 
 const styles = (theme) => ({
-    editAnnotation: {
-        backgroundColor: theme.palette.shades.light,
+  editAnnotation: {
+    backgroundColor: theme.palette.shades.light,
+  },
+  editAnnotationListItem: {
+    display: "inherit !important",
+    '&:last-child': {
+      borderBottom: 'none',
     },
-    editAnnotationListItem: {
-        display:"inherit !important",
-        '&:last-child': {
-            borderBottom: 'none',
-        },
-        paddingLeft: theme.spacing(0),
-        paddingRight: theme.spacing(0),
-    },
+    paddingLeft: theme.spacing(0),
+    paddingRight: theme.spacing(0),
+  },
 });
 
 const enhance = compose(
-    withTranslation(),
-    withStyles(styles),
+  withTranslation(),
+  withStyles(styles),
 );
 
 export default enhance(AnnotationMetadataItem);

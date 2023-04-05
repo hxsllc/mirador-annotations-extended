@@ -5,18 +5,18 @@ import TargetSvgSelector from '../components/TargetSvgSelector';
 
 
 const styles = (theme) => ({
-    selector: {},
-    hidden: {
-        display: 'none',
-    },
-    editAnnotationCollapse: {
-        padding: theme.spacing(1),
-    },
+  selector: {},
+  hidden: {
+    display: 'none',
+  },
+  editAnnotationCollapse: {
+    padding: theme.spacing(1),
+  },
 });
 
 const enhance = compose(
-    withTranslation(),
-    withStyles(styles),
+  withTranslation(),
+  withStyles(styles),
 );
 
 export default enhance(TargetSvgSelector);

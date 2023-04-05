@@ -12,207 +12,207 @@ import MiradorMenuButton from 'mirador/dist/es/src/containers/MiradorMenuButton'
 import { Typography } from '@material-ui/core';
 
 class AnnotationBodyItem extends Component {
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        this.confirm = this.confirm.bind(this);
-        this.delete = this.delete.bind(this);
-        this.edit = this.edit.bind(this);
-        this.editing = this.editing.bind(this);
-        this.updateBodyValue = this.updateBodyValue.bind(this);
+    this.confirm = this.confirm.bind(this);
+    this.delete = this.delete.bind(this);
+    this.edit = this.edit.bind(this);
+    this.editing = this.editing.bind(this);
+    this.updateBodyValue = this.updateBodyValue.bind(this);
+  }
+
+  componentDidMount() {
+    const {
+      body,
+      handleEdit,
+    } = this.props;
+
+    if (!body.value) {
+      handleEdit(body._temp_id, 'body');
     }
+  }
 
-    componentDidMount() {
-        const {
-            body,
-            handleEdit,
-        } = this.props;
+  edit() {
+    const {
+      body,
+      handleEdit,
+    } = this.props;
 
-        if (!body.value) {
-            handleEdit(body._temp_id, 'body');
+    handleEdit(body._temp_id, 'body');
+  }
+
+  confirm() {
+    const { handleEdit } = this.props;
+
+    handleEdit(null, 'body');
+  }
+
+  updateBodyValue(newValue) {
+    const {
+      body,
+      updateContent,
+    } = this.props;
+
+    updateContent('body', { value: newValue, type: body.type, purpose: body.purpose, _temp_id: body._temp_id, _temp_name: body._temp_name }, body._temp_id);
+  }
+
+  delete() {
+    const {
+      body,
+      handleDelete,
+    } = this.props;
+
+    handleDelete('body', body._temp_id);
+  }
+
+  editing() {
+    const {
+      body,
+      edit,
+    } = this.props;
+
+    return body._temp_id == edit;
+  }
+
+  renderTag() {
+    const {
+      body,
+      t,
+    } = this.props;
+
+    const edit = this.editing();
+
+    return (
+      <CustomTag
+        label={
+          edit
+            ? (
+              <AnnotationTextFieldItem
+                key={`${body._temp_id}-TextFieldItem`}
+                updateValue={this.updateBodyValue}
+                value={body.value}
+              />
+            )
+            : (body.value ? body.value : 'n.a.')
         }
-    }
+        variant={edit ? "default" : "outlined"}
+        color={edit ? "primary" : undefined}
+        onClick={() => edit ? null : this.edit()}
+        deleteIcon={
+          <MiradorMenuButton
+            aria-label={edit ? t('bodyBtn_confirm') : t('bodyBtn_delete')}
+          >
+            {
+              edit
+                ? <Check />
+                : <DeleteIcon />
+            }
+          </MiradorMenuButton>
+        }
+        onDelete={() => edit ? this.confirm() : this.delete()}
+      />
+    )
+  }
 
-    edit() {
-        const {
-            body,
-            handleEdit,
-        } = this.props;
+  renderTextField() {
+    const {
+      body,
+      htmlSanitizationRuleSet,
+      t,
+    } = this.props;
 
-        handleEdit(body._temp_id, 'body');
-    }
+    const edit = this.editing();
 
-    confirm() {
-        const { handleEdit } = this.props;
-
-        handleEdit(null, 'body');
-    }
-
-    updateBodyValue(newValue) {
-        const {
-            body,
-            updateContent,
-        } = this.props;
-
-        updateContent('body', { value: newValue, type: body.type, purpose: body.purpose, _temp_id: body._temp_id, _temp_name: body._temp_name }, body._temp_id);
-    }
-
-    delete() {
-        const {
-            body,
-            handleDelete,
-        } = this.props;
-
-        handleDelete('body', body._temp_id);
-    }
-
-    editing() {
-        const {
-            body,
-            edit,
-        } = this.props;
-
-        return body._temp_id == edit;
-    }
-
-    renderTag() {
-        const {
-            body,
-            t,
-        } = this.props;
-
-        const edit = this.editing();
-
-        return (
-            <CustomTag
-                label={
-                    edit
-                        ? (
-                            <AnnotationTextFieldItem
-                                key={`${body._temp_id}-TextFieldItem`}
-                                updateValue={this.updateBodyValue}
-                                value={body.value}
-                            />
-                        )
-                        : (body.value ? body.value : 'n.a.')
-                }
-                variant={edit ? "default" : "outlined"}
-                color={edit ? "primary" : undefined}
-                onClick={() => edit ? null : this.edit()}
-                deleteIcon={
-                    <MiradorMenuButton
-                        aria-label={edit ? t('bodyBtn_confirm') : t('bodyBtn_delete')}
-                    >
-                        {
-                            edit
-                                ? <Check />
-                                : <DeleteIcon />
-                        }
-                    </MiradorMenuButton>
-                }
-                onDelete={() => edit ? this.confirm() : this.delete()}
-            />
-        )
-    }
-
-    renderTextField() {
-        const {
-            body,
-            htmlSanitizationRuleSet,
-            t,
-        } = this.props;
-
-        const edit = this.editing();
-
-        return (
-            <CustomListItem
-                buttons={
-                    <>
-                        <MiradorMenuButton
-                            aria-label={edit ? t('bodyBtn_confirm') : t('bodyBtn_edit')}
-                            onClick={() => edit ? this.confirm() : this.edit()}
-                            size="small"
-                        >
-                            {
-                                edit
-                                    ? <Check />
-                                    : <EditIcon />
-                            }
-                        </MiradorMenuButton>
-                        <MiradorMenuButton
-                            aria-label={t('bodyBtn_delete')}
-                            onClick={this.delete}
-                            size="small"
-                        >
-                            <DeleteIcon />
-                        </MiradorMenuButton>
-                    </>
-                }
-                primary={body._temp_name}
+    return (
+      <CustomListItem
+        buttons={
+          <>
+            <MiradorMenuButton
+              aria-label={edit ? t('bodyBtn_confirm') : t('bodyBtn_edit')}
+              onClick={() => edit ? this.confirm() : this.edit()}
+              size="small"
             >
-                {
-                    edit
-                        ? (
-                            <AnnotationTextEditorItem
-                                key={`${body._temp_id}-TextEditorItem`}
-                                updateValue={this.updateBodyValue}
-                                value={body.value}
-                            />
-                        )
-                        : (
-                            body.value
-                                ? (
-                                    <Typography
-                                        color="textSecondary"
-                                        variant="body2"
-                                    >
-                                        <SanitizedHtml
-                                            htmlString={body.value}
-                                            ruleSet={htmlSanitizationRuleSet}
-                                        />
-                                    </Typography>
-                                )
-                                : ''
-                        )
-                }
-            </CustomListItem>
-        )
-    }
+              {
+                edit
+                  ? <Check />
+                  : <EditIcon />
+              }
+            </MiradorMenuButton>
+            <MiradorMenuButton
+              aria-label={t('bodyBtn_delete')}
+              onClick={this.delete}
+              size="small"
+            >
+              <DeleteIcon />
+            </MiradorMenuButton>
+          </>
+        }
+        primary={body._temp_name}
+      >
+        {
+          edit
+            ? (
+              <AnnotationTextEditorItem
+                key={`${body._temp_id}-TextEditorItem`}
+                updateValue={this.updateBodyValue}
+                value={body.value}
+              />
+            )
+            : (
+              body.value
+                ? (
+                  <Typography
+                    color="textSecondary"
+                    variant="body2"
+                  >
+                    <SanitizedHtml
+                      htmlString={body.value}
+                      ruleSet={htmlSanitizationRuleSet}
+                    />
+                  </Typography>
+                )
+                : ''
+            )
+        }
+      </CustomListItem>
+    )
+  }
 
-    render() {
-        const { body } = this.props;
+  render() {
+    const { body } = this.props;
 
-        return (
-            <>
-                {(() => {
-                    switch (body.purpose) {
-                        case 'tagging':
-                            return this.renderTag();
-                        default:
-                            return this.renderTextField();
-                    }
-                })()}
-            </>
-        )
-    }
+    return (
+      <>
+        {(() => {
+          switch (body.purpose) {
+            case 'tagging':
+              return this.renderTag();
+            default:
+              return this.renderTextField();
+          }
+        })()}
+      </>
+    )
+  }
 }
 
 AnnotationBodyItem.propTypes = {
-    body: PropTypes.object.isRequired,
-    edit: PropTypes.string,
-    handleDelete: PropTypes.func,
-    handleEdit: PropTypes.func,
-    htmlSanitizationRuleSet: PropTypes.string,
-    t: PropTypes.func.isRequired,
-    updateContent: PropTypes.func,
+  body: PropTypes.object.isRequired,
+  edit: PropTypes.string,
+  handleDelete: PropTypes.func,
+  handleEdit: PropTypes.func,
+  htmlSanitizationRuleSet: PropTypes.string,
+  t: PropTypes.func.isRequired,
+  updateContent: PropTypes.func,
 }
 
 AnnotationBodyItem.defaultProps = {
-    edit: null,
-    handleDelete: () => { },
-    handleEdit: () => { },
-    htmlSanitizationRuleSet: 'iiif',
-    updateContent: () => { },
+  edit: null,
+  handleDelete: () => { },
+  handleEdit: () => { },
+  htmlSanitizationRuleSet: 'iiif',
+  updateContent: () => { },
 }
 
 export default AnnotationBodyItem;

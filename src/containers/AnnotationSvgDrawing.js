@@ -3,7 +3,7 @@ import { withTranslation } from 'react-i18next';
 import AnnotationSvgDrawing from '../components/AnnotationSvgDrawing';
 
 const enhance = compose(
-    withTranslation(),
+  withTranslation(),
 );
 
 export default enhance(AnnotationSvgDrawing);

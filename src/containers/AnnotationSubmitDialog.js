@@ -4,7 +4,7 @@ import AnnotationSubmitDialog from '../components/AnnotationSubmitDialog';
 
 
 const enhance = compose(
-    withTranslation(),
+  withTranslation(),
 );
 
 export default enhance(AnnotationSubmitDialog);

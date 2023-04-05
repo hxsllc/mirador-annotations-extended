@@ -9,46 +9,46 @@ import CanvasAnnotationsWrapper from '../components/CanvasAnnotationsWrapper';
 
 /** */
 function mapStateToProps(state, { targetProps: { windowId } }) {
-    const canvases = getVisibleCanvases(state, { windowId });
-    const annotationsOnCanvases = {};
-    const annotationCreationCompanionWindows = getCompanionWindowsForContent(state, { content: 'annotationCreation', windowId });
-    var annotationEdit = true;
+  const canvases = getVisibleCanvases(state, { windowId });
+  const annotationsOnCanvases = {};
+  const annotationCreationCompanionWindows = getCompanionWindowsForContent(state, { content: 'annotationCreation', windowId });
+  var annotationEdit = true;
 
-    if(Object.keys(annotationCreationCompanionWindows).length !== 0) {
-        annotationEdit = false;
+  if (Object.keys(annotationCreationCompanionWindows).length !== 0) {
+    annotationEdit = false;
+  }
+
+  canvases.forEach((canvas) => {
+    const anno = state.annotations[canvas.id];
+    if (anno) {
+      annotationsOnCanvases[canvas.id] = anno;
     }
-
-    canvases.forEach((canvas) => {
-        const anno = state.annotations[canvas.id];
-        if (anno) {
-            annotationsOnCanvases[canvas.id] = anno;
-        }
-    });
-    return {
-        annotationsOnCanvases,
-        canvases,
-        config: state.config,
-        createAnnotation: annotationEdit,
-        windowViewType: getWindowViewType(state, { windowId }),
-    };
+  });
+  return {
+    annotationsOnCanvases,
+    canvases,
+    config: state.config,
+    createAnnotation: annotationEdit,
+    windowViewType: getWindowViewType(state, { windowId }),
+  };
 }
 
 /** */
 const mapDispatchToProps = (dispatch, props) => ({
-    addCompanionWindow: (content, additionalProps) => dispatch(
-        actions.addCompanionWindow(props.targetProps.windowId, { content, ...additionalProps }),
-    ),
-    receiveAnnotation: (targetId, id, annotation) => dispatch(
-        actions.receiveAnnotation(targetId, id, annotation),
-    ),
-    switchToSingleCanvasView: () => dispatch(
-        actions.setWindowViewType(props.targetProps.windowId, 'single'),
-    ),
+  addCompanionWindow: (content, additionalProps) => dispatch(
+    actions.addCompanionWindow(props.targetProps.windowId, { content, ...additionalProps }),
+  ),
+  receiveAnnotation: (targetId, id, annotation) => dispatch(
+    actions.receiveAnnotation(targetId, id, annotation),
+  ),
+  switchToSingleCanvasView: () => dispatch(
+    actions.setWindowViewType(props.targetProps.windowId, 'single'),
+  ),
 });
 
 const enhance = compose(
-    withTranslation(),
-    connect(mapStateToProps, mapDispatchToProps),
+  withTranslation(),
+  connect(mapStateToProps, mapDispatchToProps),
 );
 
 export default enhance(CanvasAnnotationsWrapper);

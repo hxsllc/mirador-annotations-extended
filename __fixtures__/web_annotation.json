@@ -9,6 +9,11 @@
       },
       "id": "https://example.org/iiif/book1/page/manifest/efb5757d-899b-4551-a7ab-5cb5d1d0eb02",
       "motivation": "commenting",
+      "creator": {
+        "type": "Person",
+        "name": "custom creator",
+        "id": "https://example.org/user/1"
+      },
       "target": {
         "id": "https://iiif.harvardartmuseums.org/manifests/object/299843/canvas/canvas-47174896",
         "selector": {

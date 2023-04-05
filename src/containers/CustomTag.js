@@ -4,15 +4,15 @@ import { withStyles } from '@material-ui/core/styles';
 import CustomTag from '../components/CustomTag';
 
 const styles = (theme) => ({
-    root: {
-        marginRight: theme.spacing(0.5),
-        marginTop: theme.spacing(1),
-    },
+  root: {
+    marginRight: theme.spacing(0.5),
+    marginTop: theme.spacing(1),
+  },
 });
 
 const enhance = compose(
-    withTranslation(),
-    withStyles(styles),
+  withTranslation(),
+  withStyles(styles),
 );
 
 export default enhance(CustomTag);

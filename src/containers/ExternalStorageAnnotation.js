@@ -5,18 +5,18 @@ import { getVisibleCanvases } from 'mirador/dist/es/src/state/selectors/canvases
 import ExternalStorageAnnotation from '../components/ExternalStorageAnnotation';
 
 const mapDispatchToProps = {
-    receiveAnnotation: actions.receiveAnnotation,
+  receiveAnnotation: actions.receiveAnnotation,
 };
 
 function mapStateToProps(state, { targetProps }) {
-    return {
-        canvases: getVisibleCanvases(state, { windowId: targetProps.windowId }),
-        config: state.config,
-    };
+  return {
+    canvases: getVisibleCanvases(state, { windowId: targetProps.windowId }),
+    config: state.config,
+  };
 }
 
 const enhance = compose(
-    connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps, mapDispatchToProps),
 );
 
 export default enhance(ExternalStorageAnnotation);
