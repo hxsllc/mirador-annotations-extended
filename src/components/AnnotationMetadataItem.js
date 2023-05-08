@@ -2,37 +2,30 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Check } from '@material-ui/icons';
 import EditIcon from '@material-ui/icons/Edit';
+import MiradorMenuButton from 'mirador/dist/es/src/containers/MiradorMenuButton';
 import MetadataCreatorItem from '../containers/MetadataCreatorItem';
 import MetadataMotivationItem from '../containers/MetadataMotivationItem';
 import CustomListItem from '../containers/CustomListItem';
-import MiradorMenuButton from 'mirador/dist/es/src/containers/MiradorMenuButton';
-
 
 class AnnotationMetadataItem extends Component {
+  /** */
   constructor(props) {
     super(props);
 
-    this.edit = this.edit.bind(this);
-    this.editing = this.editing.bind(this);
     this.confirm = this.confirm.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.edit = this.edit.bind(this);
+    this.editing = this.editing.bind(this);
   }
 
-  edit() {
-    const {
-      handleEdit,
-      metadata,
-    } = this.props;
-
-    handleEdit(metadata._temp_id, 'metadata');
-  }
-
+  /** */
   confirm() {
     const { handleEdit } = this.props;
 
     handleEdit(null, 'metadata');
   }
 
+  /** */
   handleChange(newValue) {
     const {
       metadata,
@@ -42,6 +35,17 @@ class AnnotationMetadataItem extends Component {
     updateContent('metadata', { value: newValue, type: metadata.type, _temp_id: metadata._temp_id }, metadata._temp_id);
   }
 
+  /** */
+  edit() {
+    const {
+      handleEdit,
+      metadata,
+    } = this.props;
+
+    handleEdit(metadata._temp_id, 'metadata');
+  }
+
+  /** */
   editing() {
     const {
       edit,
@@ -51,6 +55,7 @@ class AnnotationMetadataItem extends Component {
     return metadata._temp_id == edit;
   }
 
+  /** */
   renderCreator() {
     const {
       metadata,
@@ -69,11 +74,12 @@ class AnnotationMetadataItem extends Component {
               handleChange={this.handleChange}
             />
           )
-          : (metadata.value ? metadata.value : t('creator_default'))
+          : (metadata.value ? metadata.value : t('value_default'))
       }
-    )
+    );
   }
 
+  /** */
   renderMotivation() {
     const { metadata } = this.props;
     const edit = this.editing();
@@ -90,9 +96,10 @@ class AnnotationMetadataItem extends Component {
           )
           : (metadata.value ? metadata.value : '')
       }
-    )
+    );
   }
 
+  /** */
   render() {
     const {
       editable,
@@ -114,7 +121,7 @@ class AnnotationMetadataItem extends Component {
                 {...(editable && {
                   buttons:
                     <MiradorMenuButton
-                      aria-label={edit ? t('metadataBtn_edit') : t('metadataBtn_confirm')}
+                      aria-label={edit ? t('metadataBtn_confirm') : t('metadataBtn_edit')}
                       size="small"
                       onClick={() => edit ? this.confirm() : this.edit()}
                     >
@@ -139,7 +146,7 @@ class AnnotationMetadataItem extends Component {
             )
         }
       </>
-    )
+    );
   }
 }
 
@@ -151,7 +158,7 @@ AnnotationMetadataItem.propTypes = {
   metadata: PropTypes.object.isRequired,
   t: PropTypes.func.isRequired,
   updateContent: PropTypes.func,
-}
+};
 
 AnnotationMetadataItem.defaultProps = {
   classes: {},
@@ -159,6 +166,6 @@ AnnotationMetadataItem.defaultProps = {
   editable: false,
   handleEdit: () => { },
   updateContent: () => { },
-}
+};
 
 export default AnnotationMetadataItem;

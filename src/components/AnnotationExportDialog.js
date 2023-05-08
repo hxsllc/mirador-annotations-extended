@@ -10,7 +10,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
 import PropTypes, { bool } from 'prop-types';
 
-
 /** */
 class AnnotationExportDialog extends Component {
   /** */
@@ -144,7 +143,6 @@ AnnotationExportDialog.propTypes = {
 
 AnnotationExportDialog.defaultProps = {
   classes: {},
-  t: key => key,
 };
 
 export default AnnotationExportDialog;

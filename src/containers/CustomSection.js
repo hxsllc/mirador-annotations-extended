@@ -20,9 +20,18 @@ const styles = (theme) => ({
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2),
   },
-  secondaryTitle: {},
-  primaryTitle: {},
-  description: {},
+  secondaryTitle: {
+    fontSize: "16px",
+    letterSpacing: "0em",
+    lineHeight: "1.2em"
+  },
+  primaryTitle: {
+    fontSize: "18px",
+    letterSpacing: "0.007em",
+    lineHeight: "1.45em"
+  },
+  description: { 
+  },
   heading: {
     //marginBottom: theme.spacing(1),
   },

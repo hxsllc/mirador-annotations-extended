@@ -1,7 +1,7 @@
 {
-  "name": "mirador-annotations",
+  "name": "mirador-annotations-extend-plugin",
   "version": "0.5.0",
-  "description": "mirador-annotations React component",
+  "description": "mirador-annotations-extend-plugin React component",
   "main": "lib/index.js",
   "module": "es/index.js",
   "files": [

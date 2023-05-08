@@ -83,8 +83,8 @@ AnnotationSubmitDialog.propTypes = {
   handleClose: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   open: PropTypes.bool,
-  t: PropTypes.func.isRequired
-}
+  t: PropTypes.func.isRequired,
+};
 
 AnnotationSubmitDialog.defaultProps = {
   open: false,

@@ -14,7 +14,13 @@ const styles = (theme) => ({
     justifyContent: 'space-between',
     backgroundColor: theme.palette.primary.light,
   },
-  heading: {},
+  heading: {
+    fontSize: '15px',
+    fontWeight: 500,
+    lineHeight: '2rem',
+    letterSpacing: '0.166rem',
+    textTransform: 'uppercase',
+  },
   buttons: {},
 });
 

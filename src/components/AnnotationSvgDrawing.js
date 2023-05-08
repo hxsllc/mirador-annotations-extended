@@ -7,8 +7,7 @@ import {
   EllipseTool,
   RectangleTool,
   FreeformPathTool,
-}
-  from '@psychobolt/react-paperjs-editor';
+} from '@psychobolt/react-paperjs-editor';
 import { Point } from 'paper';
 import flatten from 'lodash/flatten';
 import EditTool from './EditTool';
@@ -39,11 +38,8 @@ class AnnotationSvgDrawing extends Component {
     const svgExports = flatten(path.project.layers.map((layer) => (
       flatten(mapChildren(layer)).map((aPath) => aPath.exportSVG({ asString: true }))
     )));
-    // no enclosing tags here
-    /*svgExports.unshift("<svg xmlns='http://www.w3.org/2000/svg'>");
-    svgExports.push('</svg>');*/
     updateGeometry({
-      svg: svgExports.join('')
+      svg: svgExports.join(''),
     });
   }
 

@@ -150,8 +150,8 @@ class CanvasListItem extends Component {
         <div className={this.editing() ? classes.containeractive : classes.container}>
           <div className={classes.heading}>
             <Typography
-              variant="overline" >
-              {creator ? creator : t('creator_default')}
+              variant={classes.heading} >
+              {creator ? creator : t('value_default')}
             </Typography>
           </div>
 

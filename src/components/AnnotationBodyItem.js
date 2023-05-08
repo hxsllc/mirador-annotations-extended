@@ -3,15 +3,17 @@ import PropTypes from 'prop-types';
 import { Check } from '@material-ui/icons';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
 import EditIcon from '@material-ui/icons/Edit';
+import { Typography } from '@material-ui/core';
+import SanitizedHtml from 'mirador/dist/es/src/containers/SanitizedHtml';
+import MiradorMenuButton from 'mirador/dist/es/src/containers/MiradorMenuButton';
 import AnnotationTextEditorItem from '../containers/AnnotationTextEditorItem';
 import AnnotationTextFieldItem from '../containers/AnnotationTextFieldItem';
 import CustomListItem from '../containers/CustomListItem';
 import CustomTag from '../containers/CustomTag';
-import SanitizedHtml from 'mirador/dist/es/src/containers/SanitizedHtml';
-import MiradorMenuButton from 'mirador/dist/es/src/containers/MiradorMenuButton';
-import { Typography } from '@material-ui/core';
 
+/** */
 class AnnotationBodyItem extends Component {
+  /** */
   constructor(props) {
     super(props);
 
@@ -22,6 +24,7 @@ class AnnotationBodyItem extends Component {
     this.updateBodyValue = this.updateBodyValue.bind(this);
   }
 
+  /** */
   componentDidMount() {
     const {
       body,
@@ -33,6 +36,7 @@ class AnnotationBodyItem extends Component {
     }
   }
 
+  /** */
   edit() {
     const {
       body,
@@ -42,21 +46,30 @@ class AnnotationBodyItem extends Component {
     handleEdit(body._temp_id, 'body');
   }
 
+  /** */
   confirm() {
     const { handleEdit } = this.props;
 
     handleEdit(null, 'body');
   }
 
+  /** */
   updateBodyValue(newValue) {
     const {
       body,
       updateContent,
     } = this.props;
 
-    updateContent('body', { value: newValue, type: body.type, purpose: body.purpose, _temp_id: body._temp_id, _temp_name: body._temp_name }, body._temp_id);
+    updateContent('body', {
+      _temp_id: body._temp_id,
+      _temp_name: body._temp_name,
+      purpose: body.purpose,
+      type: body.type,
+      value: newValue,
+    }, body._temp_id);
   }
 
+  /** */
   delete() {
     const {
       body,
@@ -66,6 +79,7 @@ class AnnotationBodyItem extends Component {
     handleDelete('body', body._temp_id);
   }
 
+  /** */
   editing() {
     const {
       body,
@@ -75,6 +89,7 @@ class AnnotationBodyItem extends Component {
     return body._temp_id == edit;
   }
 
+  /** */
   renderTag() {
     const {
       body,
@@ -94,11 +109,11 @@ class AnnotationBodyItem extends Component {
                 value={body.value}
               />
             )
-            : (body.value ? body.value : 'n.a.')
+            : (body.value ? body.value : t('value_default'))
         }
         variant={edit ? "default" : "outlined"}
         color={edit ? "primary" : undefined}
-        onClick={() => edit ? null : this.edit()}
+        onClick={() => { edit ? null : this.edit() }}
         deleteIcon={
           <MiradorMenuButton
             aria-label={edit ? t('bodyBtn_confirm') : t('bodyBtn_delete')}
@@ -110,11 +125,12 @@ class AnnotationBodyItem extends Component {
             }
           </MiradorMenuButton>
         }
-        onDelete={() => edit ? this.confirm() : this.delete()}
+        onDelete={() => { edit ? this.confirm() : this.delete() }}
       />
-    )
+    );
   }
 
+  /** */
   renderTextField() {
     const {
       body,
@@ -127,7 +143,7 @@ class AnnotationBodyItem extends Component {
     return (
       <CustomListItem
         buttons={
-          <>
+          <React.Fragment>
             <MiradorMenuButton
               aria-label={edit ? t('bodyBtn_confirm') : t('bodyBtn_edit')}
               onClick={() => edit ? this.confirm() : this.edit()}
@@ -146,7 +162,7 @@ class AnnotationBodyItem extends Component {
             >
               <DeleteIcon />
             </MiradorMenuButton>
-          </>
+          </React.Fragment>
         }
         primary={body._temp_name}
       >
@@ -176,9 +192,10 @@ class AnnotationBodyItem extends Component {
             )
         }
       </CustomListItem>
-    )
+    );
   }
 
+  /** */
   render() {
     const { body } = this.props;
 
@@ -193,7 +210,7 @@ class AnnotationBodyItem extends Component {
           }
         })()}
       </>
-    )
+    );
   }
 }
 
@@ -205,7 +222,7 @@ AnnotationBodyItem.propTypes = {
   htmlSanitizationRuleSet: PropTypes.string,
   t: PropTypes.func.isRequired,
   updateContent: PropTypes.func,
-}
+};
 
 AnnotationBodyItem.defaultProps = {
   edit: null,
@@ -213,6 +230,6 @@ AnnotationBodyItem.defaultProps = {
   handleEdit: () => { },
   htmlSanitizationRuleSet: 'iiif',
   updateContent: () => { },
-}
+};
 
 export default AnnotationBodyItem;

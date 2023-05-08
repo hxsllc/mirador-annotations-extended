@@ -21,6 +21,10 @@ class AnnotationCreation extends Component {
     const { t } = this.props;
 
     const annoState = {};
+    let tempBody = {};
+    let tempCreator = {};
+    let tempMotivation = {};
+    let tempTarget = {};
 
     /**
      * apply scheme to annotation for editing form
@@ -38,18 +42,18 @@ class AnnotationCreation extends Component {
       annoState.metadataCount = 0;
 
       /** add/transform basic fields for given metadata */
-      var tempCreator = {
+      tempCreator = {
+        _temp_id: annoState.annoId + '-metadata-item-' + annoState.metadataCount,
         type: 'creator',
         value: props.annotation.creator && props.annotation.creator.name ? props.annotation.creator.name : null,
-        _temp_id: annoState.annoId + '-metadata-item-' + annoState.metadataCount
       };
       annoState.metadata.push(tempCreator);
       annoState.metadataCount++;
 
-      var tempMotivation = {
+      tempMotivation = {
+        _temp_id: annoState.annoId + '-metadata-item-' + annoState.metadataCount,
         type: 'motivation',
         value: props.annotation.motivation ? props.annotation.motivation : null,
-        _temp_id: annoState.annoId + '-metadata-item-' + annoState.metadataCount
       };
       annoState.metadata.push(tempMotivation);
       annoState.metadataCount++;
@@ -58,26 +62,25 @@ class AnnotationCreation extends Component {
       annoState.body = [];
       annoState.bodyCount = 0;
       if (props.annotation.body) {
-        var tempBody = {};
         if (Array.isArray(props.annotation.body)) {
           props.annotation.body.forEach((body) => {
             tempBody = {
-              type: body.type ? body.type : null,
-              purpose: body.purpose ? body.purpose : null,
-              value: body.value,
               _temp_id: annoState.annoId + '-body-item-' + annoState.bodyCount,
-              _temp_name: t('body', { count: annoState.bodyCount }),
+              _temp_name: t('body'),
+              purpose: body.purpose ? body.purpose : null,
+              type: body.type ? body.type : null,
+              value: body.value,
             };
             annoState.body.push(tempBody);
             annoState.bodyCount++;
           });
         } else {
           tempBody = {
-            type: props.annotation.body.type ? props.annotation.body.type : null,
-            purpose: props.annotation.body.purpose ? props.annotation.body.purpose : null,
-            value: props.annotation.body.value,
             _temp_id: annoState.annoId + '-body-item-' + annoState.bodyCount,
-            _temp_name: t('body', { count: annoState.bodyCount }),
+            _temp_name: t('body'),
+            purpose: props.annotation.body.purpose ? props.annotation.body.purpose : null,
+            type: props.annotation.body.type ? props.annotation.body.type : null,
+            value: props.annotation.body.value,
           };
           annoState.body.push(tempBody);
           annoState.bodyCount++;
@@ -88,28 +91,27 @@ class AnnotationCreation extends Component {
       annoState.target = [];
       annoState.targetCount = 0;
       if (props.annotation.target.selector) {
-        var tempTarget = {};
         if (Array.isArray(props.annotation.target.selector)) {
           props.annotation.target.selector.forEach((selector) => {
             if (selector.type == 'SvgSelector') {
-              var svgObject = new DOMParser().parseFromString(selector.value, "image/svg+xml");
-              var pathObjects = svgObject.querySelectorAll('path');
+              const svgObject = new DOMParser().parseFromString(selector.value, 'image/svg+xml');
+              const pathObjects = svgObject.querySelectorAll('path');
               pathObjects.forEach(path => {
                 tempTarget = {
+                  _temp_id: annoState.annoId + '-target-item-' + annoState.targetCount,
+                  _temp_name: t('target'),
                   type: selector.type ? selector.type : null,
                   value: path.outerHTML,
-                  _temp_id: annoState.annoId + '-target-item-' + annoState.targetCount,
-                  _temp_name: t('target', { count: annoState.targetCount }),
                 };
                 annoState.target.push(tempTarget);
                 annoState.targetCount++;
               });
             } else {
               tempTarget = {
+                _temp_id: annoState.annoId + '-target-item-' + annoState.targetCount,
+                _temp_name: t('target'),
                 type: selector.type ? selector.type : null,
                 value: selector.value,
-                _temp_id: annoState.annoId + '-target-item-' + annoState.targetCount,
-                _temp_name: t('target', { count: annoState.targetCount }),
               };
               annoState.target.push(tempTarget);
               annoState.targetCount++;
@@ -117,10 +119,10 @@ class AnnotationCreation extends Component {
           });
         } else {
           tempTarget = {
+            _temp_id: annoState.annoId + '-target-item-' + annoState.targetCount,
+            _temp_name: t('target'),
             type: props.annotation.target.selector.type ? props.annotation.target.selector.type : null,
             value: props.annotation.target.selector.value,
-            _temp_id: annoState.annoId + '-target-item-' + annoState.targetCount,
-            _temp_name: t('target', { count: annoState.targetCount }),
           };
           annoState.target.push(tempTarget);
           annoState.targetCount++;
@@ -131,18 +133,18 @@ class AnnotationCreation extends Component {
       annoState.annoId = uuid();
       annoState.metadata = [];
       annoState.metadataCount = 0;
-      var tempCreator = {
+      tempCreator = {
+        _temp_id: annoState.annoId + '-metadata-item-' + annoState.metadataCount,
         type: 'creator',
         value: null,
-        _temp_id: annoState.annoId + '-metadata-item-' + annoState.metadataCount
       };
       annoState.metadata.push(tempCreator);
       annoState.metadataCount++;
 
-      var tempMotivation = {
+      tempMotivation = {
+        _temp_id: annoState.annoId + '-metadata-item-' + annoState.metadataCount,
         type: 'motivation',
         value: 'commenting',
-        _temp_id: annoState.annoId + '-metadata-item-' + annoState.metadataCount
       };
       annoState.metadata.push(tempMotivation);
       annoState.metadataCount++;
@@ -186,27 +188,27 @@ class AnnotationCreation extends Component {
       target,
     } = this.state;
 
-    var dataPos = null;
-    var index = 0;
-    var newData = null;
+    let dataPos = null;
+    let index = 0;
+    let newData = null;
 
     switch (type) {
-      case "target":
+      case 'target':
         while (index < target.length && !dataPos) {
           if (target[index]._temp_id == _temp_id) {
             dataPos = index;
-          };
+          }
           index++;
         }
         newData = target;
         newData.splice(dataPos, 1);
         this.setState({ target: newData });
         break;
-      case "body":
+      case 'body':
         while (index < body.length && !dataPos) {
           if (body[index]._temp_id == _temp_id) {
             dataPos = index;
-          };
+          }
           index++;
         }
         newData = body;
@@ -234,34 +236,34 @@ class AnnotationCreation extends Component {
 
     const { t } = this.props;
 
-    var newData = null;
+    let newData = null;
 
     switch (type) {
-      case "target":
-        const targetBase = {
+      case 'target':
+        let targetBase = {
+          _temp_id: annoId + '-target-item-' + targetCount,
+          _temp_name: t('target'),
           type: 'SvgSelector',
           value: null,
-          _temp_id: annoId + '-target-item-' + targetCount,
-          _temp_name: t('target', { count: targetCount }),
         };
         newData = target.concat(targetBase);
         this.setState({
           target: newData,
-          targetCount: targetCount + 1
+          targetCount: targetCount + 1,
         });
         break;
-      case "body":
-        const bodyBase = {
+      case 'body':
+        let bodyBase = {
+          _temp_id: annoId + '-body-item-' + bodyCount,
+          _temp_name: t('body'),
+          purpose: subType,
           type: 'TextualBody',
           value: '',
-          purpose: subType,
-          _temp_id: annoId + '-body-item-' + bodyCount,
-          _temp_name: t('body', { count: bodyCount }),
         };
         newData = body.concat(bodyBase);
         this.setState({
           body: newData,
-          bodyCount: bodyCount + 1
+          bodyCount: bodyCount + 1,
         });
         break;
       default:
@@ -280,38 +282,38 @@ class AnnotationCreation extends Component {
       target,
     } = this.state;
 
-    var dataPos = null;
-    var index = 0;
-    var newData = null;
+    let dataPos = null;
+    let index = 0;
+    let newData = null;
 
     switch (type) {
-      case "target":
+      case 'target':
         while (index < target.length && !dataPos) {
           if (target[index]._temp_id == _temp_id) {
             dataPos = index;
-          };
+          }
           index++;
         }
         newData = target;
         newData[dataPos] = content;
         this.setState({ target: newData });
         break;
-      case "metadata":
+      case 'metadata':
         while (index < metadata.length && !dataPos) {
           if (metadata[index]._temp_id == _temp_id) {
             dataPos = index;
-          };
+          }
           index++;
         }
         newData = metadata;
         newData[dataPos] = content;
         this.setState({ metadata: newData });
         break;
-      case "body":
+      case 'body':
         while (index < body.length && !dataPos) {
           if (body[index]._temp_id == _temp_id) {
             dataPos = index;
-          };
+          }
           index++;
         }
         newData = body;
@@ -389,19 +391,21 @@ class AnnotationCreation extends Component {
     } = this.state;
 
     canvases.forEach((canvas) => {
+      const tBody = body;
+      const tTarget = target;
+      let targets = null;
+
       const storageAdapter = config.annotation.adapter(canvas.id);
-      var tBody = body;
-      var tTarget = target;
+
       tTarget.forEach(a => delete a._temp_id);
       tTarget.forEach(a => delete a._temp_name);
 
-      var targets = null;
       if (target.length !== 0) {
         /**
          * combine svg-paths to one path
          * necessary as viewer displays only one svg target
         */
-        const tSvgTargetArray = "<svg xmlns='http://www.w3.org/2000/svg'>" + tTarget.filter(a => a.type == 'SvgSelector')?.map(a => a.value).join('') + "</svg>";
+        const tSvgTargetArray = '<svg xmlns="http://www.w3.org/2000/svg">' + tTarget.filter(a => a.type == 'SvgSelector')?.map(a => a.value).join('') + '</svg>';
 
         /**
          * include different targets
@@ -418,11 +422,11 @@ class AnnotationCreation extends Component {
       const anno = new WebAnnotation({
         body: tBody,
         canvasId: canvas.id,
+        creator: metadata.find(item => item.type == 'creator').value,
         id: (annotation && annotation.id) || annoId,
         manifestId: canvas.options.resource.id,
-        target: targets,
-        creator: metadata.find(item => item.type == 'creator').value,
         motivation: metadata.find(item => item.type == 'motivation').value,
+        target: targets,
       }).toJson();
 
       if (annotation) {
@@ -447,6 +451,7 @@ class AnnotationCreation extends Component {
     } = this.props;
 
     const {
+      annotationSubmitDialogOpen,
       blockTargetHover,
       body,
       bodyEditState,
@@ -454,7 +459,6 @@ class AnnotationCreation extends Component {
       metadataEditState,
       target,
       targetEditState,
-      annotationSubmitDialogOpen,
     } = this.state;
 
     return (
@@ -468,7 +472,7 @@ class AnnotationCreation extends Component {
         {/* metadata section */}
         <CustomSection
           primary={t('headerLabel_metadata')}
-          //secondary='test'
+          // secondary='test'
           id={`${id}-metadata`}
         >
           <List disablePadding>
@@ -609,7 +613,7 @@ AnnotationCreation.propTypes = {
   annotation: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   canvases: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string,
-    index: PropTypes.number
+    index: PropTypes.number,
   })),
   classes: PropTypes.objectOf(PropTypes.string),
   closeCompanionWindow: PropTypes.func,
@@ -617,15 +621,15 @@ AnnotationCreation.propTypes = {
     annotation: PropTypes.shape({
       adapter: PropTypes.func,
       defaults: PropTypes.objectOf(
-        PropTypes.oneOfType([PropTypes.bool, PropTypes.func, PropTypes.number, PropTypes.string])
-      )
-    })
+        PropTypes.oneOfType([PropTypes.bool, PropTypes.func, PropTypes.number, PropTypes.string]),
+      ),
+    }),
   }).isRequired,
   id: PropTypes.string.isRequired,
   receiveAnnotation: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
-  windowId: PropTypes.string.isRequired
-}
+  windowId: PropTypes.string.isRequired,
+};
 
 AnnotationCreation.defaultProps = {
   annotation: null,
