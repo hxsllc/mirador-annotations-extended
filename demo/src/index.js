@@ -2,13 +2,17 @@
 import mirador from 'mirador/dist/es/src/index';
 import annotationPlugins from '../../src';
 import LocalStorageAdapter from '../../src/adapters/LocalStorageAdapter';
+import AnnotationStoreAdapter from '../../src/adapters/AnnotationStoreAdapter';
 
-const endpointUrl = 'http://127.0.0.1:3000/annotations';
+// const endpointUrl = 'http://127.0.0.1:3000/annotations';
+// const SERVER_URL = 'http://127.0.0.1:8000';
+const SERVER_URL = 'https://ds20.reclaim.hosting/annophp/public';
 
 const config = {
     annotation: {
-        adapter: (canvasId) => new LocalStorageAdapter(`localStorage://?canvasId=${canvasId}`),
-        // exportLocalStorageAnnotations: true, // display annotation JSON export button
+        // adapter: (canvasId) => new LocalStorageAdapter(`localStorage://?canvasId=${canvasId}`),
+        adapter: (canvasId) => new AnnotationStoreAdapter(canvasId, SERVER_URL),
+        exportLocalStorageAnnotations: false, // display annotation JSON export button
     },
     id: 'demo',
     window: {
