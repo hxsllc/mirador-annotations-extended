@@ -2,10 +2,11 @@
 export default class WebAnnotation {
   /** */
   constructor({
-    body, canvasId, creator, id, motivation, manifestId, target,
+    body, canvasId, creator, category, id, motivation, manifestId, target,
   }) {
     this.id = id;
     this.canvasId = canvasId;
+    this.category = category;
     this.target = target;
     this.body = body;
     this.creator = creator;
@@ -19,8 +20,10 @@ export default class WebAnnotation {
       return {
         body: this.body,
         creator: this.returnCreator(),
+        createdOn: this.returnCurTime(),
         id: this.id,
         motivation: this.returnMotivation(),
+        category: this.category,
         target: this.returnTarget(),
         type: 'Annotation',
       };
@@ -29,9 +32,18 @@ export default class WebAnnotation {
       body: this.body,
       id: this.id,
       motivation: this.returnMotivation(),
+      category: this.category,
+      createdOn: this.returnCurTime(),
       target: this.returnTarget(),
       type: 'Annotation',
     };
+  }
+
+  returnCurTime() {
+    var now = new Date();
+
+    var dformat = [now.getMonth() + 1, now.getDate(), now.getFullYear()].join('/') + ' ' + [now.getHours(), now.getMinutes(), now.getSeconds()].join(':');
+    return dformat;
   }
 
   /** */

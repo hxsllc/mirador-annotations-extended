@@ -11,6 +11,7 @@ import AnnotationMetadataItem from '../containers/AnnotationMetadataItem';
 import AnnotationTargetItem from '../containers/AnnotationTargetItem';
 import AnnotationSubmitDialog from '../containers/AnnotationSubmitDialog';
 import CustomSection from '../containers/CustomSection';
+import AnnotationCategoryList from '../containers/AnnotationCategoryList';
 import WebAnnotation from '../WebAnnotation';
 
 /** */
@@ -161,6 +162,7 @@ class AnnotationCreation extends Component {
       metadata: [], // metadata data
       metadataCount: 0, // global metadata count
       metadataEditState: null, // indicates current edited metadata item
+      category: [], // category data
       target: [], // target data
       targetCount: 0, // global target count
       targetEditState: null, // indicates current edited target item
@@ -279,6 +281,7 @@ class AnnotationCreation extends Component {
     const {
       body,
       metadata,
+      category,
       target,
     } = this.state;
 
@@ -308,6 +311,21 @@ class AnnotationCreation extends Component {
         newData = metadata;
         newData[dataPos] = content;
         this.setState({ metadata: newData });
+        break;
+      case 'category':
+        while (index < category.length && !dataPos) {
+          if (category[index].value == content.value) {
+            category.splice(index, 1);
+            break;
+          }
+
+          index++;
+        }
+
+        if (content.checked)
+          category.push(content);
+
+        this.setState({ category: category });
         break;
       case 'body':
         while (index < body.length && !dataPos) {
@@ -362,6 +380,7 @@ class AnnotationCreation extends Component {
 
   /** additional validation on annotation submit */
   submitAnnotation() {
+    console.log("submitAnnotation");
     const { annotation } = this.props;
     const { metadata } = this.state;
 
@@ -387,6 +406,7 @@ class AnnotationCreation extends Component {
       annoId,
       body,
       metadata,
+      category,
       target,
     } = this.state;
 
@@ -423,11 +443,14 @@ class AnnotationCreation extends Component {
         body: tBody,
         canvasId: canvas.id,
         creator: metadata.find(item => item.type == 'creator').value,
+        category: category,
         id: (annotation && annotation.id) || annoId,
         manifestId: canvas.options.resource.id,
         motivation: metadata.find(item => item.type == 'motivation').value,
         target: targets,
       }).toJson();
+
+      console.log("anno", anno);
 
       if (annotation) {
         storageAdapter.update(anno).then(annoPage => receiveAnnotation(canvas.id, storageAdapter.annotationPageId, annoPage));
@@ -522,6 +545,16 @@ class AnnotationCreation extends Component {
           </List>
         </CustomSection>
 
+        {/* category section */}
+        <CustomSection
+          primary={t('headerLabel_category')}
+          id={`${id}-categories`}
+        >
+          <AnnotationCategoryList
+            updateContent={this.updateAnnotationItem}
+          />
+        </CustomSection>
+
         {/* body section */}
         <CustomSection
           primary={t('headerLabel_body')}
@@ -570,13 +603,41 @@ class AnnotationCreation extends Component {
             }
           >
             <List component="div" disablePadding>
-              {body.filter(item => item.purpose !== 'tagging')?.map((value, index) => (
+              {body.filter(item => item.purpose !== 'tagging' && item.purpose !== 'linking')?.map((value, index) => (
                 <AnnotationBodyItem
                   body={value}
                   bodyPos={index}
                   edit={bodyEditState}
                   handleEdit={this.setEditState}
                   handleDelete={this.deleteAnnotationItem}
+                  key={value._temp_id}
+                  updateContent={this.updateAnnotationItem}
+                />
+              ))}
+            </List>
+          </CustomSection>
+          <CustomSection
+            inner
+            id={`${id}-bodies-linkings`}
+            primary={t('headerLabel_linking')}
+            buttons={
+              <MiradorMenuButton
+                aria-label={t('createBtn_body')}
+                className={classes.button}
+                onClick={() => this.createAnnotationItem('body', 'linking')}
+              >
+                <Add />
+              </MiradorMenuButton>
+            }
+          >
+            <List component="div" disablePadding>
+              {body.filter(item => item.purpose == 'linking')?.map((value, index) => (
+                <AnnotationBodyItem
+                  body={value}
+                  bodyPos={index}
+                  edit={bodyEditState}
+                  handleDelete={this.deleteAnnotationItem}
+                  handleEdit={this.setEditState}
                   key={value._temp_id}
                   updateContent={this.updateAnnotationItem}
                 />

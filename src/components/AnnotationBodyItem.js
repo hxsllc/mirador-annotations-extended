@@ -131,6 +131,47 @@ class AnnotationBodyItem extends Component {
   }
 
   /** */
+  renderText() {
+    const {
+      body,
+      t,
+    } = this.props;
+
+    const edit = this.editing();
+
+    return (
+      <CustomTag
+        label={
+          edit
+            ? (
+              <AnnotationTextFieldItem
+                key={`${body._temp_id}-TextFieldItem`}
+                updateValue={this.updateBodyValue}
+                value={body.value}
+              />
+            )
+            : (body.value ? body.value : t('value_default'))
+        }
+        variant={edit ? "default" : "outlined"}
+        color={edit ? "primary" : undefined}
+        onClick={() => { edit ? null : this.edit() }}
+        deleteIcon={
+          <MiradorMenuButton
+            aria-label={edit ? t('bodyBtn_confirm') : t('bodyBtn_delete')}
+          >
+            {
+              edit
+                ? <Check />
+                : <DeleteIcon />
+            }
+          </MiradorMenuButton>
+        }
+        onDelete={() => { edit ? this.confirm() : this.delete() }}
+      />
+    );
+  }
+
+  /** */
   renderTextField() {
     const {
       body,
@@ -205,6 +246,8 @@ class AnnotationBodyItem extends Component {
           switch (body.purpose) {
             case 'tagging':
               return this.renderTag();
+            case 'linking':
+              return this.renderText();
             default:
               return this.renderTextField();
           }

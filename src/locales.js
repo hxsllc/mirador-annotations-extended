@@ -85,6 +85,8 @@ export default {
     headerLabel_metadata: 'Metadata',
     headerLabel_tag: 'Tags',
     headerLabel_target: 'Target',
+    headerLabel_category: 'Category',
+    headerLabel_linking: 'Additional Resources',
     metadata: 'Metadata',
     metadataBtn_confirm: 'Confirm',
     metadataBtn_edit: 'Edit',
