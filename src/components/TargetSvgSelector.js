@@ -1,22 +1,13 @@
+import PropTypes from "prop-types"
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
+import AnnotationSvgDrawing from '../containers/AnnotationSvgDrawing';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import RectangleIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CircleIcon from '@material-ui/icons/RadioButtonUnchecked';
-import PolygonIcon from '@material-ui/icons/Timeline';
 import GestureIcon from '@material-ui/icons/Gesture';
-import FormatShapesIcon from '@material-ui/icons/FormatShapes';
-import Divider from '@material-ui/core/Divider';;
-import AnnotationSvgDrawing from '../containers/AnnotationSvgDrawing';
-import StrokeColorIcon from '@material-ui/icons/BorderColor';
-import LineWeightIcon from '@material-ui/icons/LineWeight';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import FormatColorFillIcon from '@material-ui/icons/FormatColorFill';
+import { Radio } from '@material-ui/core';
 import { Collapse } from '@material-ui/core';
-import CursorIcon from '../icons/Cursor';
 
 class SelectorTools extends Component {
   constructor(props) {
@@ -53,99 +44,49 @@ class SelectorTools extends Component {
 
     return (
       <>
-        <Grid item xs={12}>
-          <Paper elevation={0} className="MuiPaper-root AnnotationCreation-paper-97 MuiPaper-elevation0 MuiPaper-rounded">
-            <ToggleButtonGroup
-              className="MuiToggleButtonGroup-root AnnotationCreation-grouped-96"
-              value={activeTool}
-              exclusive
-              onChange={this.changeTool}
-              aria-label="tool selection"
-              size="small"
-            >
-              <ToggleButton value="cursor" aria-label="select cursor">
-                <CursorIcon />
-              </ToggleButton>
-              <ToggleButton value="edit" aria-label="select cursor">
-                <FormatShapesIcon />
-              </ToggleButton>
-            </ToggleButtonGroup>
-            <Divider flexItem orientation="vertical" className="MuiDivider-root AnnotationCreation-divider-95 MuiDivider-flexItem MuiDivider-vertical" />
-            <ToggleButtonGroup
-              className="MuiToggleButtonGroup-root AnnotationCreation-grouped-96"
-              value={activeTool}
-              exclusive
-              onChange={this.changeTool}
-              aria-label="tool selection"
-              size="small"
-            >
-              <ToggleButton value="rectangle" aria-label="add a rectangle">
-                <RectangleIcon />
-              </ToggleButton>
-              <ToggleButton value="ellipse" aria-label="add a circle">
-                <CircleIcon />
-              </ToggleButton>
-              <ToggleButton value="polygon" aria-label="add a polygon">
-                <PolygonIcon />
-              </ToggleButton>
-              <ToggleButton value="freehand" aria-label="free hand polygon">
-                <GestureIcon />
-              </ToggleButton>
-            </ToggleButtonGroup>
-          </Paper>
-        </Grid>
-        <Grid item xs={12}>
+        <div>
           <ToggleButtonGroup
-            aria-label="style selection"
-            size="small"
+            aria-label={t('targetTools_selection')}
+            exclusive
+            onChange={changeTool}
+            value={activeTool}
           >
             <ToggleButton
-              value="strokeColor"
-              aria-label="select color"
-              onClick={this.openChooseColor}
+              aria-label={t('targetTools_rectangle')}
+              disabled={activeTool == 'edit'}
+              value="rectangle"
             >
-              <StrokeColorIcon style={{ fill: strokeColor }} />
-              <ArrowDropDownIcon />
+              <RectangleIcon />
             </ToggleButton>
             <ToggleButton
-              value="strokeColor"
-              aria-label="select line weight"
-              onClick={this.openChooseLineWeight}
+              aria-label={t('targetTools_ellipse')}
+              disabled={activeTool == 'edit'}
+              value="ellipse"
             >
-              <LineWeightIcon />
-              <ArrowDropDownIcon />
+              <CircleIcon />
             </ToggleButton>
             <ToggleButton
-              value="fillColor"
-              aria-label="select color"
-              onClick={this.openChooseColor}
+              aria-label={t('targetTools_freehand')}
+              disabled={activeTool == 'edit'}
+              value="freehand"
             >
-              <FormatColorFillIcon style={{  }} />
-              <ArrowDropDownIcon />
+              <GestureIcon />
             </ToggleButton>
           </ToggleButtonGroup>
-
-          <Divider flexItem orientation="vertical" className="MuiDivider-root AnnotationCreation-divider-95 MuiDivider-flexItem MuiDivider-vertical" />
-          { /* close / open polygon mode only for freehand drawing mode. */
-            activeTool === 'freehand'
-              ? (
-                <ToggleButtonGroup
-                  size="small"
-                  value={closedMode}
-                  onChange={this.changeClosedMode}
-                >
-                  <ToggleButton value="closed">
-                    <ClosedPolygonIcon />
-                  </ToggleButton>
-                  <ToggleButton value="open">
-                    <OpenPolygonIcon />
-                  </ToggleButton>
-                </ToggleButtonGroup>
-              )
-              : null
-          }
-
-        </Grid>
+        </div>
+        <div>
+          {colors.map((value, index) => (
+            <Radio
+              aria-label={t('targetTools_color', { color: value })}
+              checked={strokeColor == value}
+              disabled={activeTool == 'edit'}
+              key={index}
+              onChange={changeColor}
+              style={activeTool !== 'edit' ? { color: `${value}` } : {}}
+              value={value}
+            />
+          ))}
+        </div>
       </>
     )
   }
