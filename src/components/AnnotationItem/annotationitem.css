@@ -1,0 +1,56 @@
+.annotation-item-card {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #d5c8c8;
+    cursor: pointer;
+    --card-bg: white;
+}
+
+.annotation-item-card:hover {
+    background-color: #f7f7f7;
+}
+
+.annotation-item-card .header {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #E6D7D9;
+}
+
+.annotation-item-card .header .title {
+    color: #C4C4C4;
+    font-size: 18px;
+}
+
+.annotation-item-card main {
+    max-height: 10rem;
+    overflow: hidden;
+    position: relative;
+}
+
+.annotation-item-card main::before {
+    content: "";
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: linear-gradient(transparent 2rem,var(--card-bg) 10rem);
+}
+
+.annotation-item-card main::before:hover {
+    background-color: none;
+}
+
+.annotation-item-card .format-html {
+    padding-left: 6px;
+}
+
+.annotation-item-card .format-html .description {
+    color: black;
+    font-size: 16px;
+    margin-top: 0px;
+}

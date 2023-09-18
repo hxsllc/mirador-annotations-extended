@@ -87,8 +87,31 @@ export default class AnnotationStoreAdapter {
         }).then(data => {
             return data.annotations;
         }).catch((err) => {
-            return null;
             console.log("Error occured: ", err);
+            return null;
+        });
+    }
+
+    /** */
+    async getByCategory(categories) {
+        return fetch(this.serverUrl + "/api/annotations/get_by_categories", {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'User-Agent': 'XY'
+            },
+            body: JSON.stringify({
+                "canvasId": this.canvasId,
+                "categories": categories
+            }),
+        }).then((response) => {
+            return response.json();
+        }).then(data => {
+            return data.annotations;
+        }).catch((err) => {
+            console.log("Error occured: ", err);
+            return null;
         });
     }
 }

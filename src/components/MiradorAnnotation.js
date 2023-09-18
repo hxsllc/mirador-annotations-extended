@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import GetAppIcon from '@material-ui/icons/GetApp';
+import { Visibility } from '@material-ui/icons';
+
 import { MiradorMenuButton } from 'mirador/dist/es/src/components/MiradorMenuButton';
+
 import SingleCanvasDialog from '../containers/SingleCanvasDialog';
 import AnnotationExportDialog from '../containers/AnnotationExportDialog';
 import LocalStorageAdapter from '../adapters/LocalStorageAdapter';
@@ -19,6 +22,7 @@ class MiradorAnnotation extends Component {
     };
 
     this.openCreateAnnotationCompanionWindow = this.openCreateAnnotationCompanionWindow.bind(this);
+    this.openViewAnnotationCompanionWindow = this.openViewAnnotationCompanionWindow.bind(this);
     this.toggleCanvasExportDialog = this.toggleCanvasExportDialog.bind(this);
     this.toggleSingleCanvasDialogOpen = this.toggleSingleCanvasDialogOpen.bind(this);
   }
@@ -30,6 +34,15 @@ class MiradorAnnotation extends Component {
     addCompanionWindow('annotationCreation', {
       position: 'right',
     });
+  }
+
+  /** */
+  openViewAnnotationCompanionWindow(e) {
+    const { addCompanionWindow } = this.props;
+
+    addCompanionWindow('annotationViewer', {
+      position: 'right'
+    })
   }
 
   /** */
@@ -58,6 +71,7 @@ class MiradorAnnotation extends Component {
       canvases,
       config,
       createAnnotation,
+      viewAnnotation,
       switchToSingleCanvasView,
       t,
       TargetComponent,
@@ -86,6 +100,14 @@ class MiradorAnnotation extends Component {
           disabled={!createAnnotation}
         >
           <AddBoxIcon />
+        </MiradorMenuButton>
+        <MiradorMenuButton
+          aria-label={t('annotationBtn_view')}
+          onClick={windowViewType === 'single' ? this.openViewAnnotationCompanionWindow : this.toggleSingleCanvasDialogOpen}
+          size="small"
+          disabled={!viewAnnotation}
+        >
+          <Visibility />
         </MiradorMenuButton>
         {singleCanvasDialogOpen && (
           <SingleCanvasDialog
@@ -130,6 +152,7 @@ MiradorAnnotation.propTypes = {
     })
   }).isRequired,
   createAnnotation: PropTypes.bool.isRequired,
+  viewAnnotation: PropTypes.bool.isRequired,
   switchToSingleCanvasView: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
   targetProps: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types

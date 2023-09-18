@@ -2,6 +2,8 @@ import MiradorAnnotation from './containers/MiradorAnnotation';
 import ExternalStorageAnnotation from './containers/ExternalStorageAnnotation';
 import CanvasAnnotationsWrapper from './containers/CanvasAnnotationsWrapper';
 import AnnotationCreation from './containers/AnnotationCreation';
+import AnnotationViewer from './containers/AnnotationViewer';
+import AnnotationDetailViewer from './containers/AnnotationDetailViewer';
 import WindowSideBarButtonWrapper from './containers/WindowSideBarButtonWrapper';
 import translations from './locales';
 
@@ -30,6 +32,20 @@ export default [
   {
     companionWindowKey: 'annotationCreation',
     component: AnnotationCreation,
+    config: {
+      translations
+    }
+  },
+  {
+    companionWindowKey: 'annotationViewer',
+    component: AnnotationViewer,
+    config: {
+      translations
+    }
+  },
+  {
+    companionWindowKey: 'annotationDetailViewer',
+    component: AnnotationDetailViewer,
     config: {
       translations
     }

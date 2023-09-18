@@ -24,10 +24,17 @@ function mapStateToProps(state, { targetProps: { windowId } }) {
     annotationEdit = false;
   }
 
+  var annotationViewerCompanionWindows = getCompanionWindowsForContent(state, { content: 'annotationViewer', windowId });
+  var annotationView = true;
+  if (Object.keys(annotationViewerCompanionWindows).length !== 0) {
+    annotationView = false;
+  }
+
   return {
     canvases: getVisibleCanvases(state, { windowId }),
     config: state.config,
     createAnnotation: annotationEdit,
+    viewAnnotation: annotationView,
     windowViewType: getWindowViewType(state, { windowId }),
   }
 };
