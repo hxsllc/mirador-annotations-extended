@@ -114,4 +114,23 @@ export default class AnnotationStoreAdapter {
             return null;
         });
     }
+
+    /** */
+    async getManifestInfo(maniUrl) {
+        return fetch(maniUrl, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'User-Agent': 'XY'
+            }
+        }).then((response) => {
+            return response.json();
+        }).then(data => {
+            return data;
+        }).catch((err) => {
+            console.log("Error occured: ", err);
+            return null;
+        });
+    }
 }

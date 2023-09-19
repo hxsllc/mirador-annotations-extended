@@ -25,16 +25,14 @@ class AnnotationItemList extends Component {
 
     /** */
     render() {
-        const { windowId } = this.props;
+        const { windowId, annots } = this.props;
 
         return <>
-            <AnnotationItem windowId={windowId} />
-            <AnnotationItem windowId={windowId} />
-            <AnnotationItem windowId={windowId} />
-            <AnnotationItem windowId={windowId} />
-            <AnnotationItem windowId={windowId} />
-            <AnnotationItem windowId={windowId} />
-            <AnnotationItem windowId={windowId} />
+            {
+                annots?.map((item, idx) =>
+                    <AnnotationItem windowId={windowId} item={item} key={idx} />
+                )
+            }
         </>;
     }
 }

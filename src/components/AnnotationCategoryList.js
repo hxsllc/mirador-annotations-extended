@@ -24,18 +24,15 @@ class AnnotationCategoryList extends Component {
 
     /** */
     render() {
+        const { categories } = this.props;
+
         return (
             <>
                 <FormGroup>
-                    <FormControlLabel control={<Checkbox size="small" name="whole-pages" value="whole-pages" onChange={this.handleChange} />} label="Whole Pages" />
-                    <FormControlLabel control={<Checkbox size="small" name="regions" value="regions" onChange={this.handleChange} />} label="Regions (80)" />
-                    <FormControlLabel control={<Checkbox size="small" name="story-arcs" value="story-arcs" onChange={this.handleChange} />} label="Story Arcs (100+)" />
-                    <FormControlLabel control={<Checkbox size="small" name="glyphs" value="glyphs" onChange={this.handleChange} />} label="Glyphs" />
-                    <FormControlLabel control={<Checkbox size="small" name="glosses" value="glosses" onChange={this.handleChange} />} label="Glosses" />
-                    <FormControlLabel control={<Checkbox size="small" name="fors/xrf" value="fors/xrf" onChange={this.handleChange} />} label="FORS/XRF" />
-                    <FormControlLabel control={<Checkbox size="small" name="other" value="other" onChange={this.handleChange} />} label="Other" />
+                    {
+                        categories.map((category, idx) => <FormControlLabel control={<Checkbox size="small" name={category.value} value={category.value} onChange={this.handleChange} checked={category.checked} />} label={category.label} key={idx} />)
+                    }
                 </FormGroup>
-
             </>
         );
     }

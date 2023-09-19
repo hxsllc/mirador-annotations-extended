@@ -55,6 +55,7 @@ class CanvasListItem extends Component {
       }
       return (annotation);
     });
+
     addCompanionWindow('annotationCreation', {
       annotationid,
       position: 'right',

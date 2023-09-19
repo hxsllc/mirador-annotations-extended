@@ -1,16 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { v4 as uuid } from 'uuid';
-import { Add } from '@material-ui/icons';
-import { Button, List } from '@material-ui/core';
 import CompanionWindow from 'mirador/dist/es/src/containers/CompanionWindow';
-import MiradorMenuButton from 'mirador/dist/es/src/containers/MiradorMenuButton';
 import ns from 'mirador/dist/es/src/config/css-ns';
-import WebAnnotation from '../WebAnnotation';
-import AnnotationBodyItem from '../containers/AnnotationBodyItem';
-import AnnotationMetadataItem from '../containers/AnnotationMetadataItem';
-import AnnotationTargetItem from '../containers/AnnotationTargetItem';
-import AnnotationSubmitDialog from '../containers/AnnotationSubmitDialog';
 import CustomSection from '../containers/CustomSection';
 import AnnotationCategoryList from '../containers/AnnotationCategoryList';
 import AnnotationLayerList from '../containers/AnnotationLayerList';
@@ -25,7 +16,43 @@ class AnnotationViewer extends Component {
 
         this.state = {
             layers: [],
-            categories: [],
+            categories: [
+                {
+                    label: "Whole Pages",
+                    value: "whole-pages",
+                    checked: true
+                },
+                {
+                    label: "Regions",
+                    value: "regions",
+                    checked: true
+                },
+                {
+                    label: "Story Arcs",
+                    value: "story-arcs",
+                    checked: true
+                },
+                {
+                    label: "Glyphs",
+                    value: "glyphs",
+                    checked: true
+                },
+                {
+                    label: "Glosses",
+                    value: "glosses",
+                    checked: true
+                },
+                {
+                    label: "FORS/XRF",
+                    value: "fors/xrf",
+                    checked: true
+                },
+                {
+                    label: "Other",
+                    value: "other",
+                    checked: true
+                }
+            ],
             annotations: [],
         };
 
@@ -37,20 +64,17 @@ class AnnotationViewer extends Component {
     * use item type and id for item update
     */
     updateAnnotationItem(type, content, _temp_id) {
-        const { config, canvases } = this.props;
+        const { config, canvases, receiveAnnotation } = this.props;
         const { categories } = this.state;
 
         if (type == "category") {
             let categoryCnt = categories.length;
             for (let i = 0; i < categoryCnt; i++) {
                 if (categories[i].value == content.value) {
-                    categories.splice(i, 1);
+                    categories[i].checked = content.checked;
                     break;
                 }
             }
-
-            if (content.checked)
-                categories.push(content);
 
             this.setState({ categories: categories });
         }
@@ -60,7 +84,10 @@ class AnnotationViewer extends Component {
                 const storageAdapter = config.annotation.adapter(canvas.id);
 
                 storageAdapter.getByCategory(categories).then(annoPage => {
-                    console.log("annoPage", annoPage);
+                    if (annoPage) {
+                        receiveAnnotation(canvas.id, storageAdapter.annotationPageId, annoPage);
+                        this.setState({ annotations: annoPage?.items });
+                    }
                 });
             } else {
                 console.error("config.annotation is null");
@@ -74,9 +101,13 @@ class AnnotationViewer extends Component {
             id,
             t,
             windowId,
+            config,
+            canvases
         } = this.props;
 
         const {
+            annotations,
+            categories
         } = this.state;
 
         return (
@@ -94,6 +125,9 @@ class AnnotationViewer extends Component {
                 >
                     <AnnotationLayerList
                         updateContent={this.updateAnnotationItem}
+                        windowId={windowId}
+                        config={config}
+                        canvases={canvases}
                     />
                 </CustomSection>
 
@@ -104,6 +138,7 @@ class AnnotationViewer extends Component {
                 >
                     <AnnotationCategoryList
                         updateContent={this.updateAnnotationItem}
+                        categories={categories}
                     />
                 </CustomSection>
 
@@ -115,6 +150,7 @@ class AnnotationViewer extends Component {
                     <AnnotationItemList
                         updateContent={this.updateAnnotationItem}
                         windowId={windowId}
+                        annots={annotations}
                     />
                 </CustomSection>
             </CompanionWindow>

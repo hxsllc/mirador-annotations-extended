@@ -10,7 +10,18 @@
 }
 
 .annotation-item-card:hover {
+    --card-bg: #f7f7f7;
     background-color: #f7f7f7;
+}
+
+.annotation-item-card-open {
+    --card-bg: #e8f0ff;
+    background-color: #e8f0ff;
+}
+
+.annotation-item-card-open:hover {
+    --card-bg: #e8f0ff;
+    background-color: #e8f0ff;
 }
 
 .annotation-item-card .header {
@@ -49,8 +60,8 @@
     padding-left: 6px;
 }
 
-.annotation-item-card .format-html .description {
+/* .annotation-item-card .format-html .description {
     color: black;
     font-size: 16px;
     margin-top: 0px;
-}
+} */

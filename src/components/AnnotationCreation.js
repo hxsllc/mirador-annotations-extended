@@ -380,7 +380,6 @@ class AnnotationCreation extends Component {
 
   /** additional validation on annotation submit */
   submitAnnotation() {
-    console.log("submitAnnotation");
     const { annotation } = this.props;
     const { metadata } = this.state;
 
@@ -449,8 +448,6 @@ class AnnotationCreation extends Component {
         motivation: metadata.find(item => item.type == 'motivation').value,
         target: targets,
       }).toJson();
-
-      console.log("anno", anno);
 
       if (annotation) {
         storageAdapter.update(anno).then(annoPage => receiveAnnotation(canvas.id, storageAdapter.annotationPageId, annoPage));
