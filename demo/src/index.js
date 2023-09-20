@@ -10,8 +10,8 @@ const SERVER_URL = 'https://ds20.reclaim.hosting/annophp/public';
 
 const config = {
     annotation: {
-        adapter: (canvasId) => new LocalStorageAdapter(`localStorage://?canvasId=${canvasId}`),
-        // adapter: (canvasId) => new AnnotationStoreAdapter(canvasId, SERVER_URL),
+        // adapter: (canvasId) => new LocalStorageAdapter(`localStorage://?canvasId=${canvasId}`),
+        adapter: (canvasId) => new AnnotationStoreAdapter(canvasId, SERVER_URL),
         exportLocalStorageAnnotations: false, // display annotation JSON export button
     },
     id: 'demo',

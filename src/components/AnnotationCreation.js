@@ -162,7 +162,43 @@ class AnnotationCreation extends Component {
       metadata: [], // metadata data
       metadataCount: 0, // global metadata count
       metadataEditState: null, // indicates current edited metadata item
-      category: [], // category data
+      categories: [
+        {
+          label: "Whole Pages",
+          value: "whole-pages",
+          checked: true
+        },
+        {
+          label: "Regions",
+          value: "regions",
+          checked: true
+        },
+        {
+          label: "Story Arcs",
+          value: "story-arcs",
+          checked: true
+        },
+        {
+          label: "Glyphs",
+          value: "glyphs",
+          checked: true
+        },
+        {
+          label: "Glosses",
+          value: "glosses",
+          checked: true
+        },
+        {
+          label: "FORS/XRF",
+          value: "fors/xrf",
+          checked: true
+        },
+        {
+          label: "Other",
+          value: "other",
+          checked: true
+        }
+      ],
       target: [], // target data
       targetCount: 0, // global target count
       targetEditState: null, // indicates current edited target item
@@ -281,7 +317,7 @@ class AnnotationCreation extends Component {
     const {
       body,
       metadata,
-      category,
+      categories,
       target,
     } = this.state;
 
@@ -313,19 +349,15 @@ class AnnotationCreation extends Component {
         this.setState({ metadata: newData });
         break;
       case 'category':
-        while (index < category.length && !dataPos) {
-          if (category[index].value == content.value) {
-            category.splice(index, 1);
-            break;
-          }
-
-          index++;
+        let categoryCnt = categories.length;
+        for (let i = 0; i < categoryCnt; i++) {
+            if (categories[i].value == content.value) {
+                categories[i].checked = content.checked;
+                break;
+            }
         }
 
-        if (content.checked)
-          category.push(content);
-
-        this.setState({ category: category });
+        this.setState({ categories: categories });
         break;
       case 'body':
         while (index < body.length && !dataPos) {
@@ -405,7 +437,7 @@ class AnnotationCreation extends Component {
       annoId,
       body,
       metadata,
-      category,
+      categories,
       target,
     } = this.state;
 
@@ -442,7 +474,7 @@ class AnnotationCreation extends Component {
         body: tBody,
         canvasId: canvas.id,
         creator: metadata.find(item => item.type == 'creator').value,
-        category: category,
+        category: categories,
         id: (annotation && annotation.id) || annoId,
         manifestId: canvas.options.resource.id,
         motivation: metadata.find(item => item.type == 'motivation').value,
@@ -479,6 +511,7 @@ class AnnotationCreation extends Component {
       metadataEditState,
       target,
       targetEditState,
+      categories
     } = this.state;
 
     return (
@@ -549,6 +582,7 @@ class AnnotationCreation extends Component {
         >
           <AnnotationCategoryList
             updateContent={this.updateAnnotationItem}
+            categories={categories}
           />
         </CustomSection>
 
