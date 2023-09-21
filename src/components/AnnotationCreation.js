@@ -13,6 +13,7 @@ import AnnotationSubmitDialog from '../containers/AnnotationSubmitDialog';
 import CustomSection from '../containers/CustomSection';
 import AnnotationCategoryList from '../containers/AnnotationCategoryList';
 import WebAnnotation from '../WebAnnotation';
+import { CREATOR_CATEGORIES } from '../configs/category';
 
 /** */
 class AnnotationCreation extends Component {
@@ -162,43 +163,7 @@ class AnnotationCreation extends Component {
       metadata: [], // metadata data
       metadataCount: 0, // global metadata count
       metadataEditState: null, // indicates current edited metadata item
-      categories: [
-        {
-          label: "Whole Pages",
-          value: "whole-pages",
-          checked: true
-        },
-        {
-          label: "Regions",
-          value: "regions",
-          checked: true
-        },
-        {
-          label: "Story Arcs",
-          value: "story-arcs",
-          checked: true
-        },
-        {
-          label: "Glyphs",
-          value: "glyphs",
-          checked: true
-        },
-        {
-          label: "Glosses",
-          value: "glosses",
-          checked: true
-        },
-        {
-          label: "FORS/XRF",
-          value: "fors/xrf",
-          checked: true
-        },
-        {
-          label: "Other",
-          value: "other",
-          checked: true
-        }
-      ],
+      categories: CREATOR_CATEGORIES,
       target: [], // target data
       targetCount: 0, // global target count
       targetEditState: null, // indicates current edited target item
@@ -213,6 +178,15 @@ class AnnotationCreation extends Component {
     this.submitAnnotation = this.submitAnnotation.bind(this);
     this.toggleAnnotationSubmitDialogOpen = this.toggleAnnotationSubmitDialogOpen.bind(this);
     this.updateAnnotationItem = this.updateAnnotationItem.bind(this);
+
+    setTimeout(() => {
+      if (!props.annotation) {
+        this.createAnnotationItem("target");
+        this.createAnnotationItem('body', 'tagging');
+        this.createAnnotationItem('body', 'describing');
+        this.createAnnotationItem('body', 'linking');
+      }
+    }, 50);
   }
 
   /**
@@ -351,10 +325,10 @@ class AnnotationCreation extends Component {
       case 'category':
         let categoryCnt = categories.length;
         for (let i = 0; i < categoryCnt; i++) {
-            if (categories[i].value == content.value) {
-                categories[i].checked = content.checked;
-                break;
-            }
+          if (categories[i].value == content.value) {
+            categories[i].checked = content.checked;
+            break;
+          }
         }
 
         this.setState({ categories: categories });

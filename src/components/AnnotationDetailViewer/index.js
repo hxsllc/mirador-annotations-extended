@@ -7,6 +7,7 @@ import ns from 'mirador/dist/es/src/config/css-ns';
 import CustomSection from '../../containers/CustomSection';
 import CustomTag from '../../containers/CustomTag';
 
+import { getNameByValue } from '../../utils/category-util';
 import './annotationdetailviewer.css'
 
 /** */
@@ -25,7 +26,22 @@ class AnnotationDetailViewer extends Component {
 
         if (annotation) {
             annoId = annotation.id;
-            title = annotation.creator.name;
+
+
+            let category = "";
+            if (annotation.category) {
+                let categoryCnt = annotation.category.length;
+                let cnt = 0;
+                for (let i = 0; i < categoryCnt; i++) {
+                    if (annotation.category[i].checked) {
+                        if (cnt > 0)
+                            category += ", ";
+                        category += getNameByValue(annotation.category[i].value);
+                        cnt++;
+                    }
+                }
+            }
+            title = category;
 
             annotation?.body?.forEach((body) => {
                 if (body.purpose == "tagging") {

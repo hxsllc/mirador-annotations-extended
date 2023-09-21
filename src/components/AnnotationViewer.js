@@ -7,56 +7,39 @@ import AnnotationCategoryList from '../containers/AnnotationCategoryList';
 import AnnotationLayerList from '../containers/AnnotationLayerList';
 import AnnotationItemList from '../containers/AnnotationItemList';
 
+import { VIEWER_CATEGORIES } from '../configs/category';
+
 /** */
 class AnnotationViewer extends Component {
     /** */
     constructor(props) {
         super(props);
-        const { t } = this.props;
+        const { t, config, canvases, receiveAnnotation } = this.props;
 
         this.state = {
             layers: [],
-            categories: [
-                {
-                    label: "Whole Pages",
-                    value: "whole-pages",
-                    checked: true
-                },
-                {
-                    label: "Regions",
-                    value: "regions",
-                    checked: true
-                },
-                {
-                    label: "Story Arcs",
-                    value: "story-arcs",
-                    checked: true
-                },
-                {
-                    label: "Glyphs",
-                    value: "glyphs",
-                    checked: true
-                },
-                {
-                    label: "Glosses",
-                    value: "glosses",
-                    checked: true
-                },
-                {
-                    label: "FORS/XRF",
-                    value: "fors/xrf",
-                    checked: true
-                },
-                {
-                    label: "Other",
-                    value: "other",
-                    checked: true
-                }
-            ],
+            categories: VIEWER_CATEGORIES,
             annotations: [],
         };
 
         this.updateAnnotationItem = this.updateAnnotationItem.bind(this);
+
+        setTimeout(() => {
+            canvases.forEach((canvas) => {
+                if (config != null && config.annotation != null) {
+                    const storageAdapter = config.annotation.adapter(canvas.id);
+
+                    storageAdapter.getByCategory(VIEWER_CATEGORIES).then(annoPage => {
+                        if (annoPage) {
+                            receiveAnnotation(canvas.id, storageAdapter.annotationPageId, annoPage);
+                            this.setState({ annotations: annoPage?.items });
+                        }
+                    });
+                } else {
+                    console.error("config.annotation is null");
+                }
+            });
+        }, 50);
     }
 
     /**
@@ -119,7 +102,7 @@ class AnnotationViewer extends Component {
             >
 
                 {/* layers section */}
-                <CustomSection
+                {/* <CustomSection
                     primary={t('headerLabel_layers')}
                     id={`${id}-layers`}
                 >
@@ -129,7 +112,7 @@ class AnnotationViewer extends Component {
                         config={config}
                         canvases={canvases}
                     />
-                </CustomSection>
+                </CustomSection> */}
 
                 {/* category section */}
                 <CustomSection

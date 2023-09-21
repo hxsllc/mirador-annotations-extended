@@ -2,12 +2,16 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Album } from '@material-ui/icons';
 
+import { getNameByValue } from '../../utils/category-util';
+
 import './annotationitem.css'
 
 class AnnotationItem extends Component {
     /** */
     constructor(props) {
         super(props);
+
+        const { item } = this.props;
 
         this.state = {
             isFocused: false
@@ -18,6 +22,24 @@ class AnnotationItem extends Component {
         this.handleClick = this.handleClick.bind(this);
         this.handleHover = this.handleHover.bind(this);
         this.focusById = this.focusById.bind(this);
+
+        let category = "";
+        if (item != null && item.category != null) {
+            let categoryCnt = item.category.length;
+            let cnt = 0;
+            for (let i = 0; i < categoryCnt; i++) {
+                if (item.category[i].checked) {
+                    if (cnt > 0)
+                        category += ", ";
+                    category += getNameByValue(item.category[i].value);
+                    cnt ++;
+                }
+            }
+        }
+
+        this.state = {
+            category: category
+        };
     }
 
     /** */
@@ -57,7 +79,7 @@ class AnnotationItem extends Component {
     /** */
     render() {
         const { item, viewAnnotationDetail } = this.props;
-        const { isFocused } = this.state;
+        const { isFocused, category } = this.state;
 
         return <>
             <div
@@ -70,7 +92,7 @@ class AnnotationItem extends Component {
                 disabled={!viewAnnotationDetail}>
                 <div className='header'>
                     <Album />
-                    <span className='title'>{item?.creator?.name}</span>
+                    <span className='title'>{category}</span>
                 </div>
                 <main>
                     {
