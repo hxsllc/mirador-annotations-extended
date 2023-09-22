@@ -1,43 +1,12 @@
-const CREATOR_CATEGORIES = [
-    {
-        label: "Whole Pages",
-        value: "whole-pages",
-        checked: true
-    },
-    {
-        label: "Regions",
-        value: "regions",
-        checked: false
-    },
-    {
-        label: "Story Arcs",
-        value: "story-arcs",
-        checked: false
-    },
-    {
-        label: "Glyphs",
-        value: "glyphs",
-        checked: false
-    },
-    {
-        label: "Glosses",
-        value: "glosses",
-        checked: false
-    },
-    {
-        label: "FORS/XRF",
-        value: "fors/xrf",
-        checked: false
-    },
-    {
-        label: "Other",
-        value: "other",
-        checked: false
-    }
-]
+const CATEGORY_ALL = "all";
 
 const VIEWER_CATEGORIES = [
     {
+        label: "All Categories",
+        value: CATEGORY_ALL,
+        checked: true
+    },
+    {
         label: "Whole Pages",
         value: "whole-pages",
         checked: true
@@ -45,33 +14,33 @@ const VIEWER_CATEGORIES = [
     {
         label: "Regions",
         value: "regions",
-        checked: false
+        checked: true
     },
     {
         label: "Story Arcs",
         value: "story-arcs",
-        checked: false
+        checked: true
     },
     {
         label: "Glyphs",
         value: "glyphs",
-        checked: false
+        checked: true
     },
     {
         label: "Glosses",
         value: "glosses",
-        checked: false
+        checked: true
     },
     {
         label: "FORS/XRF",
         value: "fors/xrf",
-        checked: false
+        checked: true
     },
     {
         label: "Other",
         value: "other",
-        checked: false
+        checked: true
     }
 ]
 
-export { CREATOR_CATEGORIES, VIEWER_CATEGORIES };
+export { VIEWER_CATEGORIES, CATEGORY_ALL };

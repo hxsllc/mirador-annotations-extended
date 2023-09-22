@@ -12,22 +12,12 @@ const styles = (theme) => ({
 });
 
 const mapDispatchToProps = (dispatch, props) => ({
-    addCompanionWindow: (content, additionalProps) => dispatch(
-        actions.addCompanionWindow(props.windowId, { content, ...additionalProps }),
-    ),
-    removeCompanionWindow: (id) => dispatch(
-        actions.removeCompanionWindow(props.windowId, id),
-    ),
     switchToSingleCanvasView: () => dispatch(
         actions.setWindowViewType(props.windowId, 'single'),
     ),
     hoverAnnotation: (annotationIds) => dispatch(
         actions.hoverAnnotation(props.windowId, annotationIds)
     ),
-    selectAnnotation: (annotationId) => dispatch(
-        actions.selectAnnotation(props.windowId, annotationId)
-    )
-
 });
 
 function mapStateToProps(state, props) {

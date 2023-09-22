@@ -116,6 +116,6 @@ export default {
     textEditor_format_bold: 'Bold',
     textEditor_format_italic: 'Italic',
     textEditor_format_selection: 'Text editor format selection',
-    value_default: '[n. a.]',
+    value_default: '[Input value]',
   },
 };

@@ -13,7 +13,6 @@ import AnnotationSubmitDialog from '../containers/AnnotationSubmitDialog';
 import CustomSection from '../containers/CustomSection';
 import AnnotationCategoryList from '../containers/AnnotationCategoryList';
 import WebAnnotation from '../WebAnnotation';
-import { CREATOR_CATEGORIES } from '../configs/category';
 
 /** */
 class AnnotationCreation extends Component {
@@ -27,6 +26,43 @@ class AnnotationCreation extends Component {
     let tempCreator = {};
     let tempMotivation = {};
     let tempTarget = {};
+    let categories = [
+      {
+        label: "Whole Pages",
+        value: "whole-pages",
+        checked: true
+      },
+      {
+        label: "Regions",
+        value: "regions",
+        checked: false
+      },
+      {
+        label: "Story Arcs",
+        value: "story-arcs",
+        checked: false
+      },
+      {
+        label: "Glyphs",
+        value: "glyphs",
+        checked: false
+      },
+      {
+        label: "Glosses",
+        value: "glosses",
+        checked: false
+      },
+      {
+        label: "FORS/XRF",
+        value: "fors/xrf",
+        checked: false
+      },
+      {
+        label: "Other",
+        value: "other",
+        checked: false
+      }
+    ];
 
     /**
      * apply scheme to annotation for editing form
@@ -130,6 +166,24 @@ class AnnotationCreation extends Component {
           annoState.targetCount++;
         }
       }
+
+      // Set category list.
+      if (props.annotation.category) {
+        let curCateCnt = props.annotation.category.length;
+        let totCateCnt = categories.length;
+
+        for (let i = 0; i < totCateCnt; i++) {
+          let isChecked = false;
+          for (let k = 0; k < curCateCnt; k++) {
+            if (categories[i].value == props.annotation.category[k].value && props.annotation.category[k].checked) {
+              isChecked = true;
+              break;
+            }
+          }
+
+          categories[i].checked = isChecked;
+        }
+      }
     } else {
       /** create new annotation object with basic metadata */
       annoState.annoId = uuid();
@@ -150,7 +204,6 @@ class AnnotationCreation extends Component {
       };
       annoState.metadata.push(tempMotivation);
       annoState.metadataCount++;
-
     }
 
     this.state = {
@@ -163,7 +216,7 @@ class AnnotationCreation extends Component {
       metadata: [], // metadata data
       metadataCount: 0, // global metadata count
       metadataEditState: null, // indicates current edited metadata item
-      categories: CREATOR_CATEGORIES,
+      categories: categories,
       target: [], // target data
       targetCount: 0, // global target count
       targetEditState: null, // indicates current edited target item

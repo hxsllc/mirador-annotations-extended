@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import CompanionWindow from 'mirador/dist/es/src/containers/CompanionWindow';
 import ns from 'mirador/dist/es/src/config/css-ns';
 import CustomSection from '../containers/CustomSection';
-import AnnotationCategoryList from '../containers/AnnotationCategoryList';
+import AnnotationViewCategoryList from '../containers/AnnotationViewCategoryList';
 import AnnotationLayerList from '../containers/AnnotationLayerList';
 import AnnotationItemList from '../containers/AnnotationItemList';
 
-import { VIEWER_CATEGORIES } from '../configs/category';
+import { VIEWER_CATEGORIES, CATEGORY_ALL } from '../configs/category';
 
 /** */
 class AnnotationViewer extends Component {
@@ -52,10 +52,32 @@ class AnnotationViewer extends Component {
 
         if (type == "category") {
             let categoryCnt = categories.length;
-            for (let i = 0; i < categoryCnt; i++) {
-                if (categories[i].value == content.value) {
+
+            if (content.value == CATEGORY_ALL) {
+                for (let i = 0; i < categoryCnt; i++) {
                     categories[i].checked = content.checked;
-                    break;
+                }
+            } else {
+                for (let i = 0; i < categoryCnt; i++) {
+                    if (categories[i].value == content.value) {
+                        categories[i].checked = content.checked;
+                        break;
+                    }
+                }
+
+                // Set All Category Option
+                let generalCateCnt = 0;
+                for (let i = 0; i < categoryCnt; i++) {
+                    if (categories[i].value !== CATEGORY_ALL && categories[i].checked) {
+                        generalCateCnt++;
+                    }
+                }
+
+                for (let i = 0; i < categoryCnt; i++) {
+                    if (categories[i].value == CATEGORY_ALL) {
+                        categories[i].checked = generalCateCnt == (categoryCnt - 1);
+                        break;
+                    }
                 }
             }
 
@@ -119,7 +141,7 @@ class AnnotationViewer extends Component {
                     primary={t('headerLabel_category')}
                     id={`${id}-category`}
                 >
-                    <AnnotationCategoryList
+                    <AnnotationViewCategoryList
                         updateContent={this.updateAnnotationItem}
                         categories={categories}
                     />

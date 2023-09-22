@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Radio, FormControlLabel, FormGroup } from '@material-ui/core';
 import AnnotationItem from '../containers/AnnotationItem';
 
 class AnnotationItemList extends Component {
@@ -8,19 +7,32 @@ class AnnotationItemList extends Component {
     constructor(props) {
         super(props);
 
-        this.handleChange = this.handleChange.bind(this);
+        this.changeDetailWindow = this.changeDetailWindow.bind(this);
+
+        this.state = {
+            detailedAnnotId: "",
+            detailedWindowId: ""
+        };
     }
 
+    changeDetailWindow(annotId) {
+        const { detailedAnnotId, detailedWindowId } = this.state;
+        const { addCompanionWindow, removeCompanionWindow, selectAnnotation, addOrUpdateCompanionWindow, updateCompanionWindow, toggleAnnotationDisplay } = this.props;
 
-    /** */
-    handleChange(e) {
-        const {
-            updateContent,
-        } = this.props;
+        if (detailedAnnotId != annotId) {
+            removeCompanionWindow(detailedWindowId);
+            const { id } = addCompanionWindow('annotationDetailViewer', {
+                annotationid: annotId,
+                position: 'right'
+            })
 
-        const value = e.target.value;
-        const checked = e.target.checked;
-        updateContent('category', { value: value, checked: checked });
+            this.setState({
+                detailedAnnotId: annotId,
+                detailedWindowId: id
+            });
+
+            selectAnnotation(annotId);
+        }
     }
 
     /** */
@@ -30,7 +42,7 @@ class AnnotationItemList extends Component {
         return <>
             {
                 annots?.map((item, idx) =>
-                    <AnnotationItem windowId={windowId} item={item} key={idx} />
+                    <AnnotationItem windowId={windowId} item={item} key={idx} changeDetailWindow={(annotId) => this.changeDetailWindow(annotId)} />
                 )
             }
         </>;

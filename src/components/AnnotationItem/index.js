@@ -11,8 +11,6 @@ class AnnotationItem extends Component {
     constructor(props) {
         super(props);
 
-        const { item } = this.props;
-
         this.state = {
             isFocused: false
         };
@@ -21,8 +19,26 @@ class AnnotationItem extends Component {
 
         this.handleClick = this.handleClick.bind(this);
         this.handleHover = this.handleHover.bind(this);
-        this.focusById = this.focusById.bind(this);
+        this.getCategoryNames = this.getCategoryNames.bind(this)
+    }
 
+    /** */
+    handleClick() {
+        const { item, changeDetailWindow } = this.props;
+
+        changeDetailWindow(item?.id);
+    }
+
+    handleHover(isHover) {
+        const { hoverAnnotation, item } = this.props;
+
+        if (isHover)
+            hoverAnnotation([item?.id]);
+        else
+            hoverAnnotation([]);
+    }
+
+    getCategoryNames(item) {
         let category = "";
         if (item != null && item.category != null) {
             let categoryCnt = item.category.length;
@@ -32,54 +48,18 @@ class AnnotationItem extends Component {
                     if (cnt > 0)
                         category += ", ";
                     category += getNameByValue(item.category[i].value);
-                    cnt ++;
+                    cnt++;
                 }
             }
         }
 
-        this.state = {
-            category: category
-        };
-    }
-
-    /** */
-    handleClick() {
-        const { addCompanionWindow, selectAnnotation, item, viewAnnotationDetail } = this.props;
-
-        if (viewAnnotationDetail) {
-            addCompanionWindow('annotationDetailViewer', {
-                annotationid: item?.id,
-                position: 'right'
-            })
-        }
-
-        selectAnnotation(item?.id);
-
-        this.focusById(`annotationCard${item.id}`);
-    }
-
-    handleHover(isHover) {
-        const { hoverAnnotation, item } = this.props;
-
-        if (isHover) {
-            hoverAnnotation([item?.id]);
-        } else {
-            hoverAnnotation([]);
-        }
-    }
-
-    focusById(id) {
-        let myRef = this.my_refs[id];
-        if (myRef) {
-            console.log('focusing on ', id, myRef);
-            myRef.focus();
-        }
+        return category;
     }
 
     /** */
     render() {
         const { item, viewAnnotationDetail } = this.props;
-        const { isFocused, category } = this.state;
+        const { isFocused } = this.state;
 
         return <>
             <div
@@ -92,7 +72,7 @@ class AnnotationItem extends Component {
                 disabled={!viewAnnotationDetail}>
                 <div className='header'>
                     <Album />
-                    <span className='title'>{category}</span>
+                    <span className='title'>{this.getCategoryNames(item)}</span>
                 </div>
                 <main>
                     {
