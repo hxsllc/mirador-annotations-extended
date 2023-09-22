@@ -72,16 +72,16 @@ class AnnotationItem extends Component {
                 disabled={!viewAnnotationDetail}>
                 <div className='header'>
                     <Album />
-                    <span className='title'>{this.getCategoryNames(item)}</span>
+                    <span className='title' style={{ fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif' }}>{this.getCategoryNames(item)}</span>
                 </div>
                 <main>
                     {
                         item?.body?.map(body => (
-                            body?.purpose == "describing" && <div className='format-html' dangerouslySetInnerHTML={{ __html: body?.value }}></div>
+                            body?.purpose == "describing" && <div className='format-html' dangerouslySetInnerHTML={{ __html: body?.value }} style={{ fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif' }}></div>
                         ))
                     }
                 </main>
-            </div>
+            </div >
         </>;
     }
 }

@@ -87,7 +87,7 @@ class AnnotationDetailViewer extends Component {
                     primary={title}
                     id={`${id}-title`}
                 >
-                    <div dangerouslySetInnerHTML={{ __html: content }}></div>
+                    <div dangerouslySetInnerHTML={{ __html: content }} style={{ fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif' }}></div>
 
                     {
                         tags.map(tag => (<CustomTag label={tag} />))
@@ -102,7 +102,7 @@ class AnnotationDetailViewer extends Component {
                 >
                     <div className='annotation-detail-resource'>
                         {
-                            addResources.map(addResource => <div><a href={addResource}>{addResource}</a></div>)
+                            addResources.map(addResource => <div><a href={addResource} style={{ fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif' }}>{addResource}</a></div>)
                         }
                     </div>
                 </CustomSection>
