@@ -8,6 +8,7 @@ import CustomSection from '../../containers/CustomSection';
 import CustomTag from '../../containers/CustomTag';
 
 import { getNameByValue } from '../../utils/category-util';
+import { getMonthString } from '../../utils';
 import './annotationdetailviewer.css'
 
 /** */
@@ -59,7 +60,7 @@ class AnnotationDetailViewer extends Component {
             title,
             tags,
             content,
-            addResources
+            addResources,
         };
     }
 
@@ -81,32 +82,41 @@ class AnnotationDetailViewer extends Component {
                 id={id}
                 paperClassName={ns('window-sidebar-annotation-panel')}
             >
+                <div style={{ height: '100%' }}>
+                    <div className='annotation-detail-body'>
+                        {/* annotation information */}
+                        <CustomSection
+                            primary={title}
+                            id={`${id}-title`}
+                        >
+                            <div dangerouslySetInnerHTML={{ __html: content }} style={{ fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif' }}></div>
 
-                {/* annotation information */}
-                <CustomSection
-                    primary={title}
-                    id={`${id}-title`}
-                >
-                    <div dangerouslySetInnerHTML={{ __html: content }} style={{ fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif' }}></div>
+                            {
+                                tags.map(tag => (<CustomTag label={tag} />))
+                            }
 
-                    {
-                        tags.map(tag => (<CustomTag label={tag} />))
-                    }
+                        </CustomSection>
 
-                </CustomSection>
+                        {/* addtional resources */}
+                        <CustomSection
+                            primary={t("headerLabel_additional_resources")}
+                            id={`${id}-title`}
+                        >
+                            <div className='annotation-detail-resource'>
+                                {
+                                    addResources.map(addResource => <div><a href={addResource} style={{ fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif' }}>{addResource}</a></div>)
+                                }
+                            </div>
+                        </CustomSection>
 
-                {/* addtional resources */}
-                <CustomSection
-                    primary={t("headerLabel_additional_resources")}
-                    id={`${id}-title`}
-                >
-                    <div className='annotation-detail-resource'>
-                        {
-                            addResources.map(addResource => <div><a href={addResource} style={{ fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif' }}>{addResource}</a></div>)
-                        }
+                        <div className='annotation-detail-creator-copy'>
+                        </div>
                     </div>
-                </CustomSection>
 
+                    <div className='annotation-detail-creator'>
+                        <p className='annotation-detail-creator-text'>Annotated by {annotation?.creator?.name} on {getMonthString(new Date(annotation?.creator?.created_on).getMonth() + 1)} {new Date(annotation?.creator?.created_on).getDate()}, {new Date(annotation?.creator?.created_on).getFullYear()}</p>
+                    </div>
+                </div>
             </CompanionWindow>
         );
     }

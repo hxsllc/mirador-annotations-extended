@@ -1,7 +1,40 @@
+.annotation-detail-viewer {
+    position: relative;
+    height: 100%;
+}
+
 .annotation-detail-resource {
     display: flex;
     flex-direction: column;
     gap: 5px;
     margin-top: 5px;
     margin-bottom: 5px;
+}
+
+.annotation-detail-body {
+    /* height: calc(100vh - 80px - 40px - 49.6px); */
+    /* height: calc(100% - 80px); */
+    height: 100%;
+    overflow-y: auto;
+}
+
+.annotation-detail-creator-copy {
+    height: 80px;
+    background-color: transparent;
+}
+
+.annotation-detail-creator {
+    position: absolute;
+    bottom: 0px;
+    background-color: #f0f0f0;
+    width: 100%;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.annotation-detail-creator .annotation-detail-creator-text {
+    text-align: center;
+    color: #4e6c9d;
 }
