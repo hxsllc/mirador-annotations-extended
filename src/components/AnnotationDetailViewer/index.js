@@ -8,7 +8,7 @@ import CustomSection from '../../containers/CustomSection';
 import CustomTag from '../../containers/CustomTag';
 
 import { getNameByValue } from '../../utils/category-util';
-import { getMonthString } from '../../utils';
+import { getMonthString, linkify } from '../../utils';
 import './annotationdetailviewer.css'
 
 /** */
@@ -27,7 +27,6 @@ class AnnotationDetailViewer extends Component {
 
         if (annotation) {
             annoId = annotation.id;
-
 
             let category = "";
             if (annotation.category) {
@@ -62,6 +61,20 @@ class AnnotationDetailViewer extends Component {
             content,
             addResources,
         };
+
+        this.isAddResourceExist = this.isAddResourceExist.bind(this);
+    }
+
+    isAddResourceExist() {
+        const { addResources } = this.state;
+
+        let cnt = addResources != null ? addResources.length : 0;
+        for (let i = 0; i < cnt; i++) {
+            if (addResources[i] != '')
+                return true;
+        }
+
+        return false;
     }
 
     /** */
@@ -89,26 +102,30 @@ class AnnotationDetailViewer extends Component {
                             primary={title}
                             id={`${id}-title`}
                         >
-                            <div dangerouslySetInnerHTML={{ __html: content }} style={{ fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif' }}></div>
+                            <div dangerouslySetInnerHTML={{ __html: linkify(content) }} style={{ fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif' }}></div>
 
                             {
-                                tags.map(tag => (<CustomTag label={tag} />))
+                                tags.map(tag => (
+                                    tag != '' && <CustomTag label={tag} />
+                                ))
                             }
 
                         </CustomSection>
 
                         {/* addtional resources */}
-                        <CustomSection
-                            primary={t("headerLabel_additional_resources")}
-                            id={`${id}-title`}
-                        >
-                            <div className='annotation-detail-resource'>
-                                {
-                                    addResources.map(addResource => <div><a href={addResource} style={{ fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif' }}>{addResource}</a></div>)
-                                }
-                            </div>
-                        </CustomSection>
-
+                        {
+                            this.isAddResourceExist() &&
+                            <CustomSection
+                                primary={t("headerLabel_additional_resources")}
+                                id={`${id}-title`}
+                            >
+                                <div className='annotation-detail-resource'>
+                                    {
+                                        addResources.map(addResource => <div><a href={addResource} style={{ fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif' }}>{addResource}</a></div>)
+                                    }
+                                </div>
+                            </CustomSection>
+                        }
                         <div className='annotation-detail-creator-copy'>
                         </div>
                     </div>

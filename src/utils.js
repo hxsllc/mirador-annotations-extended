@@ -52,3 +52,8 @@ export function getMonthString(mth) {
 
   return month;
 }
+
+export function linkify(inputText) {
+  const regex = /(\b(https?:\/\/)[\S]+)/gi;
+  return inputText.replace(regex, '<a href="$1" target="_blank">$1</a>');
+}
